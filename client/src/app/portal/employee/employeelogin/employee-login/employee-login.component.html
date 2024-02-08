@@ -1,0 +1,46 @@
+<div class="flex w-full h-screen bg-[#272727] ">
+    <div class="grid h-screen w-full bg-[#272727]  place-items-center">
+        <div class="flex justify-center items-center ">
+            <img src="assets/05.jpg" alt="Logo">
+        </div>
+    </div>
+
+    <div class="divider divider-horizontal"></div>
+
+    <div class="grid h-screen w-full  bg-[#272727]  place-items-center">
+        <div class="flex flex-col max-w-md p-6 rounded-md sm:p-10 bg-gray-50 text-gray-800">
+            <div class="mb-8 text-center">
+              <h1 class="my-3 text-4xl font-bold">SCMS Portal</h1>
+              <p class="text-sm text-gray-600">Sign in to access your account</p>
+            </div>
+            <form novalidate="" action="" class="space-y-12">
+              <div class="space-y-4">
+                <div>
+                  <label for="email" class="block mb-2 text-sm">Email address</label>
+                  <input type="email" name="email" id="email" placeholder="leroy@jenkins.com" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-base-300 text-gray-800">
+                </div>
+                <div>
+                  <div class="flex justify-between mb-2">
+                    <label for="password" class="text-sm">Password</label>
+                    <a rel="noopener noreferrer" href="#" class="text-xs hover:underline text-gray-600">Forgot password?</a>
+                  </div>
+                  <input type="password" name="password" id="password" placeholder="*****" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-base-300  text-gray-800">
+                </div>
+              </div>
+              <div class="space-y-2">
+                <div>
+                  <button type="button" class="w-full px-8 py-3 font-semibold rounded-md  bg-base-300  text-gray-50">Sign in</button>
+                </div>
+               
+              </div>
+            </form>
+          </div>
+    </div>
+</div>
+<app-footer [backgroundColorClass]="'bg-[#272727]'" ></app-footer>
+
+
+
+
+
+  

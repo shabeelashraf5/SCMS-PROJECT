@@ -1,0 +1,124 @@
+<app-admin-nb></app-admin-nb> 
+<app-admin-sb></app-admin-sb>
+
+<main class="w-full sm:w-3/4 p-4 ml-0 sm:ml-80 ">
+  <!-- Your main content goes here -->
+  <div class="form-control">
+    <input type="text" placeholder="Search" class="input input-bordered w-24 md:w-auto" />
+  </div>
+
+  <!-- Open the modal using ID.showModal() method -->
+  <button class="btn btn-outline mt-5" onclick="my_modal_1.showModal()">Add</button>
+  <dialog id="my_modal_1" class="modal">
+    <div class="modal-box">
+      <form method="dialog">
+        <div class="form-group">
+          <input type="text" name="product" id="product" placeholder="Product" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
+        </div>
+        <div class="form-group mt-5">
+          <input type="text" name="category" id="category" placeholder="Category" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
+        </div>
+        <div class="form-group mt-5">
+          <input type="text" name="description" id="description" placeholder="Description" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
+        </div>
+        <div class="form-group mt-5">
+          <input type="text" name="uom" id="uom" placeholder="UOM" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
+        </div>
+        <div class="form-group mt-5">
+          <input type="text" name="price" id="price" placeholder="Price" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
+        </div>
+        <div class="form-group mt-5">
+          <input type="text" name="availability" id="availability" placeholder="Availability" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
+        </div>
+       
+        <div class="modal-action">
+          <button type="submit" class="btn">Submit</button>
+          <button type="button" class="btn" onclick="my_modal_1.close()">Close</button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+  
+  
+
+
+
+  <div class="overflow-x-auto">
+    <table class="table">
+      <!-- head -->
+      <thead>
+        <tr>
+          <th>
+            
+          </th>
+          <th>Product</th>
+          <th>Category</th>
+          <th>Description</th>
+          <th>UOM</th>
+          <th>Price</th>
+          <th>Availability</th>
+          <th></th>
+          <th></th>
+          
+        </tr>
+      </thead>
+      <tbody>
+        <!-- row 1 -->
+        <tr>
+          <th>
+            1
+          </th>
+          <td>
+            <div class="flex items-center gap-3">
+              <div>
+                <div class="font-bold">Hart Hagerty</div>
+                
+              </div>
+            </div>
+          </td>
+          <td>
+            Zemlak, Daniel and Leannon
+            <br/>
+          </td>
+          <td>Purple</td>
+          <td>Purple</td>
+          <td>Purple</td>
+          <td>Purple</td>
+          
+          <th>
+            <button class="btn btn-outline btn-success btn-xs" onclick="my_modal_1.showModal()">Update</button>
+          </th>
+          <th>
+            <button class="btn btn-outline btn-error btn-xs" >delete</button>
+          </th>
+         
+        </tr>
+       
+        
+      </tbody>
+      <!-- foot -->
+      <tfoot>
+        <tr>
+          <th></th>
+          <th>Product</th>
+          <th>Category</th>
+          <th>Description</th>
+          <th>UOM</th>
+          <th>Price</th>
+          <th>Availability</th>
+          <th></th>
+          <th></th>
+        </tr>
+      </tfoot>
+      
+    </table>
+  </div>
+
+  <div class="join mt-5">
+    <button class="join-item btn">1</button>
+    <button class="join-item btn btn-active">2</button>
+    <button class="join-item btn">3</button>
+    <button class="join-item btn">4</button>
+  </div>
+
+</main>
