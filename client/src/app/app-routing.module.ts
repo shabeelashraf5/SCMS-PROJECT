@@ -11,6 +11,7 @@ import { AdCategoryComponent } from './portal/admin/category/ad-category/ad-cate
 import { AdUserComponent } from './portal/admin/admin-user/ad-user/ad-user.component';
 
 
+
 const routes: Routes = [
   { path: '', redirectTo: '/employee-login', pathMatch: 'full' },
   {path: 'employee-login' , component: EmployeeLoginComponent},
@@ -24,7 +25,7 @@ const routes: Routes = [
   {path: 'admin/admin-user' , component: AdUserComponent},
 
   
-  { path: 'dashboard' , component: EmDashboardComponent },
+  { path: 'dashboard' , component: EmDashboardComponent, },
   { path: 'sales' , component: EmDashboardComponent },
   { path: 'purchase' , component: EmDashboardComponent },
   { path: 'warehouse' , component: EmDashboardComponent },

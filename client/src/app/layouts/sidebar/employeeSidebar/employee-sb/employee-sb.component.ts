@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
+
 @Component({
   selector: 'app-employee-sb',
   templateUrl: './employee-sb.component.html',
@@ -10,7 +11,7 @@ export class EmployeeSbComponent implements OnInit {
 
   sidebarItems : string[] = [];
 
-  constructor(private router: Router) { }
+  constructor(private router: Router ) { }
 
   ngOnInit(): void {
     this.updateSidebarItems();
@@ -38,5 +39,7 @@ export class EmployeeSbComponent implements OnInit {
         this.sidebarItems = [];
     }
   }
+
+
 
 }

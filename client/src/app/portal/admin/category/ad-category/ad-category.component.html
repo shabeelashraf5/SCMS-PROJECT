@@ -4,28 +4,26 @@
 <main class="w-full sm:w-3/4 p-4 ml-0 sm:ml-80 ">
   <!-- Your main content goes here -->
   <div class="form-control">
-    <input type="text" placeholder="Search" class="input input-bordered w-24 md:w-auto" />
+    <input type="text" placeholder="Search"  [(ngModel)]="searchTerm" class="input input-bordered w-24 md:w-auto" />
   </div>
 
   <!-- Open the modal using ID.showModal() method -->
-  <button class="btn btn-outline mt-5" onclick="my_modal_1.showModal()">Add</button>
-  <dialog id="my_modal_1" class="modal">
+  <button class="btn btn-outline mt-5" (click)="showModal()">Add</button>
+  <dialog #my_modal_1 class="modal">
     <div class="modal-box">
-      <form method="dialog">
+      <form (submit)="onSubmit()">
         <div class="form-group">
-          <input type="text" name="category" id="category" placeholder="Category" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
+          <input type="text" name="category" id="category" [(ngModel)]="category" placeholder="Category" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
         </div>
+
         
         <div class="modal-action">
           <button type="submit" class="btn">Submit</button>
-          <button type="button" class="btn" onclick="my_modal_1.close()">Close</button>
+          <button type="button" class="btn" (click)="modal1.nativeElement.close()">Close</button>
         </div>
       </form>
     </div>
   </dialog>
-  
-  
-
 
 
   <div class="overflow-x-auto">
@@ -45,24 +43,42 @@
       </thead>
       <tbody>
         <!-- row 1 -->
-        <tr>
+        <tr *ngFor="let category of filteredRecords | async; let i = index">
           <th>
-            1
+            {{ i + 1 }}
           </th>
           <td>
             <div class="flex items-center gap-3">
               <div>
-                <div class="font-bold">Hart Hagerty</div>
+                <div class="font-bold">{{ category._id }}</div>
+                <div class="font-bold">{{category.category}}</div>
                 
               </div>
             </div>
           </td>
        
           <th>
-            <button class="btn btn-outline btn-success btn-xs" onclick="my_modal_1.showModal()">Update</button>
+            <button class="btn btn-outline btn-success btn-xs" (click)="editCategories(category)">Update</button>
+ <dialog #my_modal_2  class="modal">
+  <div class="modal-box">
+    <form  (submit)="editCategory(categoryToEdit)">
+      <div class="form-group">
+        <input type="text" name="category" id="category"  [(ngModel)]="categoryToEdit.category" placeholder="Category" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
+      </div>
+
+      
+      <div class="modal-action">
+        <button type="submit" class="btn">Update</button>
+        <button type="button" class="btn" (click)="modal2.nativeElement.close()">Close</button>
+      </div>
+    </form>
+    
+  </div>
+</dialog>
+
           </th>
           <th>
-            <button class="btn btn-outline btn-error btn-xs" >delete</button>
+            <button class="btn btn-outline btn-error btn-xs" (click)="deleteCategory( category )">delete</button>
           </th>
          
         </tr>
@@ -89,5 +105,15 @@
     <button class="join-item btn">3</button>
     <button class="join-item btn">4</button>
   </div>
+  
+<!--
+  <nav aria-label="Page navigation">
+    <ul class="pagination justify-content-end">
+      <li class="page-item" *ngFor="let page of pages$ | async">
+        <a class="page-link" href="#" (click)="changePage(page)">{{ page }}</a>
+      </li>
+    </ul>
+  </nav>
+-->
 
 </main>

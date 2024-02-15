@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 
@@ -22,6 +22,19 @@ import { AdProductComponent } from './portal/admin/product/ad-product/ad-product
 import { AdCategoryComponent } from './portal/admin/category/ad-category/ad-category.component';
 import { AdDashboardComponent } from './portal/admin/dashboard/ad-dashboard/ad-dashboard.component';
 import { AdUserComponent } from './portal/admin/admin-user/ad-user/ad-user.component';
+import { appReducer } from './state/app.state';
+import { AdUserEffects } from './portal/admin/admin-user/ad-user/store/ad-user.effects';
+import { AdminLoginEffects} from './portal/admin/adminlogin/admin-login/store/admin-login.effects';
+import { AdEmployeeEffects } from './portal/admin/employee/ad-employee/store/ad-employee.effects';
+
+
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { EmployeeLoginEffects } from './portal/employee/employeelogin/employee-login/store/employee-login.effects';
+import { AdCategoryEffects } from './portal/admin/category/ad-category/store/ad-category.effects';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+
 
 
 @NgModule({
@@ -49,10 +62,17 @@ import { AdUserComponent } from './portal/admin/admin-user/ad-user/ad-user.compo
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
-    StoreModule.forRoot({}, {}),
-    EffectsModule.forRoot([])
+    CommonModule,
+    ReactiveFormsModule,
+    StoreModule.forRoot(appReducer),
+    EffectsModule.forRoot([AdUserEffects, AdminLoginEffects, AdEmployeeEffects, EmployeeLoginEffects,
+    AdCategoryEffects]),
+    
+    
   ],
-  providers: [],
+  providers: [
+    provideAnimationsAsync()
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

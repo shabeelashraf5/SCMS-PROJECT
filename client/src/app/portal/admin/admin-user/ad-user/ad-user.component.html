@@ -4,44 +4,42 @@
 <main class="w-full sm:w-3/4 p-4 ml-0 sm:ml-80 ">
   <!-- Your main content goes here -->
   <div class="form-control">
-    <input type="text" placeholder="Search" class="input input-bordered w-24 md:w-auto" />
+    <input type="text" placeholder="Search" [(ngModel)]="searchTerm" class="input input-bordered w-24 md:w-auto"   />
   </div>
 
   <!-- Open the modal using ID.showModal() method -->
-  <button class="btn btn-outline mt-5" onclick="my_modal_1.showModal()">Add</button>
-  <dialog id="my_modal_1" class="modal">
+  <button class="btn btn-outline mt-5" (click)="showModal()">Add</button>
+  <dialog #my_modal_1 class="modal">
     <div class="modal-box">
-      <form method="dialog">
+      <form (submit)="onSubmit()">
         <div class="form-group">
-          <input type="text" name="fname" id="fname" placeholder="First Name" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
+          <input type="text" name="fname" [(ngModel)]="fname" placeholder="First Name" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
         </div>
         <div class="form-group mt-5">
-          <input type="text" name="lname" id="lname" placeholder="Last Name" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
+          <input type="text" name="lname" [(ngModel)]="lname" placeholder="Last Name" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
         </div>
         <div class="form-group mt-5">
-          <input type="email" name="email" id="email" placeholder="Email" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
+          <input type="email" name="email" [(ngModel)]="email" placeholder="Email" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
         </div>
         <div class="form-group mt-5">
-          <input type="password" name="password" id="password" placeholder="Password" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
+          <input type="password" name="password" [(ngModel)]="password" placeholder="Password" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
         </div>
         
         <div class="modal-action">
           <button type="submit" class="btn">Submit</button>
-          <button type="button" class="btn" onclick="my_modal_1.close()">Close</button>
+          <button type="button" class="btn" (click)="modal.nativeElement.close()">Close</button>
         </div>
       </form>
     </div>
   </dialog>
   
-  
-
 
 
   <div class="overflow-x-auto">
     <table class="table">
       <!-- head -->
       <thead>
-        <tr>
+        <tr >
           <th>
             
           </th>
@@ -57,30 +55,74 @@
       </thead>
       <tbody>
         <!-- row 1 -->
-        <tr>
+        <tr *ngFor="let admin of filteredRecords | async; let i = index">
           <th>
-            1
+            {{ i + 1 }}
           </th>
           <td>
             <div class="flex items-center gap-3">
               <div>
-                <div class="font-bold">Hart Hagerty</div>
+             
+                <div class="font-bold">{{ admin.fname }}</div>
                 
               </div>
             </div>
           </td>
           <td>
-            Zemlak, Daniel and Leannon
+            {{ admin.lname }}
             <br/>
           </td>
-          <td>Purple</td>
-          <td>Purple</td>
+          <td>{{ admin.email }}</td>
+          <td>{{ admin.password }}</td>
          
           <th>
-            <button class="btn btn-outline btn-success btn-xs" onclick="my_modal_1.showModal()">Update</button>
+            <!-- Open the modal using ID.showModal() method -->
+            <button class="btn btn-outline btn-success btn-xs" (click)="editAdmins(admin)">Update</button>
+            <dialog #my_modal_2  class="modal">
+             <div class="modal-box">
+               <form  (submit)="editAdmin(adminToEdit)">
+                <div class="form-group">
+                  <input type="text" name="fname" [(ngModel)]="adminToEdit.fname" placeholder="First Name" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
+                </div>
+                <div class="form-group mt-5">
+                  <input type="text" name="lname" [(ngModel)]="adminToEdit.lname" placeholder="Last Name" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
+                </div>
+                <div class="form-group mt-5">
+                  <input type="email" name="email" [(ngModel)]="adminToEdit.email" placeholder="Email" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
+                </div>
+                <div class="form-group mt-5">
+                  <input type="password" name="password" [(ngModel)]="adminToEdit.password" placeholder="Password" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
+                </div>
+           
+                 
+                 <div class="modal-action">
+                   <button type="submit" class="btn">Update</button>
+                   <button type="button" class="btn" (click)="modal2.nativeElement.close()">Close</button>
+                 </div>
+               </form>
+               
+             </div>
+           </dialog>
+<dialog id="my_modal_2" class="modal">
+  <div class="modal-box">
+    
+    
+    <div class="modal-action">
+      <form method="dialog">
+        
+
+        
+        <button class="btn">Close</button>
+      </form>
+    </div>
+  </div>
+</dialog>
           </th>
+
+          
           <th>
-            <button class="btn btn-outline btn-error btn-xs" >delete</button>
+            <button class="btn btn-outline btn-error btn-xs" (click)="deleteAdmin( admin )">Delete</button>
+
           </th>
          
         </tr>

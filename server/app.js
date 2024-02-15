@@ -9,7 +9,9 @@ const dotenv = require('dotenv').config()
 
 console.log(dotenv.parsed)
 
-let indexRouter = require('./routes/index');
+let employeeRouter = require('./routes/employee');
+let adminRouter = require('./routes/admin');
+
 
 let app = express();
 
@@ -18,11 +20,15 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors())
 app.use(bodyparser.json())
 app.use(bodyparser.urlencoded({extended:true}))
 
-app.use('/', indexRouter);
+
+app.use('/api/', employeeRouter);
+app.use('/api/admin', adminRouter);
+
 
 app.use(function(req, res, next) {
     next(createError(404));
