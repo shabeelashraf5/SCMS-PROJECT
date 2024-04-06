@@ -4,15 +4,15 @@ const ProductSchema = new mongoose.Schema({
     
     category_id: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'category',
+        ref: 'ad-category',
         required: true
     },
     product: {type: String, required: true } ,
-    description: {type: Number, required: true },
+    description: {type: String, required: true },
     uom: {type:String, required: true},
-    price: {type: String, required: true } ,
-    availability: {type: Number, required: true }
-})
+    price: {type: Number, required: true } ,
+    availability: {type: String, required: true }
+}, { timestamps: true })
 
 
 

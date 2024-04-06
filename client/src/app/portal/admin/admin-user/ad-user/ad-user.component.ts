@@ -1,4 +1,5 @@
 import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Store, select  } from '@ngrx/store';
 import { AppState } from '../../../../state/app.state';
 import * as AdUserActions from '../ad-user/store/ad-user.action';
@@ -20,6 +21,8 @@ export class AdUserComponent implements OnInit  {
   searchTerm: string = '';
   currentPage: number = 1;
   itemsPerPage: number = 5;
+  totalPages: number = 1;
+ 
 
   selectedAdmin: Admin | null = null;
    
@@ -32,15 +35,21 @@ export class AdUserComponent implements OnInit  {
   @ViewChild('my_modal_2') modal2!: ElementRef;
   
 
-  constructor(private store: Store<AppState>) {
+  constructor(private store: Store<AppState>,  private formBuilder: FormBuilder,) {
     this.admins$ = this.store.pipe(select(state => state.admin.admins));
+    
     
   }
 
   ngOnInit(): void {
    
     this.store.dispatch(AdUserActions.loadAdmin());
+
+    this.calculateTotalPages();
   }
+
+
+  
 
   onSubmit(): void {
 
@@ -77,6 +86,13 @@ export class AdUserComponent implements OnInit  {
       console.error('Category or its ID is undefined');
     }
   }
+
+
+  confirmDelete(employee: any) {
+    if (confirm('Are you sure you want to delete?')) {
+        this.deleteAdmin(employee);
+    }
+  }
   
 
   showModal(): void {
@@ -94,6 +110,41 @@ export class AdUserComponent implements OnInit  {
       ))
     );
   }
+
+  calculateTotalPages(): void {
+    this.admins$.subscribe(admins => {
+      this.totalPages = Math.ceil(admins.length / this.itemsPerPage);
+    });
+  }
+
+
+  getCurrentPageRecords(): Observable<Admin[]> {
+    return this.filteredRecords.pipe(
+      map(records => {
+        const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+        return records.slice(startIndex, startIndex + this.itemsPerPage);
+      })
+    );
+  }
+
+
+  previousPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+    }
+  }
+
+  // Method to navigate to the next page
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+    }
+  }
+
+
+
+
+
 
 
   

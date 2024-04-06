@@ -5,15 +5,26 @@ let cookieParser = require('cookie-parser');
 let logger = require('morgan');
 let cors = require('cors')
 const bodyparser = require('body-parser')
+let http = require ('http')
 const dotenv = require('dotenv').config()
-
 console.log(dotenv.parsed)
+const chatMessage = require('./model/chatDB')
+const collectionemployee = require('./model/employeeDB')
+
+let app = express();
+
+let server = http.createServer(app)
+
+
+//const io = socketIO(server);
 
 let employeeRouter = require('./routes/employee');
 let adminRouter = require('./routes/admin');
-
-
-let app = express();
+let salesRouter = require('./routes/sales');
+let purchaseRouter = require('./routes/purchase');
+let warehouseRouter = require('./routes/warehouse');
+let accountingRouter = require('./routes/accounting');
+let shipmentRouter = require('./routes/shipment');
 
 
 app.use(logger('dev'));
@@ -28,6 +39,90 @@ app.use(bodyparser.urlencoded({extended:true}))
 
 app.use('/api/', employeeRouter);
 app.use('/api/admin', adminRouter);
+app.use('/api/sales', salesRouter);
+app.use('/api/purchase', purchaseRouter);
+app.use('/api/warehouse', warehouseRouter);
+app.use('/api/accounting', accountingRouter);
+app.use('/api/shipment', shipmentRouter);
+
+
+const io = require("socket.io")(server, {
+  cors: {
+    origin: "http://localhost:4200",
+    methods: ["GET", "POST"],
+    
+  }
+});
+
+
+const usp = io.of('/user-namespace')
+
+usp.on('connection', async function(socket){
+
+  console.log('User Connected')
+
+  console.log(socket.handshake.auth.token)
+
+  
+
+ 
+
+  socket.on('disconnect', async function(){
+
+    console.log('User Disconnect')
+
+
+
+
+
+  }) 
+
+  
+  socket.on('chatMessage', function(message){
+    console.log('Message received:', message);
+    usp.emit('chatMessage', message); 
+      //socket.broadcast.emit('loadNewChat', message)
+  });
+
+  
+  socket.on('existsChat', async function(data) {
+    try {
+      const { sender_id, receiver_id } = data;
+      console.log(`Fetching existing chats for sender_id: ${sender_id} and receiver_id: ${receiver_id}`);
+      const chats = await chatMessage.find({
+        $or: [
+          { sender_id: data.sender_id, receiver_id: data.receiver_id },
+          { sender_id: data.receiver_id, receiver_id: data.sender_id }
+        ]
+      }).sort({ createdAt: 1 }); // Sort chats by creation time if necessary
+      socket.emit('loadChats', { chats });
+      console.log('Existing chats:', chats);
+    } catch (error) {
+      console.error('Error fetching chats:', error);
+      // Handle error appropriately, e.g., emit an error event to the client
+      socket.emit('loadChatError', { error: 'Error fetching chats' });
+    }
+  });
+
+/*
+  socket.on('chatOpened', (data) => {
+    const { sender_id, receiver_id } = data;
+    // Assuming you have a method to check for new messages from receiver to sender
+    const hasNewMessages = checkForNewMessages(sender_id, receiver_id);
+    if (hasNewMessages) {
+        // Send a notification to the sender
+        socket.to(sender_id).emit('newMessageNotification', {
+            sender_id: receiver_id // You can send any relevant data here
+        });
+    }
+});*/
+
+  socket.on('error', function(err){
+    console.error('Socket error:', err);
+});
+
+
+})
 
 
 app.use(function(req, res, next) {
@@ -44,5 +139,24 @@ app.use(function(req, res, next) {
     res.status(err.status || 500);
     res.render('error');
   });
+
+
+server.listen(3000, () => {
+  console.log('The Server Connected')
+})
+
+
+/*
+io.on('connection', (socket) => {
+  socket.on('join', (data) => {
+    socket.join(data.room)
+    socket.broadcast.to(data.room).emit('User Joined')
+  })
+  socket.on('message' , (data) =>{
+    io.in(data.room).emit('new message', {user: data.user, message: data.message})
+  })
+})*/
   
-  module.exports = app;
+
+  
+ // module.exports = app;

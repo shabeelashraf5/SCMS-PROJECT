@@ -6,6 +6,7 @@ import { Category } from '../../../../model/ad-category.model';
 import { Observable, map } from 'rxjs';
 import { AdCategoryService } from './ad-category.service';
 import { AdCategoryState } from './store/ad-category.state';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 
 @Component({
@@ -15,6 +16,7 @@ import { AdCategoryState } from './store/ad-category.state';
 })
 export class AdCategoryComponent implements OnInit  {
   
+  categoryForm!: FormGroup;
 
   userRecords: Category[] = [];
   _id: string = ''
@@ -22,6 +24,7 @@ export class AdCategoryComponent implements OnInit  {
   searchTerm: string = '';
   currentPage: number = 1;
   itemsPerPage: number = 5;
+  totalPages: number = 1;
   
 
   selectedCategory: Category | null = null;
@@ -36,14 +39,20 @@ export class AdCategoryComponent implements OnInit  {
   
   categoryToEdit: Partial<Category> = {};
 
-  constructor(private store: Store<AppState>) {
+  constructor(private store: Store<AppState>, private formBuilder: FormBuilder) {
     this.categories$ = this.store.pipe(select(state => state.category.categories));
     
   }
 
   ngOnInit(): void {
+
+    
     
     this.store.dispatch(AdCategoryActions.loadCategory());
+
+    this.calculateTotalPages();
+
+    
   }
 
   onSubmit(): void {
@@ -86,6 +95,16 @@ editCategory(category: Partial<Category>) {
   }
 
 
+  confirmDelete(employee: any) {
+    if (confirm('Are you sure you want to delete?')) {
+        this.deleteCategory(employee);
+    }
+  }
+
+
+  
+
+
 
   get filteredRecords() {
     const searchTermLower = this.searchTerm.toLowerCase();
@@ -103,6 +122,40 @@ editCategory(category: Partial<Category>) {
   changePage(page: number) {
     this.currentPage = page;
   } */
+
+  calculateTotalPages(): void {
+    this.categories$.subscribe(categories => {
+      this.totalPages = Math.ceil(categories.length / this.itemsPerPage);
+    });
+  }
+
+  getCurrentPageRecords(): Observable<Category[]> {
+    return this.filteredRecords.pipe(
+      map(records => {
+        const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+        return records.slice(startIndex, startIndex + this.itemsPerPage);
+      })
+    );
+  }
+
+
+  previousPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+    }
+  }
+
+  // Method to navigate to the next page
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+    }
+  }
+
+
+  
+
+
       
 
 }

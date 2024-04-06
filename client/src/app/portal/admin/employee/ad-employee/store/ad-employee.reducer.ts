@@ -12,16 +12,26 @@ export const adEmployeeReducer = createReducer(
       error: null
     })),
 
+    /*
     
-    on(AdEmployeeActions.addEmployee, (state, { fname, lname , email , password, position, department, area }) => ({
+    on(AdEmployeeActions.addEmployee, (state, { fname, lname , email , password, position, department, area, image }) => ({
       ...state,
       categories: [
         ...state.employees,
-        { _id: '', fname, lname , email , password, position, department, area  }
+        { _id: '', fname, lname , email , password, position, department, area, image  }
+      ]
+    })) , */
+
+    on(AdEmployeeActions.addEmployeeSuccess, (state, { employee  }) => ({
+      ...state,
+      categories: [
+        ...state.employees,  employee
       ]
     })) ,
 
 
+
+/*
     on(AdEmployeeActions.updateEmployee, (state, { employee }) => {
       const updatedEmployee = state.employees.map(emp => {
         if (emp._id === employee._id) { // Assuming _id is the unique identifier
@@ -34,7 +44,12 @@ export const adEmployeeReducer = createReducer(
         ...state,
         employees: updatedEmployee
       };
-    }),
+    }), */
+
+    on(AdEmployeeActions.updateEmployeeSuccess, (state, { employee }) => ({
+      ...state,
+      employees: state.employees.map(emp => emp._id === employee._id ? employee : emp)
+    })),
 
 
     on(AdEmployeeActions.deleteEmployeeSuccess, (state, { employeeId }) => ({

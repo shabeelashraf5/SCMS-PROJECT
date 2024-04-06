@@ -2,8 +2,59 @@
 <app-admin-sb></app-admin-sb>
 
 <main class="w-full sm:w-3/4 p-4 ml-0 sm:ml-80 ">
-    <!-- Your main content goes here -->
-    <p>ad-dashboard works!</p>
+   
+
+  <div class="flex justify-center  ">
+    <div class="stats stats-vertical lg:stats-horizontal shadow bg-base-300">
+      <div class="stat">
+        <div class="stat-title">No of Employees</div>
+        <div class="stat-value"> {{ employeeDetails.length }}   </div>
+      </div>
+      <div class="stat">
+        <div class="stat-title">No of Quotation</div>
+        <div class="stat-value"> {{ spoDetails.length }}   </div>
+      </div>
+      <div class="stat">
+        <div class="stat-title">No of Customers</div>
+        <div class="stat-value"> {{ calculateUniqueCustomers(spoDetails) }}   </div>
+      </div>
+      <div class="stat">
+        <div class="stat-title">No of Orders</div>
+        <div class="stat-value"> {{ calculateOrders(spoDetails) }}  </div>
+      </div>
+      <div class="stat">
+        <div class="stat-title">Total Orders</div>
+        <div class="stat-value"> {{ calculateTotalOrders(spoDetails) }}  </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="grid grid-flow-col justify-center items-center gap-2 text-center auto-cols-max mt-5">
+    <div class="flex flex-col p-1 bg-base-300 rounded-box text-neutral-content">
+      <span class="font-mono text-4xl">{{ currentDate.getDate() }}</span>
+      <span class="text-xs">day</span>
+    </div> 
+    <div class="flex flex-col p-1 bg-base-300 rounded-box text-neutral-content">
+      <span class="font-mono text-4xl">{{ currentDate | date: 'MMMM' }}</span>
+      <span class="text-xs">month</span>
+    </div> 
+    <div class="flex flex-col p-1 bg-base-300 rounded-box text-neutral-content">
+      <span class="font-mono text-4xl">{{ currentDate.getFullYear() }}</span>
+      <span class="text-xs">year</span>
+    </div> 
+</div>
+
+
+  <div class="mt-5">
+    <button class="btn btn-sm btn-outline" (click)="toggleTimePeriod()">Toggle Time Period</button>
+  </div>
+
+    <div class="mt-2 ">
+      <canvas id="linechart" width="400" height="120"></canvas>
+    </div>
+
     
+      
   
   </main>

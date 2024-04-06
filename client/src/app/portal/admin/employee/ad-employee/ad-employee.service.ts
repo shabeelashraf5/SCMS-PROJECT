@@ -10,6 +10,7 @@ export class AdEmployeeService {
 
   private apiUrl = 'http://localhost:3000/api/admin';
 
+
   constructor(private http: HttpClient) { }
 
   getEmployees(): Observable<Employee[]> {
@@ -17,13 +18,24 @@ export class AdEmployeeService {
     return this.http.get<Employee[]>(`${this.apiUrl}/employee`, { headers });
   }
 
-  addEmployee(employee: Employee): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/employee/add`, employee);
+  addEmployee(formData: FormData): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/employee/add`, formData);
   }
 
-  updateEmployee(employee: Partial<Employee>): Observable<any> {
+  /*
+  updateEmployee(employee: Partial<Employee> ): Observable<any> {
     return this.http.put<any>(`${this.apiUrl}/employee/update/${employee._id}`, employee);
+  } */
+
+
+
+  updateEmployee(id: string, formData: FormData): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/employee/update/${id}`, formData);
   }
+  
+
+
+
 
   deleteEmployee(id: string): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/employee/delete/${id}`);

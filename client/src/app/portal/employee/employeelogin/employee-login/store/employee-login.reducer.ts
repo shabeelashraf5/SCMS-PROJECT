@@ -11,6 +11,22 @@ export const employeeLoginReducer = createReducer(
       token,
       error: null,
     })),
+
+    on(EmployeeActions.storeToken, (state, { token }) => {
+      console.log('Current state:', state);
+      console.log('New token:', token);
+      return {
+        ...state,
+        token,
+      };
+    }), 
+  
+    on(EmployeeActions.logoutAdmin, (state) => ({
+      ...state,
+      loggedIn: false,
+      admin: null,
+      token: null,
+    })),
   
     
     on(EmployeeActions.loginEmployeeFailure, (state, { error }) => ({

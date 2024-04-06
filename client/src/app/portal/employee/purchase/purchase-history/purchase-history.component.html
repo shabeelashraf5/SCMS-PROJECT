@@ -1,0 +1,116 @@
+<app-employee-nb></app-employee-nb> 
+<app-employee-sb></app-employee-sb>
+
+
+
+<main class="w-full sm:w-3/4 p-4 ml-0 sm:ml-80 ">
+
+    <p class="mt-5 text-lg font-bold">Purchase History</p>
+
+      <div class="divider"></div> 
+
+   
+
+    
+      <!-- Open the modal using ID.showModal() method -->
+  
+      
+    
+    
+      <div class="overflow-x-auto mt-5">
+        <table class="table">
+          <!-- head -->
+          <thead>
+            <tr >
+              <th>
+                
+              </th>
+
+              <th>Your Po no</th>
+              <th>Responsible</th>
+              <th>Your Ref No</th>
+              <th>Supplier Name</th>
+              <th>Total Amount</th>
+              <th>Created At</th>
+              <th> Status </th>
+              <th></th>
+              
+              
+            </tr>
+          </thead>
+          <tbody>
+            <!-- row 1 -->
+            <tr *ngFor="let detail of purchaseDetails"  >
+              <th>
+                
+              </th>
+              <td>
+                <div class="flex items-center gap-3">
+                  <div>
+                 
+                    <div class="font-bold">
+                      
+                      {{ getPo(detail.po_id) }}
+
+                    </div>
+                    
+                  </div>
+                </div>
+              </td>
+              <td>{{getResponsible(detail)}}</td>
+              <td>
+
+                {{ getSrfq(detail.po_id.quotation_id) }}
+              
+              </td>
+              <td>{{detail.to}}</td>
+              <td>{{detail.totalAmount}}</td>
+              <td>{{detail.createdAt | date: 'dd-MM-yyyy' }}</td>
+              <td>{{detail.status}}</td>
+              <th>
+                <form (click)="createInv(detail._id)">
+                  <ul>
+                    <li>
+                      <input type="hidden" name="purchase_id" [value]="detail._id">
+                    </li>
+                    <button class="btn btn-outline btn-error btn-xs" >Confirm</button>
+                  </ul>
+                </form>
+              </th>
+
+             
+           
+    
+             
+            </tr>
+           
+            
+          </tbody>
+          <!-- foot -->
+          <tfoot>
+            <tr>
+              <th></th>
+              <th>Your Po no</th>
+              <th>Responsible</th>
+              <th>Your Ref No</th>
+              <th>Supplier Name</th>
+              <th>Total Amount</th>
+              <th>Created At</th>
+              <th> Status </th>
+              <th></th>
+              
+              
+             
+            </tr>
+          </tfoot>
+          
+        </table>
+      </div>
+    
+     
+
+
+
+
+
+</main>

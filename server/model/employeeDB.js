@@ -9,9 +9,12 @@ const mongoose = require('../config/config')
       position: { type: String, required: true },
       area: { type: String, required: true },
       department: { type: String, required: true },
-    // image: { type: String, required: true },
+      image: { type: String, required: true },
+      token: {type: String , default: ''},
+      is_online: {type: String, default: false}
+
       
-    });
+    }, { timestamps: true })
 
     const collectionemployee = new mongoose.model("employee" , addEmployeeSchema)
 

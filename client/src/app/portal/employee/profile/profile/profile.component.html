@@ -1,0 +1,87 @@
+<app-employee-nb></app-employee-nb> 
+<app-employee-sb></app-employee-sb>
+
+<main class="w-full sm:w-3/4 p-4 ml-0 sm:ml-80 ">
+
+     
+    <div class="card card-side bg-base-100 shadow-xl mt-20 ">
+
+        
+            <div class="card w-96 bg-base-100 shadow-xl">
+              <figure class="px-10 pt-10">
+                <img [src]="getImageUrl(employeeProfile.image)" alt="Shoes" class="rounded-full w-48 h-48 mx-auto"  onclick="my_modal_3.showModal()" style="cursor: pointer;" />
+              </figure>
+
+              <dialog id="my_modal_3" class="modal">
+                <div class="modal-box">
+                  <form method="dialog">
+                    <button class="btn btn-xs btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                  </form>
+                  <img [src]="getImageUrl(employeeProfile.image)" alt="Shoes" class="rounded-full w-48 h-48 mx-auto"  />
+
+                  <div class="divider"></div> 
+
+                  <ul>
+                    <li  (click)="showModal()">
+
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 inline-block mr-2 cursor-pointer">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                    </svg>
+
+                    <dialog #my_modal_2 class="modal">
+                      <div class="modal-box">
+                        <form (submit)="editProfileEmployee(employeeProfile)">
+
+                        <h3 class="font-bold text-lg">Upload your Image</h3>
+                        <div class="divider"></div> 
+                        <div class="form-group mt-5">
+                      
+                          <input  type="file" id="image1" name="image" class="file-input file-input-bordered w-full max-w-xs" (change)="onFileSelected($event)">    
+                        </div>
+                        <div class="modal-action">
+                         
+                           <button type="submit" class="btn">Update</button>
+                            <button class="btn" (click)="modal2.nativeElement.close()">Close</button>
+                         
+                        </div>
+                      </form>
+                      </div>
+                    </dialog>
+
+
+
+
+                    </li>
+                  
+                  </ul>
+                    
+
+                </div>
+              </dialog>
+
+          
+         
+              <div class="card-body items-center text-center">
+                <h2 class="card-title">{{ employeeProfile.fname }} {{ employeeProfile.lname }} </h2>
+                <p>{{ employeeProfile.position  }}</p>
+                <div class="card-actions">
+    
+                </div>
+              </div>
+            
+          </div>
+          
+       
+    
+            <div class="card-body ">
+                <h2 class="card-title ">Professional Details</h2>
+                <p>Area: <span class="font-semibold mt-5">{{ employeeProfile.area  }}</span></p>
+                <p>Department: <span class="font-semibold">{{ employeeProfile.department }}</span></p>
+                <p>Email: <span class="font-semibold">{{ employeeProfile.email }}</span></p>
+              </div>
+      </div>
+
+</main>
+
+
+  

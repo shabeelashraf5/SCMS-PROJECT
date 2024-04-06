@@ -1,0 +1,84 @@
+<app-employee-nb></app-employee-nb> 
+<app-employee-sb></app-employee-sb>
+
+
+<main class="w-full sm:w-3/4 p-4 ml-0 sm:ml-80 bg-base-300 rounded-lg shadow-lg mt-10">
+    
+    <div class="flex justify-end">
+        <form (click)="createShipment(invoiceDetail._id)">
+            <ul>
+              <li>
+                <input type="hidden" name="invoice_id" [value]="invoiceDetail._id">
+              </li>
+              <button class="btn btn-outline btn-sm " >Confirm</button>
+            </ul>
+          </form>
+        
+        
+       
+    </div>
+    <!-- Invoice Header -->
+    <div class="flex justify-between items-center border-b pb-4 mt-4 ">
+        <div>
+            <h1 class="text-xl font-bold">Invoice</h1>
+           <!-- <p class="text-gray-600">Date: March 15, 2024</p> -->
+            <p>{{ invoiceDetail?.invoice }} </p>
+            
+        </div>
+        <div>
+            <!-- Company Logo -->
+            <img src="assets/05.jpg" alt="Company Logo" class="w-20">
+        </div>
+    </div>
+
+    <!-- Client Information -->
+    <div class="mt-4">
+        <h2 class="text-lg font-semibold">Bill To:</h2>
+        <p class="mt-2">{{ getClient(invoiceDetail) }}</p>
+        <p>{{ getAttention(invoiceDetail) }}</p>
+        <p></p>
+    </div>
+
+    <!-- Invoice Details -->
+    <div class="mt-8">
+        <table class="w-full">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th class="text-left">Product</th>
+                    <th class="text-right">Quantity</th>
+                    <th class="text-right">UOM</th>
+                    <th class="text-right">Price</th>
+                    <th class="text-right">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Example Row -->
+                <tr  *ngFor="let product of getProduct(invoiceDetail?.purchase_id?.po_id?.quotation_id?.products); let i = index  ">
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ product.product }}</td>
+                    <td class="text-right">{{ product.qty }}</td>
+                    <td class="text-right">{{ product.uom }}</td>
+                    <td class="text-right">{{ product.unit }}</td>
+                    <td class="text-right">{{ product.total }}  </td>
+                </tr>
+                <!-- Add more rows as needed -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Invoice Total -->
+    <div class="mt-8">
+        <p class="text-right font-semibold">Total Amount: {{ getTotalamount(invoiceDetail) }}</p>
+    </div>
+
+    <!-- Invoice Footer -->
+    
+    <div class="mt-8 border-t pt-4 ">
+        <p>Make all payable to: 05shebz Limited LLC </p>
+        <p class="text-gray-600">Thank you for your business!</p>
+    </div>
+
+</main>
+
+

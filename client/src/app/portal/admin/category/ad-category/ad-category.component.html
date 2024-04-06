@@ -11,17 +11,24 @@
   <button class="btn btn-outline mt-5" (click)="showModal()">Add</button>
   <dialog #my_modal_1 class="modal">
     <div class="modal-box">
-      <form (submit)="onSubmit()">
-        <div class="form-group">
-          <input type="text" name="category" id="category" [(ngModel)]="category" placeholder="Category" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
-        </div>
 
-        
+
+      <form (ngSubmit)="onSubmit()"  #userForm="ngForm">
+        <div class="form-group">
+          <input type="text" name="category" [(ngModel)]="category" required placeholder="Category" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
+          <div *ngIf="userForm.controls['category']?.invalid && (userForm.controls['category']?.dirty || userForm.controls['category']?.touched)">
+            <small class="text-red-500">Enter the Category</small>
+          </div>
+        </div>
+      
         <div class="modal-action">
-          <button type="submit" class="btn">Submit</button>
+          <button type="submit" [disabled]="!userForm.form.valid" class="btn">Submit</button>
           <button type="button" class="btn" (click)="modal1.nativeElement.close()">Close</button>
         </div>
       </form>
+
+
+      
     </div>
   </dialog>
 
@@ -43,14 +50,14 @@
       </thead>
       <tbody>
         <!-- row 1 -->
-        <tr *ngFor="let category of filteredRecords | async; let i = index">
+        <tr *ngFor="let category of getCurrentPageRecords() | async; let i = index">
           <th>
             {{ i + 1 }}
           </th>
           <td>
             <div class="flex items-center gap-3">
               <div>
-                <div class="font-bold">{{ category._id }}</div>
+                
                 <div class="font-bold">{{category.category}}</div>
                 
               </div>
@@ -78,7 +85,7 @@
 
           </th>
           <th>
-            <button class="btn btn-outline btn-error btn-xs" (click)="deleteCategory( category )">delete</button>
+            <button class="btn btn-outline btn-error btn-xs"  (click)="confirmDelete(category)" >delete</button>
           </th>
          
         </tr>
@@ -99,21 +106,11 @@
     </table>
   </div>
 
-  <div class="join mt-5">
-    <button class="join-item btn">1</button>
-    <button class="join-item btn btn-active">2</button>
-    <button class="join-item btn">3</button>
-    <button class="join-item btn">4</button>
+  <div class="pagination">
+    <button class="btn" (click)="previousPage()" [disabled]="currentPage === 1">Previous</button>
+    <span>Page {{ currentPage }}</span>
+    <button class="btn" (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
   </div>
-  
-<!--
-  <nav aria-label="Page navigation">
-    <ul class="pagination justify-content-end">
-      <li class="page-item" *ngFor="let page of pages$ | async">
-        <a class="page-link" href="#" (click)="changePage(page)">{{ page }}</a>
-      </li>
-    </ul>
-  </nav>
--->
+
 
 </main>

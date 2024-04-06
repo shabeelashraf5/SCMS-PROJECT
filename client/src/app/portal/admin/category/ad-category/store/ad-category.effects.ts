@@ -75,44 +75,4 @@ updateCategory$ = createEffect(() =>
 
   
       }
-  /*
-  constructor(private actions$: Actions, private adCategoryService: AdCategoryService) {}
-
-  loadCategories$ = createEffect(() =>
-  this.actions$.pipe(
-    ofType(AdCategoryActions.loadCategories),
-    switchMap(() =>
-      this.adCategoryService.getCategories().pipe(
-        map((categories) => AdCategoryActions.loadCategoriesSuccess({ categories })),
-        catchError((error) => of(AdCategoryActions.loadCategoriesFailure({ error })))
-      )
-    )
-  )
-);
-
-createCategory$ = createEffect(() =>
-  this.actions$.pipe(
-    ofType(AdCategoryActions.createCategory),
-    switchMap(({ category }) =>
-      this.adCategoryService.createCategory(category).pipe(
-        map((createdCategory) => AdCategoryActions.createCategorySuccess({ category: createdCategory })),
-        catchError((error) => of(AdCategoryActions.createCategoryFailure({ error })))
-      )
-    )
-  )
-);
-
-
-deleteCategory$ = createEffect(() =>
-this.actions$.pipe(
-  ofType(AdCategoryActions.deleteCategory),
-  switchMap(({ categoryId }) =>
-    this.adCategoryService.deleteCategory(categoryId).pipe(
-      map(() => AdCategoryActions.deleteCategorySuccess({ categoryId })),
-      catchError((error) => of(AdCategoryActions.deleteCategoryFailure({ error })))
-    )
-  )
-)
-);
-}
-*/
+ 

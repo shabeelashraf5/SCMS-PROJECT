@@ -4,6 +4,7 @@ import { of } from 'rxjs';
 import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
 import { AdEmployeeService } from '../ad-employee.service';
 import * as AdEmployeeActions from '../store/ad-employee.action'
+import { ResetPasswordService } from '../../../../employee/reset-password/reset-password.service';
 
 import { Employee } from '../../../../../model/ad-employee.model';
 
@@ -23,13 +24,13 @@ export class AdEmployeeEffects {
     )
   ));
 
-  
+  /*
   addEmployee$ = createEffect(() =>
   this.actions$.pipe(
     ofType(AdEmployeeActions.addEmployee),
-    switchMap(({ fname, lname, email, password, area, position, department}) => {
+    switchMap(({ fname, lname, email, password, area, position, department, image}) => {
       console.log('Creating user...');
-      const employees: Partial<Employee> = { fname, lname, email, password, area, position, department }; // Use Partial<User> here
+      const employees: Partial<Employee> = { fname, lname, email, password, area, position, department, image }; // Use Partial<User> here
       return this.adEmployeeService.addEmployee(employees as Employee).pipe( // Cast it back to User
         map(() => {
           console.log('User created successfully');
@@ -39,8 +40,27 @@ export class AdEmployeeEffects {
       );
     })
   )
+); */
+
+
+addEmployee$ = createEffect(() =>
+this.actions$.pipe(
+  ofType(AdEmployeeActions.addEmployee),
+  switchMap(({ formData}) => {
+    console.log('Creating user...');
+   
+    return this.adEmployeeService.addEmployee(formData).pipe( // Cast it back to User
+      map(() => {
+        console.log('User created successfully');
+        return AdEmployeeActions.loadEmployee(); // Trigger a load after create
+      }),
+      catchError((error) => of(AdEmployeeActions.loadEmployeeFailure({ error })))
+    );
+  })
+)
 );
 
+/*
 updateEmployee$ = createEffect(() =>
 this.actions$.pipe(
   ofType(AdEmployeeActions.updateEmployee),
@@ -55,7 +75,24 @@ this.actions$.pipe(
     );
   })
 )
+);*/
+
+updateEmployee$ = createEffect(() =>
+  this.actions$.pipe(
+    ofType(AdEmployeeActions.updateEmployee),
+    switchMap(({ _id, formData }) => {
+      console.log('Updating employee...');
+      return this.adEmployeeService.updateEmployee(_id, formData).pipe(
+        map(() => {
+          console.log('Employee updated successfully');
+          return AdEmployeeActions.loadEmployee(); // Trigger a load after update
+        }),
+        catchError((error) => of(AdEmployeeActions.updateEmployeeFailure({ error })))
+      );
+    })
+  )
 );
+
 
 
 deleteEmployee$ = createEffect(() => this.actions$.pipe(
@@ -71,7 +108,8 @@ deleteEmployee$ = createEffect(() => this.actions$.pipe(
 
 constructor(
     private actions$: Actions,
-    private adEmployeeService: AdEmployeeService
+    private adEmployeeService: AdEmployeeService,
+    private resetPasswordService: ResetPasswordService
   ) {}
 }
 

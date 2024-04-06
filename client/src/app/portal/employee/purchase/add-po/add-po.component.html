@@ -1,0 +1,148 @@
+<app-employee-nb></app-employee-nb> 
+<app-employee-sb></app-employee-sb>
+
+<main class="w-full sm:w-3/4 p-4 ml-0 sm:ml-80 ">
+
+<form (submit)="submitPo()" >
+    <div class="grid grid-cols-1 gap-1">
+        <div>
+
+            <div class="flex justify-end">
+                <button type="submit" class="btn btn-outline" >
+                    Submit
+                </button>
+            </div>
+
+            <div class="card lg:card-side bg-base-300 shadow-xl mt-4" >
+                <div class="card-body" >
+                    <h2 class="card-title">Purchase Order No: {{ poDetail?.po }}   </h2>
+
+                    <ul>
+                        <li>
+                            <input type="text" name="to" placeholder="To:" required  [(ngModel)]="to" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800" >
+                        </li>
+                        <li>
+                            <input type="hidden" name="salesRFQ_id"  [value]="po_id">
+                        </li>
+                        <li class="mt-2">
+                            <input type="text" name="attention" placeholder="Kind Attention:" required [(ngModel)]="attention" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
+                        </li>
+                        <li class="mt-2">
+                            <input type="text" name="email" placeholder="Email:" required [(ngModel)]="email"  class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
+                        </li>
+                        <li class="mt-2">
+                            <input type="text" name="phone" placeholder="Phone no:" required [(ngModel)]="phone"  class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
+                        </li>
+                        <div class="divider"></div>
+                        <li>
+                            <input type="text" name="supplierrfq" placeholder="Supplier Rfq No:" required [(ngModel)]="supplierrfq"  class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
+                        </li>
+                    </ul>
+
+
+
+                </div>
+            </div>
+
+            <div class="mt-2">
+    
+    
+                <div class="card lg:card-side bg-base-300 shadow-xl">
+                    <div class="card-body">
+                        <div class="overflow-x-auto">
+                            <table class="table">
+                               
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">Product Description</th>
+                                        <th class="text-center">QTY</th>
+                                        <th class="text-center">UOM</th>
+                                        <th class="text-center">Unit Price</th>
+                                       
+                                        <th class="text-center">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    
+                                   
+                                    <tr *ngFor="let item of items; let i = index">
+                                        <td>
+                                            <input type="text" [name]="'product_' + i" required [(ngModel)]="item.product" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800"  >
+                                        </td>
+                                        <td>
+                                            <input type="number" [name]="'qty_' + i" required [(ngModel)]="item.qty" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800"  (input)="updateTotal(item)">
+                                        </td>
+                                        <td>
+                                            <input type="text" [name]="'uom_' + i" required [(ngModel)]="item.uom" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
+                                        </td>
+                                        <td>
+                                            <input type="number" [name]="'unit_' + i" required [(ngModel)]="item.unit" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800" (ngModelChange)="updateTotal(item)">
+                                        </td>
+                                        
+                                        <td>
+                                            <input type="number" [name]="'total_' + i"  required [(ngModel)]="item.total" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800" readonly>
+                                        </td>
+                                    </tr>
+                                   
+                                    <tr>
+                                        <td colspan="4" class="text-right">Total Amount:</td>
+                                        <td>
+                                           
+                                            <input type="text" [value]="calculateTotal().toFixed(2)" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800" readonly>
+                                        </td>
+                                    </tr>
+
+                                    
+                                    
+                                </tbody>
+                            </table>
+                            <button type="button"  (click)="addItem()">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                </svg>
+                            </button>
+                            
+                        </div>
+                    </div>
+                </div>
+    
+            </div>
+
+
+            <div class="mt-2">
+
+
+                <div class="card lg:card-side bg-base-300 shadow-xl">
+                    <div class="card-body">
+    
+                        <input type="text" name="subject" required placeholder="Subject:" [(ngModel)]="subject"  class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800" [value]="quoDetails?.spo">
+    
+                        <div class="divider"></div>
+    
+                        <p>Terms and Conditions</p>
+                        <ul>
+                            <li>
+                                <input type="text" name="basis" required placeholder="Price Basis:" [(ngModel)]="basis"  class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
+                            </li>
+                            <li class="mt-2">
+                                <input type="text" name="payment" required placeholder="Payment Terms:" [(ngModel)]="payment"  class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
+                            </li>
+                            <li class="mt-2">
+                                <input type="text" name="validity" required placeholder="Validity:" [(ngModel)]="validity"  class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
+                            </li>
+                            <li class="mt-2">
+                                <input type="text" name="availability" required placeholder="Availability:" [(ngModel)]="availability"  class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+    
+            </div>
+
+
+
+        </div>
+    </div>
+</form>
+
+</main>

@@ -1,7 +1,7 @@
 import { createReducer, on } from '@ngrx/store';
 import { initialAdCategoryState, AdCategoryState } from './ad-category.state';
 import * as AdCategoryActions from '../store/ad-category.action';
-import { Category } from '../../../../../model/ad-category.model';
+
 
 export const adCategoryReducer = createReducer(
 
@@ -52,21 +52,9 @@ export const adCategoryReducer = createReducer(
   }))
 
   
-
-  /*
-  on(AdCategoryActions.loadCategoriesSuccess, (state, { categories }) => [...categories]),
-  on(AdCategoryActions.createCategorySuccess, (state, { category }) => [...state, category]),
-  on(AdCategoryActions.deleteCategorySuccess, (state, { categoryId }) => state.filter((category) => category._id !== categoryId))
-*/
-
-
-
 );
 
 export function reducer(state: AdCategoryState | undefined, action: any) {
   return adCategoryReducer(state, action); 
  
- 
- /* export function reducer(state: Category[] | undefined, action: Action) {
-    return adCategoryReducer(state, action); */
 }

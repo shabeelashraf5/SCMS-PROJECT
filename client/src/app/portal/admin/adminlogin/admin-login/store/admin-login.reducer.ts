@@ -13,6 +13,22 @@ export const adminLoginReducer = createReducer(
   })),
 
   
+  on(AdminActions.storeToken, (state, { token }) => {
+    console.log('Current state:', state);
+    console.log('New token:', token);
+    return {
+      ...state,
+      token,
+    };
+  }), 
+
+  on(AdminActions.logoutAdmin, (state) => ({
+    ...state,
+    loggedIn: false,
+    admin: null,
+    token: null,
+  })),
+  
   on(AdminActions.loginAdminFailure, (state, { error }) => ({
     ...state,
     loggedIn: false,

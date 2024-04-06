@@ -1,0 +1,89 @@
+<app-employee-nb></app-employee-nb> 
+<app-employee-sb></app-employee-sb>
+
+
+<main class="w-full sm:w-3/4 p-4 ml-0 sm:ml-80 ">
+
+
+    <p class="mt-5 text-lg font-bold">Create RFQ</p>
+
+      <div class="divider"></div> 
+
+    
+      <button class="btn btn-outline mt-10" (click)="createRFQ()">Create RFQ</button>
+      
+    
+    
+      <div class="overflow-x-auto">
+        <table class="table">
+          <!-- head -->
+          <thead>
+            <tr >
+              <th>
+                
+              </th>
+              <th>Your Ref no</th>
+              <th>Responsible</th>
+              <th>Created At</th>
+              <th>Status</th>
+              
+              <th></th>
+          
+              
+            </tr>
+          </thead>
+          <tbody>
+            <!-- row 1 -->
+            <tr *ngFor="let detail of rfqDetails">
+              <th>
+                
+              </th>
+              <td>
+                <div class="flex items-center gap-3">
+                  <div>
+                 
+                    <div class="font-bold">
+                      
+                     <button (click)="getQuotationDetail(detail._id)" > {{detail.srfq}}</button>
+                    </div>
+                    
+                  </div>
+                </div>
+              </td>
+              <td>
+               {{ getResponsible(detail) }}
+                <br/>
+              </td>
+              <td>{{detail.createdAt | date: 'dd-MM-yyyy' }}</td>
+              <td>{{detail.status}}   </td>
+           
+    
+              
+             
+             
+            </tr>
+           
+            
+          </tbody>
+          <!-- foot -->
+          <tfoot>
+            <tr>
+              <th></th>
+              <th>Your Ref no</th>
+              <th>Responsible</th>
+              <th>Created At</th>
+              <th>Status</th>
+             
+              <th></th>
+             
+            </tr>
+          </tfoot>
+          
+        </table>
+      </div>
+    
+      
+
+
+ 
+</main>

@@ -7,6 +7,7 @@ export interface Employee {
   position: string;
   department: string;
   area: string;
-  //image: any;
+  image: string;
+  token?: string;
   
   }

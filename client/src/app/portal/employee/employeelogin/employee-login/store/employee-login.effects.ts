@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
-import { catchError, map, mergeMap, switchMap, } from 'rxjs/operators';
+import { catchError, map, mergeMap, switchMap, concatMap } from 'rxjs/operators';
 import { EmployeeLoginService } from '../employee-login.service';
 import * as EmployeeActions from '../store/employee-login.action'
 import { Router } from '@angular/router';
@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 @Injectable()
 export class EmployeeLoginEffects {
 
-  
+  /*
     loginEmployee$ = createEffect(() =>
       this.actions$.pipe(
         ofType(EmployeeActions.loginEmployee),
@@ -23,7 +23,25 @@ export class EmployeeLoginEffects {
           )
         )
       )
-    );
+    );*/
+
+    loginEmployee$ = createEffect(() =>
+  this.actions$.pipe(
+    ofType(EmployeeActions.loginEmployee),
+    concatMap(({ email, password }) =>
+      this.authService.login(email, password).pipe(
+        map(({ employee, token }) => {
+          this.router.navigate(['/dashboard']);
+          return EmployeeActions.loginEmployeeSuccess({ employee, token });
+        }),
+        catchError((error) => {
+          console.error('Login error:', error);
+          return of(EmployeeActions.loginEmployeeFailure({ error: error.message }));
+        })
+      )
+    )
+  )
+);
 
     
 

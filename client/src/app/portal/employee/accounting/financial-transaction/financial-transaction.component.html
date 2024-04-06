@@ -1,0 +1,110 @@
+<app-employee-nb></app-employee-nb> 
+<app-employee-sb></app-employee-sb>
+
+<main class="w-full sm:w-3/4 p-4 ml-0 sm:ml-80 ">
+
+
+
+    <p class="mt-5 text-lg font-bold">Financial Transaction</p>
+
+      <div class="divider"></div> 
+
+  
+
+    
+      <!-- Open the modal using ID.showModal() method -->
+      
+      
+    
+    
+      <div class="overflow-x-auto" *ngIf="!errorMessage">
+        <table class="table">
+          <!-- head -->
+          <thead>
+            <tr >
+              <th>
+                
+              </th>
+              <th>FT ID</th>
+              <th>Responsible</th>
+              <th>Your Ref no</th>
+              <th>Your PO no</th>
+              <th>Supplier Name</th>
+              <th>Total Amount</th>
+              <th>Status</th>
+            
+          
+              
+              <th></th>
+          
+              
+            </tr>
+          </thead>
+          <tbody>
+            <!-- row 1 -->
+            <tr  *ngFor="let detail of invDetails" >
+              <th>
+                
+              </th>
+              <td>
+                <div class="flex items-center gap-3">
+                  <div>
+                 
+                    <div class="font-bold">
+                      
+                     <button (click)="getTransDetail(detail._id)" > {{detail.transaction}} </button>
+                    </div>
+                    
+                  </div>
+                </div>
+              </td>
+              <td>{{getResponsible(detail)}}</td>
+              <td>
+                {{ getSRFQ(detail) }}
+                <br/>
+              </td>
+              <td> {{ getPO(detail) }}</td> 
+              <td>  {{ getSupplier(detail)}}  </td>
+              <td>{{ getAmount(detail.purchase_id) }}  </td>
+              <td>{{detail.payment}}</td>
+            
+              
+            </tr>
+           
+            
+          </tbody>
+          <!-- foot -->
+          <tfoot>
+            <tr>
+              <th></th>
+              <th>FT ID</th>
+              <th>Responsible</th>
+              <th>Your Ref no</th>
+              <th>Your PO no</th>
+              <th>Supplier Name</th>
+              <th>Total Amount</th>
+              <th>Status</th>
+              
+       
+             
+            </tr>
+          </tfoot>
+          
+        </table>
+      </div>
+    
+  
+
+      <div class="error-message mt-5" *ngIf="errorMessage">
+        <div role="alert" class="alert alert-warning">
+          <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+          <span> {{ errorMessage }}</span>
+        </div>
+      </div>
+      
+
+
+
+
+
+</main>

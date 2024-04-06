@@ -4,36 +4,60 @@
 <main class="w-full sm:w-3/4 p-4 ml-0 sm:ml-80 ">
   <!-- Your main content goes here -->
   <div class="form-control">
-    <input type="text" placeholder="Search" class="input input-bordered w-24 md:w-auto" />
+    <input type="text" placeholder="Search" [(ngModel)]="searchTerm" class="input input-bordered w-24 md:w-auto" />
   </div>
 
   <!-- Open the modal using ID.showModal() method -->
-  <button class="btn btn-outline mt-5" onclick="my_modal_1.showModal()">Add</button>
-  <dialog id="my_modal_1" class="modal">
+  <button class="btn btn-outline mt-5" (click)="showModal()">Add</button>
+  <dialog #my_modal_1 class="modal">
     <div class="modal-box">
-      <form method="dialog">
+      <form #productForm="ngForm" (ngSubmit)="onSubmit()">
         <div class="form-group">
-          <input type="text" name="product" id="product" placeholder="Product" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
+          <input type="text" name="product" id="product" [(ngModel)]="product" placeholder="Product" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800" required>
+          <div *ngIf="productForm.controls['product'].invalid && (productForm.controls['product'].dirty || productForm.controls['product'].touched)">
+            <small class="text-red-500">Enter the Product</small>
+          </div>
         </div>
+      
+        <select class="select select-bordered w-full max-w-xs mt-5" [(ngModel)]="category_id" name="category_id" required>
+          <option disabled [ngValue]="null">Select Category</option>
+          <option *ngFor="let category of categories$ | async" [value]="category._id">{{ category.category }}</option>
+        </select>
+        <div *ngIf="productForm.controls['category_id'].invalid && (productForm.controls['category_id'].dirty || productForm.controls['category_id'].touched)">
+          <small class="text-red-500">Select a Category</small>
+        </div>
+      
         <div class="form-group mt-5">
-          <input type="text" name="category" id="category" placeholder="Category" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
+          <input type="text" name="description" id="description" [(ngModel)]="description" placeholder="Description" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800" required>
+          <div *ngIf="productForm.controls['description'].invalid && (productForm.controls['description'].dirty || productForm.controls['description'].touched)">
+            <small class="text-red-500">Enter the Description</small>
+          </div>
         </div>
+      
         <div class="form-group mt-5">
-          <input type="text" name="description" id="description" placeholder="Description" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
+          <input type="text" name="uom" id="uom" placeholder="UOM" [(ngModel)]="uom" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800" required>
+          <div *ngIf="productForm.controls['uom'].invalid && (productForm.controls['uom'].dirty || productForm.controls['uom'].touched)">
+            <small class="text-red-500">Enter the UOM</small>
+          </div>
         </div>
+      
         <div class="form-group mt-5">
-          <input type="text" name="uom" id="uom" placeholder="UOM" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
+          <input type="text" name="price" id="price" [(ngModel)]="price" placeholder="Price" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800" required>
+          <div *ngIf="productForm.controls['price'].invalid && (productForm.controls['price'].dirty || productForm.controls['price'].touched)">
+            <small class="text-red-500">Enter the Price</small>
+          </div>
         </div>
+      
         <div class="form-group mt-5">
-          <input type="text" name="price" id="price" placeholder="Price" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
+          <input type="text" name="availability" id="availability" [(ngModel)]="availability" placeholder="Availability" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800" required>
+          <div *ngIf="productForm.controls['availability'].invalid && (productForm.controls['availability'].dirty || productForm.controls['availability'].touched)">
+            <small class="text-red-500">Enter the Availability</small>
+          </div>
         </div>
-        <div class="form-group mt-5">
-          <input type="text" name="availability" id="availability" placeholder="Availability" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
-        </div>
-       
+      
         <div class="modal-action">
-          <button type="submit" class="btn">Submit</button>
-          <button type="button" class="btn" onclick="my_modal_1.close()">Close</button>
+          <button type="submit" [disabled]="!productForm.form.valid" class="btn">Submit</button>
+          <button type="button" class="btn" (click)="modal.nativeElement.close()">Close</button>
         </div>
       </form>
     </div>
@@ -64,32 +88,70 @@
       </thead>
       <tbody>
         <!-- row 1 -->
-        <tr>
+        <tr *ngFor="let product of getCurrentPageRecords() | async; let i = index">
           <th>
             1
           </th>
           <td>
             <div class="flex items-center gap-3">
               <div>
-                <div class="font-bold">Hart Hagerty</div>
+                <div class="font-bold">{{ product.product }}</div>
                 
               </div>
             </div>
           </td>
           <td>
-            Zemlak, Daniel and Leannon
+          
+              
+            {{ getCategory(product.category_id) }}
+
             <br/>
           </td>
-          <td>Purple</td>
-          <td>Purple</td>
-          <td>Purple</td>
-          <td>Purple</td>
+          <td>{{ product.description }}</td>
+          <td>{{ product.uom }}</td>
+          <td>{{ product.price }}</td>
+          <td>{{ product.availability }}</td>
           
           <th>
-            <button class="btn btn-outline btn-success btn-xs" onclick="my_modal_1.showModal()">Update</button>
+            <button class="btn btn-outline btn-success btn-xs" (click)="editProducts(product)">Update</button>
+            <dialog #my_modal_2  class="modal">
+              <div class="modal-box">
+                <form (submit)="editProduct(productToEdit)" >
+                  <div class="form-group">
+                    <input type="text" name="product" id="product"  [(ngModel)]="productToEdit.product" placeholder="Product"  class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
+                  </div>
+
+                  <select name="category" [(ngModel)]="productToEdit.category_id" class="select select-bordered w-full max-w-xs mt-5">
+                    <option disabled selected>Select Category</option>
+                    <option *ngFor="let category of categories$ | async" [value]="category._id">{{ category.category }}</option>
+                  </select>
+                  
+          
+                  <div class="form-group mt-5">
+                    <input type="text" name="description" id="description"  [(ngModel)]="productToEdit.description" placeholder="Description" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
+                  </div>
+                  <div class="form-group mt-5">
+                    <input type="text" name="uom" id="uom" placeholder="UOM"  [(ngModel)]="productToEdit.uom" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
+                  </div>
+                  <div class="form-group mt-5">
+                    <input type="text" name="price" id="price"  [(ngModel)]="productToEdit.price" placeholder="Price" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
+                  </div>
+                  <div class="form-group mt-5">
+                    <input type="text" name="availability"  id="availability"  [(ngModel)]="productToEdit.availability" placeholder="Availability" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
+                  </div>
+                 
+                  <div class="modal-action">
+                    <button type="submit" class="btn">Submit</button>
+                    <button type="button" class="btn" (click)="modal2.nativeElement.close()">Close</button>
+                  </div>
+                </form>
+              </div>
+            </dialog>
+            
+
           </th>
           <th>
-            <button class="btn btn-outline btn-error btn-xs" >delete</button>
+            <button class="btn btn-outline btn-error btn-xs" (click)="confirmDelete(product)" >delete</button>
           </th>
          
         </tr>
@@ -114,11 +176,10 @@
     </table>
   </div>
 
-  <div class="join mt-5">
-    <button class="join-item btn">1</button>
-    <button class="join-item btn btn-active">2</button>
-    <button class="join-item btn">3</button>
-    <button class="join-item btn">4</button>
+  <div class="pagination">
+    <button class="btn" (click)="previousPage()" [disabled]="currentPage === 1">Previous</button>
+    <span>Page {{ currentPage }}</span>
+    <button class="btn" (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
   </div>
 
 </main>

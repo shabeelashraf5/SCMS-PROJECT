@@ -13,8 +13,9 @@ router.put('/admin-user/update/:id' , adminController.updateAdmin)
 router.delete('/admin-user/delete/:id' , adminController.deleteAdmin)
 
 router.get('/employee', adminController.loadEmployee)
-router.post('/employee/add', adminController.addEmployee);
-router.put('/employee/update/:id' , adminController.updateEmployee)
+//router.post('/employee/add', adminController.addEmployee);
+router.post('/employee/add', upload.single('image'),  adminController.addEmployee);
+router.put('/employee/update/:id' , upload.single('image'), adminController.updateEmployee)
 router.delete('/employee/delete/:id' , adminController.deleteEmployee)
 
 
@@ -25,6 +26,10 @@ router.delete('/category/delete/:id' , adminController.deleteCategory)
 
 router.get('/product', adminController.loadProduct)
 router.post('/product/add', adminController.addProduct);
+router.put('/product/update/:id' , adminController.updateProduct)
+router.delete('/product/delete/:id' , adminController.deleteProduct)
+
+router.get('/dashboard',  adminController.loadDashboard)
 
 
 module.exports = router;

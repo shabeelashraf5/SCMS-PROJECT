@@ -1,0 +1,151 @@
+<app-employee-nb></app-employee-nb> 
+<app-employee-sb></app-employee-sb>
+
+
+<main class="w-full sm:w-3/4 p-4 ml-0 sm:ml-80 ">
+
+    <form >
+        <div class="grid grid-cols-1 gap-1">
+            <div>
+    
+                <div class="flex justify-end">
+                    <button type="submit" class="btn btn-outline" >
+                        Submit
+                    </button>
+
+
+                    <form >
+                        <ul>
+                          <li>
+                           
+                          </li>
+                          <button class="btn btn-outline btn-error btn-xs"  >Confirm</button>
+                        </ul>
+                      </form>
+                   
+
+                   
+                </div>
+
+    
+                <div class="card lg:card-side bg-base-300 shadow-xl mt-4">
+                    <div class="card-body">
+                        <h2 class="card-title">  </h2>
+    
+                        <ul>
+                           
+                            <li>
+                                <input type="hidden" name="quotation_id"  [value]="quotation_id">
+                            </li>
+                           
+                        
+                            
+                            <div class="divider"></div>
+                            
+                        </ul>
+                        <ul>
+                            <li>
+                                <input type="text" name="clientPo" placeholder="Client PO no:" required [(ngModel)]="clientPo" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
+                            </li>
+
+                            <li class="mt-2">
+                                <input type="text" name="date" placeholder="Date:" required [(ngModel)]="date" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
+                            </li>
+
+
+                        </ul>
+
+
+
+                    </div>
+                </div>
+
+
+
+
+                <div class="mt-2">
+    
+    
+                    <div class="card lg:card-side bg-base-300 shadow-xl">
+                        <div class="card-body">
+                            <div class="overflow-x-auto">
+                                <table class="table">
+                                   
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">Product Description</th>
+                                            <th class="text-center">QTY</th>
+                                            <th class="text-center">UOM</th>
+                                            <th class="text-center">Unit Price</th>
+                                           
+                                            <th class="text-center">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr >
+                                            
+                                            
+                                           
+                                           
+                                            
+                                            
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4" class="text-right">Uplift%:</td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4" class="text-right">Total Amount:</td>
+                                            
+                                        </tr>
+                                        
+                                    </tbody>
+                                </table>
+                                
+                            </div>
+                        </div>
+                    </div>
+        
+                </div>
+
+
+
+
+                <div class="mt-2">
+    
+    
+                    <div class="card lg:card-side bg-base-300 shadow-xl">
+                        <div class="card-body">
+        
+                            
+        
+                            <div class="divider"></div>
+        
+                            <p>Terms and Conditions</p>
+                            <ul>
+                                
+                               
+                               
+                                
+                            </ul>
+                        </div>
+                    </div>
+        
+                </div>
+
+
+
+
+
+
+
+
+
+
+            </div>
+        </div>
+    </form>
+
+
+
+    </main>

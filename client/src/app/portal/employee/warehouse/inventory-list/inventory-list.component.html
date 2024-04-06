@@ -1,0 +1,83 @@
+<app-employee-nb></app-employee-nb> 
+<app-employee-sb></app-employee-sb>
+
+
+<main class="w-full sm:w-3/4 p-4 ml-0 sm:ml-80 ">
+
+
+    <p class="mt-5 text-lg font-bold">Inventory List</p>
+
+      <div class="divider"></div> 
+
+
+      <div class="overflow-x-auto">
+        <table class="table">
+          <!-- head -->
+          <thead>
+            <tr>
+              <th>
+                
+              </th>
+              <th>Product</th>
+              <th>Category</th>
+              <th>Description</th>
+              <th>UOM</th>
+              <th>Price</th>
+              <th>Availability</th>
+              <th></th>
+              <th></th>
+              
+            </tr>
+          </thead>
+          <tbody>
+            <!-- row 1 -->
+            <tr *ngFor="let product of product$ | async; let i = index">
+              <th>
+                {{ i + 1 }}
+              </th>
+              <td>
+                <div class="flex items-center gap-3">
+                  <div>
+                    <div class="font-bold">{{ product.product }}</div>
+                    
+                  </div>
+                </div>
+              </td>
+              <td>
+              
+                  
+                {{ getCategory(product.category_id) }}
+    
+                <br/>
+              </td>
+              <td>{{ product.description }}</td>
+              <td>{{ product.uom }}</td>
+              <td>{{ product.price }}</td>
+              <td>{{ product.availability }}</td>
+              
+             
+             
+            </tr>
+           
+            
+          </tbody>
+          <!-- foot -->
+          <tfoot>
+            <tr>
+              <th></th>
+              <th>Product</th>
+              <th>Category</th>
+              <th>Description</th>
+              <th>UOM</th>
+              <th>Price</th>
+              <th>Availability</th>
+              <th></th>
+              <th></th>
+            </tr>
+          </tfoot>
+          
+        </table>
+      </div>
+
+
+      </main>
