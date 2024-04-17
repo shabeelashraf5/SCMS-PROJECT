@@ -4,7 +4,7 @@ let express = require('express');
 const invoicing = require('../model/invoiceDS')
 const collectionshipment = require('../model/shipmentDB')
 const generateCustomShipment = require('../uuid/idshipment')
-const stripe = require('stripe')('sk_test_51OvQEMSIJEtGIYvEykZlGOg6rv3Gsx1KknXpggAUzA5VjnHa1EO8SqSTdBMIJujfIpZr24r2k0aGFj6Smsb5YNdB00t1KOWIWL');
+const stripe = require('stripe')(process.env.PRIV_KEY);
 const stripeService = require('../payment/stripe.service')
 
 /*
@@ -323,9 +323,9 @@ const paymentSup = async function (req, res) {
             }],
             mode: 'payment',
            // success_url: "http://localhost:4200/success?session_id={CHECKOUT_SESSION_ID}",
-            success_url: "http://localhost:4200/accounting/financial-transaction?session_id={CHECKOUT_SESSION_ID}",
+            success_url: "http://localhost:4200/portal/accounting/financial-transaction?session_id={CHECKOUT_SESSION_ID}",
             //success_url: "http://localhost:4200/accounting/financial-transaction?session_id={CHECKOUT_SESSION_ID}&redirect_to=success",
-            cancel_url: "http://localhost:4200/accounting/financial-transaction",
+            cancel_url: "http://localhost:4200/portal/accounting/financial-transaction",
             customer_email: 'test@example.com', // Dummy customer email
             billing_address_collection: 'required',
         });

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ShipmentHistoryService } from './shipment-history.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-shipment-history',
@@ -11,7 +12,7 @@ export class ShipmentHistoryComponent implements OnInit {
 
   shipmentDetails: any
 
-  constructor(private shipmentService: ShipmentHistoryService ) { }
+  constructor(private shipmentService: ShipmentHistoryService, private snackBar: MatSnackBar, ) { }
 
   ngOnInit() {
     this.getShipDetails(); 
@@ -36,7 +37,7 @@ export class ShipmentHistoryComponent implements OnInit {
       (response) => {
         // Handle success
         console.log('Shipment status updated successfully');
-        // Refresh the shipment details after update
+        this.openSnackBar('Shipment delivered successfully');
         this.getShipDetails();
       },
       (error) => {
@@ -83,6 +84,15 @@ export class ShipmentHistoryComponent implements OnInit {
       return detail.employee_id.fname + ' ' + detail.employee_id.lname ; 
     }
     return '';
+  }
+
+
+  openSnackBar(message: string) {
+    this.snackBar.open(message, 'Close', {
+      duration: 4000,
+      verticalPosition: 'top', // Set position to top
+      horizontalPosition: 'center', // Set position to center horizontally
+    });
   }
 
 }

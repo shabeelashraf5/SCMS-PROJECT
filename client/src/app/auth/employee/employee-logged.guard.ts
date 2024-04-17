@@ -21,6 +21,5 @@ export class CanEmployeeLogged implements CanActivate {
       return false;
     }
   }
-  
-  
+   
 }

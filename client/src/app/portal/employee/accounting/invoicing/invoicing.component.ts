@@ -30,7 +30,7 @@ export class InvoicingComponent {
     this.invoiceService.invSingle(_id).subscribe(
       (data) => {
         // Navigate to AddQuotationComponent with the ID parameter
-        this.router.navigate(['/accounting/invoicing', _id]);
+        this.router.navigate(['/portal/accounting/invoicing', _id]);
       },
       (error) => {
         console.error('Error fetching quotation detail:', error);

@@ -2,15 +2,17 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Employee } from '../../../../model/ad-employee.model';
-import { tap  } from 'rxjs/operators';
+import { tap , map } from 'rxjs/operators';
+import { environment } from '../../../../../environment/environment';
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class EmployeeLoginService {
 
-  private apiUrl = 'http://localhost:3000/api';
-  private tokenKey = 'jwt_token';
+  private apiUrl = environment.apiUrl + '/api/portal'
+  private tokenKey = 'employee_jwt_token';
   private loggedInEmployee: Employee | null = null;
   private loggedInEmployeeKey = 'logged_in_employee'
   
@@ -78,6 +80,23 @@ getToken(): string | null {
 getLoggedInEmployeeId(): string | null {
   return this.loggedInEmployee ? this.loggedInEmployee._id : null;
 }
+
+
+refreshToken(): Observable<string> {
+  // Implement your logic to refresh the token here, for example:
+  const refreshToken = 'your_refresh_token';
+
+  // You can make an HTTP request to refresh the token
+  return this.http.post<{ token: string }>(`${this.apiUrl}/refresh-token`, { refreshToken })
+    .pipe(
+      map(response => {
+        const token = response.token;
+        console.log('Refreshed Token:', token); // Log the token to the console
+        return token; // Return the token
+      })
+    );
+}
+
 
 
 

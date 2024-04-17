@@ -1,6 +1,7 @@
 let express = require('express');
 const { generateToken } = require('../token/tokenauth')
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const collectionemployee = require('../model/employeeDB')
 const collectionmessage = require('../model/messageDB')
@@ -57,6 +58,48 @@ const employeeLogin = async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 };
+
+
+
+const refreshToken = async  (req , res) => {
+
+
+    try {
+        const refreshToken = req.body.refreshToken;
+    
+        // Verify the refresh token
+        const decoded = jwt.verify(refreshToken, 'refreshSecret');
+    
+        // Check if the refresh token is valid
+        if (!decoded || !decoded.email || !decoded.userId) {
+          return res.status(401).json({ message: 'Invalid refresh token' });
+        }
+    
+        // Retrieve the employee from the database based on the decoded user ID
+        const employee = await collectionemployee.findById(decoded.userId);
+
+    
+        if (!employee) {
+          return res.status(404).json({ message: 'Employee not found' });
+        }
+    
+        // Generate a new access token
+        const accessToken = generateToken(employee);
+    
+        // Send the new access token in the response
+        res.status(200).json({ token: accessToken });
+      } catch (error) {
+        console.error('Error refreshing token:', error);
+        return res.status(500).json({ message: 'Internal server error' });
+      }
+
+
+}
+
+
+
+
+
 
 
 //Messaging
@@ -299,6 +342,7 @@ const saveChat = async (req , res ) => {
         sender_id: employeeId,
         receiver_id: req.body.receiver_id,
         message: req.body.message,
+        isRead:  req.body.status || 'Delivered'
         
     };
 
@@ -364,6 +408,25 @@ const EmployeeLogOut = async (req, res) => {
 
 
 
+const markMessageAsSeen = async (req, res) => {
+    const receiverId = req.userData.userId;
+    const senderId = req.body.sender_id;
+
+    try {
+        // Update the message status to 'Seen'
+        await chatMessage.updateMany(
+            { sender_id: senderId, receiver_id: receiverId, isRead: 'Delivered' },
+            { $set: { isRead: 'Seen' } }
+        );
+        console.log('Message added successfully');
+        res.json({ success: true, message: 'Messages marked as Seen' });
+    } catch (error) {
+        console.error('Error marking messages as Seen:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
+
 
 
 module.exports = {
@@ -379,6 +442,8 @@ module.exports = {
     loadChatUser,
     saveChat,
     loadChat,
-    EmployeeLogOut
+    EmployeeLogOut,
+    refreshToken,
+    markMessageAsSeen
 
 }

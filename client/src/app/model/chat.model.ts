@@ -5,5 +5,7 @@ export interface Chat {
     sender_id: mongoose.Types.ObjectId | string 
     receiver_id: mongoose.Types.ObjectId | string  
     message: string;
+    createdAt: Date;
+    isRead: 'Seen' | 'Delivered'
     
   }

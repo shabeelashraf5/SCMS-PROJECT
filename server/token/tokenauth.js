@@ -2,7 +2,8 @@ const jwt = require('jsonwebtoken');
 
 
 // Middleware to generate JWT token
-function generateToken(user) {
+
+function  generateToken(user) {
   return jwt.sign({ email: user.email, userId: user._id , role: user.position }, 'secret', {
     expiresIn: '24h',
   });

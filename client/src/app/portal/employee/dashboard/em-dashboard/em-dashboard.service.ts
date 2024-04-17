@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Messaging } from '../../../../model/em-messaging.model';
+import { environment } from '../../../../../environment/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EmDashboardService {
 
-  private apiUrl = 'http://localhost:3000/api';
+  private apiUrl = environment.apiUrl + '/api/portal';    
 
   constructor(private http: HttpClient) { }
 

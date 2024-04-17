@@ -37,13 +37,13 @@ app.use(bodyparser.json())
 app.use(bodyparser.urlencoded({extended:true}))
 
 
-app.use('/api/', employeeRouter);
+app.use('/api/portal', employeeRouter);
 app.use('/api/admin', adminRouter);
-app.use('/api/sales', salesRouter);
-app.use('/api/purchase', purchaseRouter);
-app.use('/api/warehouse', warehouseRouter);
-app.use('/api/accounting', accountingRouter);
-app.use('/api/shipment', shipmentRouter);
+app.use('/api/portal/sales', salesRouter);
+app.use('/api/portal/purchase', purchaseRouter);
+app.use('/api/portal/warehouse', warehouseRouter);
+app.use('/api/portal/accounting', accountingRouter);
+app.use('/api/portal/shipment', shipmentRouter);
 
 
 const io = require("socket.io")(server, {
@@ -64,17 +64,9 @@ usp.on('connection', async function(socket){
   console.log(socket.handshake.auth.token)
 
   
-
- 
-
   socket.on('disconnect', async function(){
 
     console.log('User Disconnect')
-
-
-
-
-
   }) 
 
   
@@ -104,18 +96,7 @@ usp.on('connection', async function(socket){
     }
   });
 
-/*
-  socket.on('chatOpened', (data) => {
-    const { sender_id, receiver_id } = data;
-    // Assuming you have a method to check for new messages from receiver to sender
-    const hasNewMessages = checkForNewMessages(sender_id, receiver_id);
-    if (hasNewMessages) {
-        // Send a notification to the sender
-        socket.to(sender_id).emit('newMessageNotification', {
-            sender_id: receiver_id // You can send any relevant data here
-        });
-    }
-});*/
+
 
   socket.on('error', function(err){
     console.error('Socket error:', err);
@@ -141,7 +122,7 @@ app.use(function(req, res, next) {
   });
 
 
-server.listen(3000, () => {
+server.listen(process.env.PORT_NUMBER, () => {
   console.log('The Server Connected')
 })
 

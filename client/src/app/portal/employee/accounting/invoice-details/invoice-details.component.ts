@@ -73,7 +73,7 @@ export class InvoiceDetailsComponent {
         this.openSnackBar('Invoice Confirmed');
 
 
-        this.router.navigate(['/accounting/invoicing']);
+        this.router.navigate(['/portal/accounting/invoicing']);
        
         console.log(response);
       },

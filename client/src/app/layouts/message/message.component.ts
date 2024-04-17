@@ -6,6 +6,9 @@ import { Chat } from '../../model/chat.model';
 import { EmployeeLoginService } from '../../portal/employee/employeelogin/employee-login/employee-login.service';
 import { ToastrService } from 'ngx-toastr';
 import { ToasterService } from '../../service/toaster.service';
+import { environment } from '../../../environment/environment';
+
+
 
 @Component({
   selector: 'app-message',
@@ -48,7 +51,7 @@ export class MessageComponent implements OnInit,  AfterViewChecked {
 
     console.log(this.sender_id);
 
-    this.socket = io('http://localhost:3000/user-namespace', {
+    this.socket = io( environment.apiUrl + '/user-namespace', {
 
     auth:{
       token: this.authService.getLoggedInEmployeeId()
@@ -68,30 +71,7 @@ export class MessageComponent implements OnInit,  AfterViewChecked {
     }); 
     
 
-    /*
-    this.socket.on('chatMessage', (message: Chat) => {
-      //console.log('Received new message:', message);
-      const loggedInEmployeeId = this.authService.getLoggedInEmployeeId();
-      if (!loggedInEmployeeId) {
-          console.error('Logged-in employee ID not found');
-          return;
-      }
   
-
-      if (message.sender_id === loggedInEmployeeId || message.receiver_id === loggedInEmployeeId) {
-        this.chatMessages.push(message);
-    }
-
-    }); 
-
-
-    this.socket.on('loadChats', (data: { chats: Chat[] }) => {
-      console.log('Existing chats:', data.chats);
-      // Update the UI with existing chats
-      this.chatMessages = data.chats;
-    }); */
-
-
     this.socket.on('chatMessage', (message: Chat) => {
       const loggedInEmployeeId = this.authService.getLoggedInEmployeeId();
       if (!loggedInEmployeeId) {
@@ -109,6 +89,9 @@ export class MessageComponent implements OnInit,  AfterViewChecked {
       } */
       if (message.sender_id === loggedInEmployeeId || message.receiver_id === loggedInEmployeeId) {
         this.chatMessages.push(message);
+        
+
+
       }
     });
 
@@ -159,6 +142,16 @@ export class MessageComponent implements OnInit,  AfterViewChecked {
   openChat(user: any) {
     this.selectedUser = user;
 
+    // Mark message as 'Seen' when chat is opened
+    this.employeeService.markMessageAsSeen(user._id).subscribe(
+      (response) => {
+        console.log('Message marked as Seen:', response);
+      },
+      (error) => {
+        console.error('Error marking message as Seen:', error);
+      }
+    );
+
     this.chatMessages = [];
     this.receiverChat = [];
     this.requestExistingChat(user._id); 
@@ -182,6 +175,8 @@ export class MessageComponent implements OnInit,  AfterViewChecked {
       sender_id: senderId,
       receiver_id: receiverId, 
       message: this.message, 
+      createdAt: new Date(),
+      isRead: 'Delivered'
       
     };
 
@@ -224,13 +219,14 @@ export class MessageComponent implements OnInit,  AfterViewChecked {
 
   
   getImageUrl(imageFileName: string): string {
-    return `http://localhost:3000/images/${imageFileName}`; 
+    return   environment.apiUrl + `/images/${imageFileName}`; 
   }
 
 
   isOnline(): boolean {
     return this.onlineUsers.includes(this.sender_id);
   }
+  
 
 
 

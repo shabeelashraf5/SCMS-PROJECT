@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from '../../../../../environment/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -7,7 +8,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 export class SalesAnalysisService {
 
-  private apiUrl = 'http://localhost:3000/api/sales';
+  private apiUrl = environment.apiUrl + '/api/portal/sales';
   
     constructor(private http: HttpClient) { }
   

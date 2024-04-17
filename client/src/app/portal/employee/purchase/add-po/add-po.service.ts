@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core';
 import { AddPo } from '../../../../model/purchase-addpo.model';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../../../../environment/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AddPoService {
 
-  private apiUrl = 'http://localhost:3000/api/purchase';
+  private apiUrl = environment.apiUrl + '/api/portal/purchase';
 
   constructor(private http: HttpClient) { }
 

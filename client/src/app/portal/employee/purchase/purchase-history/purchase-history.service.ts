@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Invoice } from '../../../../model/invoice.model';
+import { environment } from '../../../../../environment/environment';
 
 
 @Injectable({
@@ -9,7 +10,7 @@ import { Invoice } from '../../../../model/invoice.model';
 })
 export class PurchaseHistoryService {
 
-  private apiUrl = 'http://localhost:3000/api/purchase';
+  private apiUrl = environment.apiUrl + '/api/portal/purchase';
   
     constructor(private http: HttpClient) { }
   

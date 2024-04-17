@@ -2,13 +2,13 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import { ZegoUIKitPrebuilt } from '@zegocloud/zego-uikit-prebuilt';
 import { VideoChatService } from './video-chat.service';
 import { Employee } from '../../model/ad-employee.model';
-
+import { environment } from '../../../environment/environment';
 
 
 function randomID(len:number) {
   let result = '';
   if (result) return result;
-  var chars = '12345qwertyuiopasdfgh67890jklmnbvcxzMNBVCZXASDQWERTYHGFUIOLKJP',
+  var chars = environment.video_key ,
     maxPos = chars.length,
     i;
   len = len || 5;
@@ -61,7 +61,7 @@ export class VideoChatComponent {
 
      // generate Kit Token
       const appID = 1511448381 ;
-      const serverSecret = "9939e35d4602fe52520872b63fcdd3b3";
+      const serverSecret = environment.secret_key ;
       const kitToken =  ZegoUIKitPrebuilt.generateKitTokenForTest(appID, serverSecret, roomID,  randomID(5),  randomID(5));
 
       // Create instance object from Kit Token.

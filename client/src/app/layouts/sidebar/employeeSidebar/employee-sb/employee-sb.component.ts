@@ -30,32 +30,32 @@ export class EmployeeSbComponent implements OnInit {
   updateSidebarItems() {
     const currentRoute = this.router.url;
     switch(currentRoute) {
-      case '/sales':
-        case '/sales/customer':
-          case '/sales/quotations':
-            case '/sales/sales-order':
-              case '/sales/sales-analysis':
+      case '/portal/sales':
+        case '/portal/sales/customer':
+          case '/portal/sales/quotations':
+            case '/portal/sales/sales-order':
+              case '/portal/sales/sales-analysis':
         this.sidebarItems = ['Customer', 'Quotations', 'Sales Order', 'Sales Analysis'];
         break;
-      case '/purchase':
-        case '/purchase/supplier':
-          case '/purchase/purchase-order':
-            case '/purchase/vendor-evaluation':
-              case '/purchase/purchase-history':
+      case '/portal/purchase':
+        case '/portal/purchase/supplier':
+          case '/portal/purchase/purchase-order':
+            case '/portal/purchase/vendor-evaluation':
+              case '/portal/purchase/purchase-history':
         this.sidebarItems = ['Supplier', 'Purchase Order', 'Purchase History'];
         break;
-      case '/warehouse':
-        case '/warehouse/inventory-list':
+      case '/portal/warehouse':
+        case '/portal/warehouse/inventory-list':
         this.sidebarItems = ['Inventory List'];
         break;
-      case '/shipment':
-        case '/shipment/shipment-history':
+      case '/portal/shipment':
+        case '/portal/shipment/shipment-history':
         this.sidebarItems = ['Shipment History'];
         break;
-      case '/accounting':
-        case '/accounting/invoicing':
-          case '/accounting/financial-transaction':
-           // case '/accounting/financial-reports':
+      case '/portal/accounting':
+        case '/portal/accounting/invoicing':
+          case '/portal/accounting/financial-transaction':
+           // case '/portal/accounting/financial-reports':
          
         this.sidebarItems = ['Invoicing', 'Financial Transaction' ];
         break;
@@ -69,31 +69,31 @@ export class EmployeeSbComponent implements OnInit {
   getRoute(item: string): string {
     switch (item) {
       case 'Customer':
-        return '/sales/customer';
+        return '/portal/sales/customer';
       case 'Quotations':
-        return '/sales/quotations';
+        return '/portal/sales/quotations';
       case 'Sales Order':
-        return '/sales/sales-order';
+        return '/portal/sales/sales-order';
       case 'Sales Analysis':
-        return '/sales/sales-analysis';
+        return '/portal/sales/sales-analysis';
       case 'Supplier':
-        return '/purchase/supplier';
+        return '/portal/purchase/supplier';
       case 'Purchase Order':
-        return '/purchase/purchase-order';
+        return '/portal/purchase/purchase-order';
       case 'Purchase History':
-        return '/purchase/purchase-history';
+        return '/portal/purchase/purchase-history';
       case 'Vendor Evaluation':
-        return '/purchase/vendor-evaluation';
+        return '/portal/purchase/vendor-evaluation';
       case 'Inventory List':
-        return '/warehouse/inventory-list';
+        return '/portal/warehouse/inventory-list';
       case 'Shipment History':
-        return '/shipment/shipment-history';
+        return '/portal/shipment/shipment-history';
       case 'Invoicing':
-        return '/accounting/invoicing';
+        return '/portal/accounting/invoicing';
       case 'Financial Transaction':
-        return '/accounting/financial-transaction';
+        return '/portal/accounting/financial-transaction';
       case 'Financial Reports':
-        return '/accounting/financial-reports';
+        return '/portal/accounting/financial-reports';
       default:
         return '/';
     }

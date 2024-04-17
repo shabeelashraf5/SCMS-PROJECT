@@ -8,17 +8,18 @@ const sentMail = async function (fname,email,token ) {
 
     const transporter = nodemailer.createTransport({
             
-        host: 'smtp.gmail.com',
-        port: 465,
+        host: process.env.SMTP_HOST ,
+        port: process.env.SMTP_PORT ,
         secure: true,
         auth:{
-            user: 'mastercoding34@gmail.com',
-            pass: 'fnbrqimtvvfjsqrj'
+            user: process.env.SMTP_USER ,
+            pass: process.env.SMTP_PASSWORD
         }
     })
 
 
     const mailOption = {
+        
         from: 'mastercoding34@gmail.com',
         to: email,
         subject: 'Welcome to the Platform ! Reset your Password',

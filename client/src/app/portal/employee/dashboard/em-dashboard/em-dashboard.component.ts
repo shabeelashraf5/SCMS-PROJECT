@@ -7,6 +7,7 @@ import { Observable, map } from 'rxjs';
 import { Employee } from '../../../../model/ad-employee.model';
 import { EmployeeLoginService } from '../../employeelogin/employee-login/employee-login.service';
 import mongoose from 'mongoose';
+import { environment } from '../../../../../environment/environment';
 
 
 
@@ -135,7 +136,7 @@ getImage(employeeId: any): string {
 
 
 getImageUrl(imageFileName: string): string {
-  return `http://localhost:3000/images/${imageFileName}`; 
+  return environment.apiUrl + `/images/${imageFileName}`; 
 }
 
 

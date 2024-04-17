@@ -3,13 +3,14 @@ import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { tap,map } from 'rxjs/operators';
 import { Admin } from '../../../../model/ad-user.model';
+import { environment } from '../../../../../environment/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AdminLoginService {
 
-  private apiUrl = 'http://localhost:3000/api/admin';
+  private apiUrl =  environment.apiUrl + '/api/admin';
   private tokenKey = 'jwt_token';
 
   

@@ -41,7 +41,7 @@ export class PaymentComponent implements OnInit {
  
 
   constructor(private http: HttpClient , private route: ActivatedRoute, private transService: FinancialTransactionService, private paymentService:  PaymentService , private stripeService: StripeService, private snackBar: MatSnackBar, private router: Router  ) {
-    this.stripePromise = loadStripe('pk_test_51OvQEMSIJEtGIYvEYdqTv7BhGV4a9afxYv7abFIIWkVa3CsnZUwqPLmBtGdrokT1O2eaHPTsTbUjYzsbDAvRKo4j00QllpJp87');
+    this.stripePromise = loadStripe(environment.stripeKey);
    
    
 
@@ -217,7 +217,7 @@ async payNow() {
     try {
       await this.updatePaymentStatus();
       this.openSnackBar('Payment done by Cash or CDC');
-      this.router.navigate(['/accounting/financial-transaction']);
+      this.router.navigate(['/portal/accounting/financial-transaction']);
     } catch (error) {
       console.error('Error updating payment status:', error);
       this.openSnackBar('An error occurred while updating payment status.');
@@ -231,7 +231,7 @@ async payNow() {
 async updatePaymentStatus() {
   try {
     const invoiceId = this.transDetail._id;
-    await this.http.put(`http://localhost:3000/api/accounting/${invoiceId}/pay`, {}).toPromise();
+    await this.http.put(`http://localhost:3000/api/portal/accounting/${invoiceId}/pay`, {}).toPromise();
   } catch (error) {
     throw new Error('Error updating payment status');
   }

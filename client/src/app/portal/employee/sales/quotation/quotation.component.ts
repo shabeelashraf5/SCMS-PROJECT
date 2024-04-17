@@ -73,7 +73,7 @@ export class QuotationComponent implements OnInit {
     this.salesService.qsingle(_id).subscribe(
       (data) => {
         // Navigate to AddQuotationComponent with the ID parameter
-        this.router.navigate(['/sales/quotations', _id]);
+        this.router.navigate(['/portal/sales/quotations', _id]);
       },
       (error) => {
         console.error('Error fetching quotation detail:', error);

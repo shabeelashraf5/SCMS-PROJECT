@@ -31,7 +31,7 @@ export class EmployeeLoginEffects {
     concatMap(({ email, password }) =>
       this.authService.login(email, password).pipe(
         map(({ employee, token }) => {
-          this.router.navigate(['/dashboard']);
+          this.router.navigate(['/portal/dashboard']);
           return EmployeeActions.loginEmployeeSuccess({ employee, token });
         }),
         catchError((error) => {

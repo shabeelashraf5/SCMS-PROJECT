@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../../../../environment/environment';
 
 
 @Injectable({
@@ -8,7 +9,7 @@ import { Observable } from 'rxjs';
 })
 export class FinancialTransactionService {
 
-  private apiUrl = 'http://localhost:3000/api/accounting';
+  private apiUrl = environment.apiUrl + '/api/portal/accounting';
 
   constructor(private http: HttpClient) { }
 

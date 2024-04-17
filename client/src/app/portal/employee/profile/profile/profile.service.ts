@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Profile } from '../../../../model/emp-profile.model';
 import { Employee } from '../../../../model/ad-employee.model';
+import { environment } from '../../../../../environment/environment';
 
 
 @Injectable({
@@ -10,9 +11,9 @@ import { Employee } from '../../../../model/ad-employee.model';
 })
 export class ProfileService {
 
-  private apiUrl = 'http://localhost:3000/api';
+  private apiUrl = environment.apiUrl + '/api/portal'
 
-  private apiUrls = 'http://localhost:3000/api/admin';
+  private apiUrls = environment.apiUrl + '/api/admin';
 
   constructor(private http: HttpClient) { }
 

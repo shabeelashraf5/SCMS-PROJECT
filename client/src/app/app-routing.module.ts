@@ -41,61 +41,64 @@ import { MessageComponent } from './layouts/message/message.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/employee-login', pathMatch: 'full' },
-  {path: 'employee-login' , component: EmployeeLoginComponent,  canActivate: [CanActivateEmLogin]},
+ 
+  {path: 'employee-login' , loadChildren: () => import('./portal/employee/employeelogin/employee-login/employee-login/employee-login.module').then( m => m.EmployeeLoginModule)},
 
-  {path: 'admin' , component: AdminLoginComponent ,  canActivate: [CanActivateLogin]  },
-  {path: 'admin/portal' , component: AdminPortalComponent, canActivate: [CanAdminLogged]   },
-  {path: 'admin/dashboard' , component: AdDashboardComponent, canActivate: [CanAdminLogged]   }, 
-  {path: 'admin/employee' , component: AdEmployeeComponent,  canActivate: [CanAdminLogged]   },
-  {path: 'admin/product' , component: AdProductComponent, canActivate: [CanAdminLogged]    },
-  {path: 'admin/category' , component: AdCategoryComponent,  canActivate: [CanAdminLogged]  },
-  {path: 'admin/admin-user' , component: AdUserComponent, canActivate: [CanAdminLogged]   },
+  {path: 'admin' , loadChildren: () => import('./portal/admin/adminlogin/admin-login/admin-login/admin-login.module').then( m => m.AdminLoginModule) },
+  {path: 'admin/portal' , loadChildren: () => import('./portal/admin/admin-portal/admin-portal/admin-portal.module').then( m => m.AdminPortalModule)   },
+  {path: 'admin/dashboard' , loadChildren: () => import('./portal/admin/dashboard/ad-dashboard/ad-dashboard/ad-dashboard.module').then( m => m.AdDashboardModule)}, 
+  {path: 'admin/employee' , loadChildren: () => import('./portal/admin/employee/ad-employee/ad-employee/ad-employee.module').then( m => m.AdEmployeeModule)   },
+  {path: 'admin/product' , loadChildren: () => import('./portal/admin/product/ad-product/ad-product/ad-product.module').then( m => m.AdProductModule)    },
+  {path: 'admin/category' , loadChildren: () => import('./portal/admin/category/ad-category/ad-category/ad-category.module').then( m => m.AdCategoryModule) },
+  {path: 'admin/admin-user' , loadChildren: () => import('./portal/admin/admin-user/ad-user/ad-user/ad-user.module').then( m => m.AdUserModule)  },
 
 
-  
-  { path: 'dashboard' , component: EmDashboardComponent,  canActivate: [CanEmployeeLogged] },
+  { path: 'portal/dashboard' , loadChildren: () => import('./portal/employee/dashboard/em-dashboard/em-dashboard/em-dashboard.module').then(m => m.EmDashboardModule) },
 
-  { path: 'sales' , component: EmDashboardComponent, canActivate: [CanEmployeeLogged] },
-  { path: 'sales/customer' , component: CustomerComponent, canActivate: [CanEmployeeLogged] },
-  { path: 'sales/quotations' , component: QuotationComponent, canActivate: [CanEmployeeLogged] },
-  { path: 'sales/quotations/:id' , component: AddQuotationComponent, canActivate: [CanEmployeeLogged] },
-  { path: 'sales/sales-order' , component: SalesOrderComponent, canActivate: [CanEmployeeLogged] },
-  { path: 'sales/sales-order/:id' , component:  ClientPoComponent , canActivate: [CanEmployeeLogged] },
-  { path: 'sales/sales-analysis' , component: SalesAnalysisComponent, canActivate: [CanEmployeeLogged] },
+  { path: 'portal/sales' , loadChildren: () => import('./portal/employee/dashboard/em-dashboard/em-dashboard/em-dashboard.module').then(m => m.EmDashboardModule) },
+  { path: 'portal/sales/customer' , loadChildren: () => import('./portal/employee/sales/customer/customer/customer.module').then( m => m.CustomerModule) },
+  { path: 'portal/sales/quotations' , loadChildren: () => import('./portal/employee/sales/quotation/quotation/quotation.module').then( m => m.QuotationModule) },
+  { path: 'portal/sales/quotations/:id' , loadChildren: () => import('./portal/employee/sales/add-quotation/add-quotation/add-quotation.module').then( m => m.AddQuotationModule) },
+  { path: 'portal/sales/sales-order' , loadChildren: () => import('./portal/employee/sales/sales-order/sales-order/sales-order.module').then( m => m.SalesOrderModule)  },
+  { path: 'portal/sales/sales-order/:id' , loadChildren: () => import('./portal/employee/sales/client-po/client-po/client-po.module').then( m => m.ClientPoModule) },
+  { path: 'portal/sales/sales-analysis' , loadChildren: () => import('./portal/employee/sales/sales-analysis/sales-analysis/sales-analysis.module').then( m => m.SalesAnalysisModule) },
  
 
+  { path: 'portal/purchase' , loadChildren: () => import('./portal/employee/dashboard/em-dashboard/em-dashboard/em-dashboard.module').then(m => m.EmDashboardModule) },
 
-  { path: 'purchase' , component: EmDashboardComponent, canActivate: [CanEmployeeLogged] },
-  { path: 'purchase/supplier' , component: SupplierComponent, canActivate: [CanEmployeeLogged] },
-  { path: 'purchase/purchase-order' , component: PurchaseOrderComponent, canActivate: [CanEmployeeLogged] },
-  { path: 'purchase/vendor-evaluation' , component: EvaluationComponent, canActivate: [CanEmployeeLogged] },
-  { path: 'purchase/purchase-order/:id' , component: AddPoComponent, canActivate: [CanEmployeeLogged] },
-  { path: 'purchase/purchase-history' , component: PurchaseHistoryComponent , canActivate: [CanEmployeeLogged] },
+  { path: 'portal/purchase/supplier' , loadChildren: () => import('./portal/employee/purchase/supplier/supplier/supplier.module').then( m => m.SupplierModule) },
+  { path: 'portal/purchase/purchase-order' , loadChildren: () => import('./portal/employee/purchase/purchase-order/purchase-order/purchase-order.module').then( m => m.PurchaseOrderModule) },
+  //{ path: 'portal/purchase/vendor-evaluation' , component: EvaluationComponent, canActivate: [CanEmployeeLogged] },
+  { path: 'portal/purchase/purchase-order/:id' , loadChildren: () => import('./portal/employee/purchase/add-po/add-po/add-po.module').then( m => m.AddPoModule)  },
+  { path: 'portal/purchase/purchase-history' , loadChildren: () => import('./portal/employee/purchase/purchase-history/purchase-history/purchase-history.module').then( m => m.PurchaseHistoryModule) },
 
-  { path: 'warehouse' , component: EmDashboardComponent, canActivate: [CanEmployeeLogged] },
-  { path: 'warehouse/inventory-list' , component: InventoryListComponent, canActivate: [CanEmployeeLogged] },
 
-  { path: 'shipment' , component: EmDashboardComponent, canActivate: [CanEmployeeLogged] },
-  { path: 'shipment/shipment-history' , component: ShipmentHistoryComponent, canActivate: [CanEmployeeLogged] },
+  { path: 'portal/warehouse' , loadChildren: () => import('./portal/employee/dashboard/em-dashboard/em-dashboard/em-dashboard.module').then(m => m.EmDashboardModule) },
+  { path: 'portal/warehouse/inventory-list' , loadChildren: () => import('./portal/employee/warehouse/inventory-list/inventory-list/inventory-list.module').then( m => m.InventoryListModule) },
 
-  { path: 'accounting' , component: EmDashboardComponent, canActivate: [CanEmployeeLogged] },
-  { path: 'accounting/invoicing' , component: InvoicingComponent, canActivate: [CanEmployeeLogged] },
-  { path: 'accounting/invoicing/:id' , component: InvoiceDetailsComponent, canActivate: [CanEmployeeLogged] },
-  { path: 'accounting/financial-transaction' , component: FinancialTransactionComponent, canActivate: [CanEmployeeLogged] },
-  { path: 'accounting/financial-reports' , component: FinancialReportComponent, canActivate: [CanEmployeeLogged] },
-  { path: 'accounting/financial-transaction/:id' , component: PaymentComponent, canActivate: [CanEmployeeLogged] },
   
-  { path: 'success' , component: SuccessComponent,  canActivate:  [CanEmployeeLogged] },
+  { path: 'portal/shipment' , loadChildren: () => import('./portal/employee/dashboard/em-dashboard/em-dashboard/em-dashboard.module').then(m => m.EmDashboardModule) },
+  { path: 'portal/shipment/shipment-history' , loadChildren: () => import('./portal/employee/shipment/shipment-history/shipment-history/shipment-history.module').then( m => m.ShipmentHistoryModule) },
 
-  { path: 'profile' , component: ProfileComponent,  canActivate:  [CanEmployeeLogged] },
-  { path: 'reset-password' , component: ResetPasswordComponent,  },
+
+  { path: 'portal/accounting' , loadChildren: () => import('./portal/employee/dashboard/em-dashboard/em-dashboard/em-dashboard.module').then(m => m.EmDashboardModule) },
+  { path: 'portal/accounting/invoicing' , loadChildren: () => import('./portal/employee/accounting/invoicing/invoicing/invoicing.module').then( m => m.InvoicingModule)},
+  { path: 'portal/accounting/invoicing/:id' , loadChildren: () => import('./portal/employee/accounting/invoice-details/invoice-details/invoice-details.module').then( m => m.InvoiceDetailsModule) },
+  { path: 'portal/accounting/financial-transaction' , loadChildren: () => import('./portal/employee/accounting/financial-transaction/financial-transaction/financial-transaction.module').then( m => m.FinancialTransactionModule)  },
+  //{ path: 'portal/accounting/financial-reports' , component: FinancialReportComponent, canActivate: [CanEmployeeLogged] },
+  { path: 'portal/accounting/financial-transaction/:id' , loadChildren: () => import('./portal/employee/accounting/payment/payment/payment.module').then( m => m.PaymentModule) },
   
-  { path: 'video-conference' , component: VideoChatComponent,  canActivate:  [CanEmployeeLogged] },
+  //{ path: 'success' , component: SuccessComponent,  canActivate:  [CanEmployeeLogged] },
 
-  { path: 'messenger', component: MessageComponent,  canActivate:  [CanEmployeeLogged] },
+  { path: 'portal/profile' , loadChildren: () => import('./portal/employee/profile/profile/em-profile/em-profile.module').then( m => m.EmProfileModule) },
+ 
+  { path: 'reset-password' , loadChildren: () => import('./portal/employee/reset-password/reset-password/reset-password.module').then( m => m.ResetPasswordModule) },
+  
+  { path: 'portal/video-conference' , loadChildren: () => import('./layouts/video-chat/video-chat/video-chat.module').then( m => m.VideoChatModule)  },
 
-  { path: 'chat', component: ChatComponent,  canActivate:  [CanEmployeeLogged] }
+  { path: 'portal/messenger', loadChildren: () => import('./layouts/message/message/message.module').then( m => m.MessageModule) },
 
+ // { path: 'chat', component: ChatComponent,  canActivate:  [CanEmployeeLogged] }
 
 ];
 

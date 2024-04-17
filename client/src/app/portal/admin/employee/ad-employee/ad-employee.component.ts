@@ -4,6 +4,7 @@ import * as AdEmployeeActions from '../ad-employee/store/ad-employee.action';
 import { Employee } from '../../../../model/ad-employee.model';
 import { Observable, map } from 'rxjs';
 import { AppState } from '../../../../state/app.state';
+import { environment } from '../../../../../environment/environment';
 
 
 @Component({
@@ -201,7 +202,7 @@ get filteredRecords() {
 }
 
 getImageUrl(imageFileName: string): string {
-  return `http://localhost:3000/images/${imageFileName}`; // Adjust the URL based on your backend server configuration
+  return environment.apiUrl + `/images/${imageFileName}`; // Adjust the URL based on your backend server configuration
 }
 
 

@@ -8,6 +8,7 @@ import { Employee } from '../../../../model/ad-employee.model';
 import { ProfileService } from './profile.service';
 import * as AdEmployeeActions from '../../../admin/employee/ad-employee/store/ad-employee.action'
 import { AdEmployeeService } from '../../../admin/employee/ad-employee/ad-employee.service';
+import { environment } from '../../../../../environment/environment';
 
 
 @Component({
@@ -57,7 +58,7 @@ export class ProfileComponent implements OnInit {
 
 
   getImageUrl(imageFileName: string): string {
-    return `http://localhost:3000/images/${imageFileName}`; 
+    return environment.apiUrl + `/images/${imageFileName}`; 
   }
 
 

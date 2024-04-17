@@ -1,18 +1,18 @@
 <div class="navbar bg-base-300 sticky top-0 w-full z-50">
     <div class="flex-1">
-      <a class="btn btn-ghost text-xl" routerLink="/dashboard">
+      <a class="btn btn-ghost text-xl" routerLink="/portal/dashboard">
         <img src="assets/05.jpg" alt="" class="h-14 w-auto" />
       </a>
     </div>
   
     
     <div class="flex-none gap-2">
-      <a routerLink="/sales" class="btn btn-ghost" (click)="updateSidebar('Sales')">Sales</a>
-      <a routerLink="/purchase" class="btn btn-ghost" (click)="updateSidebar('Purchase')">Purchase</a>
-      <a routerLink="/warehouse" class="btn btn-ghost" (click)="updateSidebar('Warehouse')">Warehouse</a>
-      <a routerLink="/shipment" class="btn btn-ghost" (click)="updateSidebar('Shipment')">Shipment</a>
-      <a routerLink="/accounting" class="btn btn-ghost " (click)="updateSidebar('Accounting')">Accounting</a>
-      <a routerLink="/video-conference" class="btn btn-ghost ml-10" >Connect</a>
+      <a routerLink="/portal/sales" class="btn btn-ghost" (click)="updateSidebar('Sales')">Sales</a>
+      <a routerLink="/portal/purchase" class="btn btn-ghost" (click)="updateSidebar('Purchase')">Purchase</a>
+      <a routerLink="/portal/warehouse" class="btn btn-ghost" (click)="updateSidebar('Warehouse')">Warehouse</a>
+      <a routerLink="/portal/shipment" class="btn btn-ghost" (click)="updateSidebar('Shipment')">Shipment</a>
+      <a routerLink="/portal/accounting" class="btn btn-ghost " (click)="updateSidebar('Accounting')">Accounting</a>
+      <a routerLink="/portal/video-conference" class="btn btn-ghost ml-10" >Connect</a>
     </div>
   
     <div class="flex-none gap-2">
@@ -24,7 +24,7 @@
         </div>
         <ul tabindex="0" class="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
           <li>
-            <a class="justify-between" routerLink="/profile">
+            <a class="justify-between" routerLink="/portal/profile">
               Profile
               <span class="badge">New</span>
             </a>

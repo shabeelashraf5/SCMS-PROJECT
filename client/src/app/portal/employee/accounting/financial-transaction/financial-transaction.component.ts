@@ -30,7 +30,7 @@ export class FinancialTransactionComponent {
     this.transactionService.transSingle(_id).subscribe(
       (data) => {
         // Navigate to AddQuotationComponent with the ID parameter
-        this.router.navigate(['/accounting/financial-transaction', _id]);
+        this.router.navigate(['/portal/accounting/financial-transaction', _id]);
       },
       (error) => {
         console.error('Error fetching quotation detail:', error);

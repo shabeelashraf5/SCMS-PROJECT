@@ -50,7 +50,7 @@ export class AuthInterceptor implements HttpInterceptor {
     );
   } */
 
-  
+  /*
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const token = this.authService.getToken();
 
@@ -74,6 +74,33 @@ export class AuthInterceptor implements HttpInterceptor {
       })
     );
   } 
+
+  */
+
+
+  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    // Check if the request URL contains 'employee-login'
+    if (request.url.includes('admin')) {
+      const token = this.authService.getToken();
+
+      console.log('Token from AuthInterceptor:', token);
+
+      if (token) {
+        request = request.clone({
+          setHeaders: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+      }
+    }
+
+    return next.handle(request).pipe(
+      catchError((error: HttpErrorResponse) => {
+        console.error('HTTP error occurred:', error);
+        return throwError(error);
+      })
+    );
+  }
 
 
 

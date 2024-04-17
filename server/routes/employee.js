@@ -26,8 +26,11 @@ router.post('/save-chat', verifyToken, employeeController.saveChat);
 
 router.get('/messages/:senderId/:receiverId', verifyToken ,  employeeController.loadChat)
 
+router.post('/refresh-token', employeeController.refreshToken);
 
 router.put('/logout',  employeeController.EmployeeLogOut)
+
+router.put('/mark-as-seen', verifyToken, employeeController.markMessageAsSeen);
 
 
 module.exports = router;

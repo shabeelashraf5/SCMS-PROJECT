@@ -7,11 +7,6 @@
 <!-- This is an example component -->
 <div class="container mx-auto shadow-lg rounded-lg mt-5   ">
     <!-- headaer -->
-    <div class="toast " *ngIf="showToastr">
-      <div class="alert alert-info">
-        <span>New message arrived. </span>
-      </div>
-    </div>
     
 
 <!-- end header -->
@@ -90,22 +85,29 @@
   
        
          <div *ngFor="let chatMessage of chatMessages" class="flex mb-4 justify-{{ chatMessage.sender_id === sender_id ? 'end' : 'start' }}">
-          <div *ngIf="chatMessage.sender_id === sender_id" class="mr-2 py-3 px-4 bg-blue-400 rounded-bl-3xl rounded-tl-3xl rounded-tr-xl text-white ">
-              {{ chatMessage.message }}
-          </div>
-          <div *ngIf="chatMessage.sender_id !== sender_id">
-          <img [src]="getImageUrl(selectedUser.image)" class="object-cover h-8 w-8 rounded-full" alt="" />
-          <div class="ml-2 py-3 px-4 bg-gray-300 rounded-br-3xl rounded-tr-3xl rounded-tl-xl text-black ">
-              {{ chatMessage.message }}
-          </div>
+          <div *ngIf="chatMessage.sender_id === sender_id" >
+            <time class="text-xs opacity-50">{{ chatMessage.createdAt | date: 'medium' }}</time>
+    <div class="mr-2 py-3 px-4 bg-blue-400 rounded-bl-3xl rounded-tl-3xl rounded-tr-xl text-white ">
+        <div>{{ chatMessage.message }}</div>
+    </div>
+    <div class="chat-footer opacity-50">
+      {{ chatMessage.isRead }}
+    </div>
+  </div>
+  <div *ngIf="chatMessage.sender_id !== sender_id">
+    <time class="text-xs opacity-50">{{ chatMessage.createdAt | date: 'medium' }}</time>
+    <div class="flex items-center">
+        <img [src]="getImageUrl(selectedUser.image)" class="object-cover h-8 w-8 rounded-full" alt="" />
+        <div class="ml-2 py-3 px-4 bg-gray-300 rounded-br-3xl rounded-tr-3xl rounded-tl-xl text-black ">
+            <div>{{ chatMessage.message }}</div>
         </div>
-      </div>
+    </div>
+  </div>
+</div>
+
 
       
-    
-
-
- 
+  
     </div>
      
     </div>

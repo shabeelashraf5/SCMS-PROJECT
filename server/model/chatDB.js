@@ -8,6 +8,10 @@ const messageSchema = new mongoose.Schema({
 
   message: { type: String, required: true },
 
+  isRead: { type: String,
+    enum: ['Seen', 'Delivered'],
+    default: 'Delivered', },
+
   } ,
   
   { timestamps: true }

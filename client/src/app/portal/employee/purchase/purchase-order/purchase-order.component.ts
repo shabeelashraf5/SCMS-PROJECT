@@ -50,7 +50,7 @@ export class PurchaseOrderComponent {
     this.purchaseService.poSingle(_id).subscribe(
       (data) => {
         // Navigate to AddQuotationComponent with the ID parameter
-        this.router.navigate(['/purchase/purchase-order', _id]);
+        this.router.navigate(['/portal/purchase/purchase-order', _id]);
       },
       (error) => {
         console.error('Error fetching quotation detail:', error);
