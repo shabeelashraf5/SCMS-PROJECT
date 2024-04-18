@@ -4,8 +4,8 @@ import { QuotationService } from '../quotation/quotation.service';
 import { AddQuotationService } from './add-quotation.service';
 import { AddQuotation, Product } from '../../../../model/sales-addquo';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import jsPDF from 'jspdf';
-import 'jspdf-autotable';
+//import jsPDF from 'jspdf';
+//import 'jspdf-autotable';
 
 
 @Component({
@@ -251,7 +251,7 @@ export class AddQuotationComponent implements OnInit  {
     });
   }
 
-
+/*
   generatePDF() {
     const doc = new jsPDF();
 
@@ -316,6 +316,6 @@ we are pleased to quote our best offer as per the following:`, 20, 100);
   }
 
   
-  
+  */
 
 }
