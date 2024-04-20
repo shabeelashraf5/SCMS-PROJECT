@@ -18,7 +18,7 @@ phases:
 
   post_build:
     commands:
-      - aws s3 sync ./dist/client/ s3://your-bucket-name --delete
+      - aws s3 sync ./dist/client/ s3://test-scms --delete
 
 artifacts:
   files:
