@@ -2,11 +2,11 @@
   "name": "client",
   "version": "0.0.0",
   "scripts": {
-    "ng": "./node_modules/.bin/ng",
+    "ng": "ng",
     "start": "ng serve --proxy-config proxy.conf.json",
-    "build": "./node_modules/.bin/ng build",
-    "watch": "./node_modules/.bin/ng build --watch --configuration development",
-    "test": "./node_modules/.bin/ng test"
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test"
   },
   "private": true,
   "dependencies": {

@@ -1,0 +1,26 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 18.x
+    commands:
+      - npm install -g @angular/cli
+
+  pre_build:
+    commands:
+      - cd client
+      - npm install
+
+  build:
+    commands:
+      - npm run build 
+
+  post_build:
+    commands:
+      - aws s3 sync ./dist/client/ s3://your-bucket-name --delete
+
+artifacts:
+  files:
+    - '**/*'
+  base-directory: client/dist/
