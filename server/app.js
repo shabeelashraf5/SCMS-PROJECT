@@ -26,20 +26,13 @@ let warehouseRouter = require('./routes/warehouse');
 let accountingRouter = require('./routes/accounting');
 let shipmentRouter = require('./routes/shipment');
 
-const corsOptions = {
-  origin: 'http://localhost:4200',  // Change as needed
-  optionsSuccessStatus: 200,       // For legacy browser support
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // Allowed HTTP methods
-  allowedHeaders: ['Content-Type', 'Authorization'],  // Allowed request headers
-};
-
 
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(cors(corsOptions))
+app.use(cors())
 app.use(bodyparser.json())
 app.use(bodyparser.urlencoded({extended:true}))
 
@@ -53,7 +46,7 @@ app.use('/api/portal/accounting', accountingRouter);
 app.use('/api/portal/shipment', shipmentRouter);
 
 
-app.options('*', cors(corsOptions));  
+
 
 const io = require("socket.io")(server, {
   cors: {
