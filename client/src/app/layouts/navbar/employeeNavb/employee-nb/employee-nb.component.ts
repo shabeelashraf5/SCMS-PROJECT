@@ -2,6 +2,7 @@ import { Component, EventEmitter, Output , OnInit, Input } from '@angular/core';
 import { ActivatedRoute, Router  } from '@angular/router';
 import { Employee } from '../../../../model/ad-employee.model';
 import { ProfileService } from '../../../../portal/employee/profile/profile/profile.service';
+import { environment } from '../../../../../environment/environment';
 
 
 @Component({
@@ -38,7 +39,7 @@ export class EmployeeNbComponent  {
 
 
   getImageUrl(imageFileName: string): string {
-    return `http://localhost:3000/images/${imageFileName}`; 
+    return environment.apiUrl + `/images/${imageFileName}`; 
   }
 
 
