@@ -27,8 +27,10 @@ let accountingRouter = require('./routes/accounting');
 let shipmentRouter = require('./routes/shipment');
 
 const corsOptions = {
-  origin: 'http://localhost:4200',
-  optionsSuccessStatus: 200 // For older browsers
+  origin: 'http://localhost:4200',  // Change as needed
+  optionsSuccessStatus: 200,       // For legacy browser support
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // Allowed HTTP methods
+  allowedHeaders: ['Content-Type', 'Authorization'],  // Allowed request headers
 };
 
 
@@ -50,6 +52,8 @@ app.use('/api/portal/warehouse', warehouseRouter);
 app.use('/api/portal/accounting', accountingRouter);
 app.use('/api/portal/shipment', shipmentRouter);
 
+
+app.options('*', cors(corsOptions));  
 
 const io = require("socket.io")(server, {
   cors: {
@@ -109,17 +113,6 @@ usp.on('connection', async function(socket){
 
 
 })
-
-
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*'); // Or specify the origin
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  if (req.method === 'OPTIONS') {
-    return res.sendStatus(200);
-  }
-  next();
-});
 
 
 
