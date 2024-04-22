@@ -51,7 +51,7 @@ app.use('/api/portal/shipment', shipmentRouter);
 const io = require("socket.io")(server, {
   cors: {
     //origin: "http://localhost:4200",
-    origin: "https://scmsbiz.online",
+     origin: "https://scmsbiz.online",
     methods: ["GET", "POST"],
     
   }
