@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { EmployeeLoginService } from '../../../../portal/employee/employeelogin/employee-login/employee-login.service';
 import io from 'socket.io-client';
-
+import { environment } from '../../../../../environment/environment';
 
 
 @Component({
@@ -20,7 +20,7 @@ export class EmployeeSbComponent implements OnInit {
   ngOnInit(): void {
     this.updateSidebarItems();
 
-    this.socket = io('http://localhost:3000/user-namespace');
+    this.socket = io( environment.apiUrl + '/user-namespace');
     this.socket.on('disconnect', () => {
       console.log('Disconnected from Socket.IO server');
     });
