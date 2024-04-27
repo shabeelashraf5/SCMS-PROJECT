@@ -322,11 +322,9 @@ const paymentSup = async function (req, res) {
                 quantity: 1,
             }],
             mode: 'payment',
-           // success_url: "http://localhost:4200/success?session_id={CHECKOUT_SESSION_ID}",
-            success_url: "http://localhost:4200/portal/accounting/financial-transaction?session_id={CHECKOUT_SESSION_ID}",
-            //success_url: "http://localhost:4200/accounting/financial-transaction?session_id={CHECKOUT_SESSION_ID}&redirect_to=success",
-            cancel_url: "http://localhost:4200/portal/accounting/financial-transaction",
-            customer_email: 'test@example.com', // Dummy customer email
+            success_url: "https://scmsbiz.online/portal/accounting/financial-transaction?session_id={CHECKOUT_SESSION_ID}",
+            cancel_url: "https://scmsbiz.online/portal/accounting/financial-transaction",
+            customer_email: 'test@example.com', 
             billing_address_collection: 'required',
         });
 
