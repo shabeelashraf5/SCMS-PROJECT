@@ -50,10 +50,10 @@ app.use('/api/portal/shipment', shipmentRouter);
 
 const io = require("socket.io")(server, {
   cors: {
-    origin: ["https://www.scmsbiz.online", "http://localhost:4200"], // allow multiple origins
+    origin: [process.env.URLs , process.env.URL ], 
     methods: ["GET", "POST"],
-    allowedHeaders: ["Authorization", "Content-Type"], // additional allowed headers
-    credentials: true, // allow sending credentials like cookies
+    allowedHeaders: ["Authorization", "Content-Type"], 
+    credentials: true, 
   },
 });
 

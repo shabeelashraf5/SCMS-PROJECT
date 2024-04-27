@@ -25,6 +25,7 @@ const sentMail = async function (fname,email,token ) {
         subject: 'Welcome to the Platform ! Reset your Password',
         html: `<h2> Hello ${fname}, Welcome to our Team. Please click to <a href="https://scmsbiz.online/reset-password/?token=${token}">Reset</a> your password<h2>`
     };
+       
 
         transporter.sendMail(mailOption, function(error,info){
 

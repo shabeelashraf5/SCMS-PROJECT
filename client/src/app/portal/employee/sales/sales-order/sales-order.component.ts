@@ -3,6 +3,9 @@ import { SalesOrderService } from './sales-order.service';
 import { Po } from '../../../../model/purchase-po.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router'; 
+import { firstValueFrom } from 'rxjs';
+import { AddQuotation } from '../../../../model/sales-addquo';
+import { Quotation } from '../../../../model/sales-quotation.model';
 
 @Component({
   selector: 'app-sales-order',
@@ -12,7 +15,7 @@ import { Router } from '@angular/router';
 export class SalesOrderComponent {
 
 
-  spoDetails: any;
+  spoDetails: AddQuotation[] = [];
   employee_id: string = ''
   quotation_id: string =''
   
@@ -25,61 +28,61 @@ export class SalesOrderComponent {
 
   }
 
-  getClientDetails() {
-    this.salesOrderService.getSPO().subscribe(
-      (response) => {
-        this.spoDetails = response; 
-        console.log(this.spoDetails);
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
+
+
+  async getClientDetails() {
+    try {
+      const response = await firstValueFrom(this.salesOrderService.getSPO());
+      this.spoDetails = response; // Store the fetched SPO details
+      console.log('SPO Details:', this.spoDetails);
+    } catch (error) {
+      console.error('Error fetching SPO details:', error);
+    }
   }
 
-
+/*
   getSrfq(rfqId: any): string {
     if (typeof rfqId === 'object') {
       return rfqId.srfq  ;
     }
     return '';
   }
+*/
+
+getSrfq(quotation: Quotation): string {
+  return quotation.srfq || '';
+}
 
 
-  createPO(quotationId: string) {
+  async createPO(quotationId: string) {
     const newPo: Po = {
       _id: '', 
       employee_id: this.employee_id,
-      quotation_id: quotationId, // Set quotation_id here
+      quotation_id: quotationId as unknown as AddQuotation ,
       po: '', 
       status: 'not submitted',
-      
-      
+      createdAt: new Date()
     };
 
-    console.log(newPo)
+    console.log('New PO:', newPo);
 
-  
-    this.salesOrderService.addPo(newPo).subscribe(
-      (response) => {
-        
-        this.getClientDetails(); 
-        this.openSnackBar('Sales Order Confirmed');
-        console.log(response);
-      },
-      (error) => {
-        console.error(error);
-     
-      }
-    );
+    try {
+      const response = await firstValueFrom(this.salesOrderService.addPo(newPo));
+      console.log('Sales order created:', response);
+
+      this.getClientDetails(); // Refresh client details after creating a PO
+      this.openSnackBar('Sales Order Confirmed'); // Notify the user
+    } catch (error) {
+      console.error('Error creating sales order:', error);
+    }
   }
 
   
-  getResponsible(detail: any): string {
-    if (detail && detail.employee_id) {
-      return detail.employee_id.fname + ' ' + detail.employee_id.lname ; 
+  getResponsible(detail: AddQuotation): string {
+    if (typeof detail.employee_id === 'object' && 'fname' in detail.employee_id && 'lname' in detail.employee_id) {
+      return `${detail.employee_id.fname} ${detail.employee_id.lname}`;
     }
-    return '';
+    return 'Unknown';
   }
 
 

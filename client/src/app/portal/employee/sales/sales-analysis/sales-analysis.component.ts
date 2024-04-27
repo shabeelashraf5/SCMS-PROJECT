@@ -2,10 +2,15 @@ import { Component,  OnInit, ViewChild, ElementRef } from '@angular/core';
 import { SalesAnalysisService } from './sales-analysis.service';
 import { Chart, registerables } from 'chart.js';
 import { PlotlyService } from 'angular-plotly.js';
+import { firstValueFrom } from 'rxjs';
+import { AddQuotation } from '../../../../model/sales-addquo';
 
 Chart.register(...registerables)
 
-
+enum OrderStatus {
+  Confirmed = 'Confirmed',
+  Pending = 'Not Confirmed',
+}
 
 
 @Component({
@@ -16,7 +21,7 @@ Chart.register(...registerables)
 
 export class SalesAnalysisComponent implements OnInit {
 
-  spoDetails: any;
+  spoDetails: AddQuotation[] = [];
  
   
 
@@ -26,34 +31,35 @@ export class SalesAnalysisComponent implements OnInit {
 
     this.getClientDetails(); 
 
-    
-
+  
   }
 
-  getClientDetails() {
-    this.salesAnalysisService.getSPO().subscribe(
-      (response) => {
-        this.spoDetails = response; 
-        console.log(this.spoDetails);
-        this.RenderChart()
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
+ 
+  async getClientDetails() {
+    try {
+      const response = await firstValueFrom(this.salesAnalysisService.getSPO());
+      this.spoDetails = response;
+      console.log('SPO Details:', this.spoDetails);
+
+      this.RenderChart(); // Render the chart after obtaining the data
+    } catch (error) {
+      console.error('Error fetching SPO details:', error);
+    }
   }
 
 
-  calculateUniqueCustomers(details: any[]): number {
+
+
+  calculateUniqueCustomers(details: AddQuotation[]): number {
     
     const employees = new Set(details.map(detail => detail.to));
     return employees.size;
 }
 
 
-calculateOrders(details: any[]): number {
+calculateOrders(details: AddQuotation[]): number {
   
-  return details.filter(detail => detail.status === 'Confirmed').length;
+  return details.filter(detail => detail.status === OrderStatus.Confirmed ).length;
 }
 
 calculateTotalOrders(details: any[]): number {
@@ -73,7 +79,7 @@ RenderChart() {
   this.spoDetails.forEach((detail: any) => {
     const date = new Date(detail.createdAt);
     const monthIndex = date.getMonth();
-    if (detail.status === 'Confirmed') {
+    if (detail.status === OrderStatus.Confirmed ) {
       monthWiseOrders[monthIndex]++;
     }
   });

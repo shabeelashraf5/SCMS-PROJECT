@@ -4,6 +4,9 @@ import { AddPo } from '../../../../model/purchase-addpo.model';
 import { Invoice } from '../../../../model/invoice.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router'; 
+import { firstValueFrom } from 'rxjs';
+import { AddQuotation } from '../../../../model/sales-addquo';
+import { Po } from '../../../../model/purchase-po.model';
 
 @Component({
   selector: 'app-purchase-history',
@@ -12,9 +15,8 @@ import { Router } from '@angular/router';
 })
 export class PurchaseHistoryComponent {
 
-  purchaseDetails: any;
+  purchaseDetails: AddPo[] = []
 
-  
   _id!: string; 
   employee_id: string = ''
  
@@ -27,72 +29,63 @@ export class PurchaseHistoryComponent {
 
   }
 
-  getClientDetails() {
-    this.purchaseHistoryService.getpurchase().subscribe(
-      (response) => {
-        this.purchaseDetails = response; 
-        console.log(this.purchaseDetails);
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
+
+async getClientDetails() {
+  try {
+    const response = await firstValueFrom(this.purchaseHistoryService.getpurchase());
+    this.purchaseDetails = response;
+    console.log(this.purchaseDetails);
+  } catch (error) {
+    console.error('Error fetching client purchase details:', error);
   }
+}
 
 
-  getPo(poId: any): string {
-    if (typeof poId === 'object') {
-      return poId.po  ;
-    }
-    return '';
-  }
+  async createInv(purchaseId: string) {
+    console.log('purchaseId:', purchaseId);
 
-
-  getSrfq(quotationId: any): string {
-    if (quotationId && quotationId.salesRFQ_id && quotationId.salesRFQ_id.srfq) {
-      return quotationId.salesRFQ_id.srfq;
-    }
-    return '';
-  }
-
-
-  createInv(purchaseId: string) {
-    console.log('purchaseId:', purchaseId); 
     const newInv: Invoice = {
-      _id: '', 
+      _id: '',
       employee_id: this.employee_id,
-      purchase_id: purchaseId, 
+      purchase_id: purchaseId as unknown as AddPo,
       invoice: '',
-      delivery:'',
+      delivery: '',
       transaction: '',
-      payment:'to be Paid',
-      status: 'not confirmed' 
-    
+      payment: 'to be Paid',
+      status: 'not confirmed'
     };
-  
-    console.log(newInv)
-  
-    this.purchaseHistoryService.addInv(newInv).subscribe(
-      (response) => {
-        this.getClientDetails() 
-        console.log(response);
-        this.openSnackBar('Purchase Confirmed');
-      },
-      (error) => {
-        console.error(error);
-     
-      }
-    );
-  }
 
+    console.log(newInv);
 
-  getResponsible(detail: any): string {
-    if (detail && detail.employee_id) {
-      return detail.employee_id.fname + ' ' + detail.employee_id.lname ; 
+    try {
+      const response = await firstValueFrom(this.purchaseHistoryService.addInv(newInv));
+      console.log(response);
+
+      await this.getClientDetails(); // Await this function to ensure completion before proceeding
+      this.openSnackBar('Purchase Confirmed');
+    } catch (error) {
+      console.error('Error creating invoice:', error);
     }
-    return '';
   }
+
+
+
+  getPo(po: Po): string {
+    return po.po || '';
+  }
+
+  getSrfq(quotation: AddQuotation): string {
+    return quotation.salesRFQ_id?.srfq || '';
+  }
+
+
+  getResponsible(detail: AddPo): string {
+    if (typeof detail.employee_id === 'object' && 'fname' in detail.employee_id && 'lname' in detail.employee_id) {
+      return `${detail.employee_id.fname} ${detail.employee_id.lname}`;
+    }
+    return 'Unknown';
   
+  }
 
   openSnackBar(message: string) {
     this.snackBar.open(message, 'Close', {

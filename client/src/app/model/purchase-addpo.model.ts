@@ -1,4 +1,6 @@
 import mongoose from 'mongoose';
+import { Po } from './purchase-po.model';
+
 
 export interface Product {
     product: string;
@@ -10,7 +12,7 @@ export interface Product {
 
 export interface AddPo {
     _id: string;
-    po_id: mongoose.Types.ObjectId | string
+    po_id: Po 
     employee_id: mongoose.Types.ObjectId | string;
     to: string;
     attention: string;
@@ -26,6 +28,7 @@ export interface AddPo {
     availability: string;
     totalAmount: number;
     status: 'not confirmed' | 'Confirmed';
+    createdAt: Date
      
    
    

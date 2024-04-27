@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AddQuotation } from '../../../../model/sales-addquo';
 import { CustomerService } from './customer.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-customer',
@@ -10,7 +11,7 @@ import { CustomerService } from './customer.service';
 export class CustomerComponent implements OnInit {
 
 
-  clientDetails: any;
+  clientDetails: AddQuotation[] = [];
 
 
   constructor(private clientService: CustomerService ) { }
@@ -22,16 +23,17 @@ export class CustomerComponent implements OnInit {
 
   }
 
-  getClientDetails() {
-    this.clientService.getClient().subscribe(
-      (response) => {
-        this.clientDetails = response; 
-        console.log(this.clientDetails);
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
+
+
+  async getClientDetails() {
+    try {
+      const response = await firstValueFrom(this.clientService.getClient());
+      this.clientDetails = response;
+      console.log(this.clientDetails);
+    } catch (error) {
+      console.error('Error fetching client details:', error);
+    }
   }
+  
 
 }

@@ -24,7 +24,7 @@ export class InventoryListComponent {
     this.categories$ = this.adCategoryService.getCategory()
     this.categories$.subscribe(categories => {
       this.categories = categories;
-      console.log('Categories:', this.categories); // Log categories array
+      console.log('Categories:', this.categories); 
     }); 
     
   }
@@ -39,7 +39,6 @@ export class InventoryListComponent {
     });
   
   }
-
 
 
   getCategory(categoryId: any): string {

@@ -4,6 +4,8 @@ import { QuotationService } from '../quotation/quotation.service';
 import { AddQuotationService } from './add-quotation.service';
 import { AddQuotation, Product } from '../../../../model/sales-addquo';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { firstValueFrom } from 'rxjs';
+import { Quotation } from '../../../../model/sales-quotation.model';
 //import jsPDF from 'jspdf';
 //import 'jspdf-autotable';
 
@@ -18,7 +20,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class AddQuotationComponent implements OnInit  {
   
 
-  rfqDetail: any
+  rfqDetail: Quotation | null = null;
   //quotationId!: string;
   salesRFQ_id: string = ''
   to: string = ''
@@ -45,46 +47,43 @@ export class AddQuotationComponent implements OnInit  {
   constructor(private route: ActivatedRoute, private addQuotationService: AddQuotationService, private quotationService: QuotationService, private snackBar: MatSnackBar  ) {}
 
 
-  ngOnInit() {
-    this.route.params.subscribe(params => {
-      this.salesRFQ_id = params['id']; 
+async ngOnInit() {
+  try {
+    const params = await firstValueFrom(this.route.params);
+    this.salesRFQ_id = params['id'];
 
+    const data = await firstValueFrom(
       this.addQuotationService.getQuotationBySalesRFQId(this.salesRFQ_id)
-        .subscribe((data: AddQuotation) => {
-          if (data) {
-       
-            this.to = data.to;
-            this.attention = data.attention;
-            this.email = data.email;
-            this.phone = data.phone;
-            this.clientrfq = data.clientrfq;
-            this.subject = data.subject;
-            this.payment = data.payment;
-            this.basis = data.basis;
-            this.validity = data.validity;
-            this.availability = data.availability;
-            this.items = data.products;
-            this.discount = +data.discount
-            this.clientPo = data.clientPo;
-            this.date = data.date
+    );
 
+    if (data) {
+      this.to = data.to;
+      this.attention = data.attention;
+      this.email = data.email;
+      this.phone = data.phone;
+      this.clientrfq = data.clientrfq;
+      this.subject = data.subject;
+      this.payment = data.payment;
+      this.basis = data.basis;
+      this.validity = data.validity;
+      this.availability = data.availability;
+      this.items = data.products;
+      this.discount = +data.discount;
+      this.clientPo = data.clientPo;
+      this.date = data.date;
 
+      const quotationData = await firstValueFrom(
+        this.quotationService.qsingle(this.salesRFQ_id)
+      );
 
-           this.quotationService.qsingle(this.salesRFQ_id).subscribe((quotationData: any) => {
-            if (quotationData) {
-              this.rfqDetail = quotationData;
-            }
-          }, error => {
-            console.error('Error fetching RFQ number', error);
-          });
-        }
-        
-        }, error => {
-          console.error('Error fetching submitted data', error);
-        });
-    });
+      if (quotationData) {
+        this.rfqDetail = quotationData;
+      }
+    }
+  } catch (error) {
+    console.error('Error during initialization:', error);
   }
-
+}
   
 
   addItem() {
@@ -93,26 +92,6 @@ export class AddQuotationComponent implements OnInit  {
   } 
 
 
-/*
-  rows: Product[] =  [{ product: '', qty: 1 , uom: '', unit: 0 ,  total: 0 }]
-  
-  // Method to add new row
-  insertRow() {
-    this.rows.push({ product: '',  qty: 1 , uom: '' ,  unit: 0 ,  total: 0  });
-  }  
-
-  // Method to delete row
-  deleteRow(index: number) {
-    this.rows.splice(index, 1);
-  }
-*/
-
-/*
-  updateTotal(item: Product) {
-    const total = Number(item.qty) * Number(item.unit);
-    item.total = parseFloat(total.toFixed(2)); 
-  }
-  */
 
   updateTotal(item: Product) {
     const totalBeforeUplift = Number(item.qty) * Number(item.unit);
@@ -149,99 +128,84 @@ export class AddQuotationComponent implements OnInit  {
 
 
 
-  submitQuotation() { 
+async submitQuotation() {
+  const totalAmount = this.calculateTotal();
+  const totalPrice = this.calculateTotalprice();
 
-    const totalAmount = this.calculateTotal();
-    const totalPrice = this. calculateTotalprice()
-    
-    this.addQuotationService.getQuotationBySalesRFQId(this.salesRFQ_id)
-      .subscribe(existingQuotation => {
-        if (existingQuotation) {
-          
-          
-          console.log('A quotation already exists for this salesRFQ_id:', existingQuotation);
-          this.updateQuotation(existingQuotation); 
-          this.openSnackBar('Quotation updated');
-        } else {
-      
-          const formData: AddQuotation = {
-            _id: '',
-            salesRFQ_id: this.salesRFQ_id,
-            employee_id: this.employee_id,
-            to: this.to,
-            spo: '',
-            attention: this.attention,
-            email: this.email,
-            phone: this.phone,
-            clientrfq: this.clientrfq,
-            products: this.items,
-            subject: this.subject,
-            basis: this.basis,
-            payment: this.payment,
-            validity: this.validity,
-            availability: this.availability,
-            status: 'not confirmed',
-            totalAmount: totalAmount,
-            discount: this.discount,
-            clientPo: this.clientPo,
-            date: this.date,
-            totalprice: totalPrice
-           
-            
-          };
+  try {
+    const existingQuotation = await firstValueFrom(
+      this.addQuotationService.getQuotationBySalesRFQId(this.salesRFQ_id)
+    );
 
-          console.log('AddQuotation data:', formData);
-         
+    if (existingQuotation) {
+      console.log('A quotation already exists for this salesRFQ_id:', existingQuotation);
+      await this.updateQuotation(existingQuotation);
+      this.openSnackBar('Quotation updated');
+    } else {
+      const formData: AddQuotation = {
+        _id: '',
+        salesRFQ_id: this.salesRFQ_id as unknown as Quotation ,
+        employee_id: this.employee_id,
+        to: this.to,
+        spo: '',
+        attention: this.attention,
+        email: this.email,
+        phone: this.phone,
+        clientrfq: this.clientrfq,
+        products: this.items,
+        subject: this.subject,
+        basis: this.basis,
+        payment: this.payment,
+        validity: this.validity,
+        availability: this.availability,
+        status: 'not confirmed',
+        totalAmount: totalAmount,
+        discount: this.discount,
+        clientPo: this.clientPo,
+        date: this.date,
+        totalprice: totalPrice,
+        createdAt: new Date()
+      };
 
-          // Submit the quotation
-          this.addQuotationService.addQuotation(formData)
-            .subscribe(response => {
-              console.log('Quotation submitted successfully', response);
-              this.openSnackBar('Quotation submitted');
-              
+      console.log('AddQuotation data:', formData);
 
-          
-            }, error => {
-              console.error('Error submitting quotation', error);
-            });
-        }
-      }, error => {
-        console.error('Error checking existing quotation', error);
-      });
+      await firstValueFrom(this.addQuotationService.addQuotation(formData));
+      this.openSnackBar('Quotation submitted');
+      console.log('Quotation submitted successfully');
+    }
+  } catch (error) {
+    console.error('Error during quotation submission:', error);
   }
+}
 
+async updateQuotation(existingQuotation: AddQuotation) {
+  const totalPrice = this.calculateTotalprice();
+  const totalAmount = this.calculateTotal();
 
-  updateQuotation(existingQuotation: AddQuotation) {
+  existingQuotation.to = this.to;
+  existingQuotation.attention = this.attention;
+  existingQuotation.email = this.email;
+  existingQuotation.phone = this.phone;
+  existingQuotation.clientrfq = this.clientrfq;
+  existingQuotation.subject = this.subject;
+  existingQuotation.basis = this.basis;
+  existingQuotation.payment = this.payment;
+  existingQuotation.validity = this.validity;
+  existingQuotation.availability = this.availability;
+  existingQuotation.products = this.items;
+  existingQuotation.clientPo = this.clientPo;
+  existingQuotation.date = this.date;
+  existingQuotation.discount = this.discount;
+  existingQuotation.totalprice = totalPrice;
+  existingQuotation.totalAmount = totalAmount;
 
-    const totalPrice = this. calculateTotalprice()
-    const totalAmount = this.calculateTotal();
-   
-    existingQuotation.to = this.to;
-    existingQuotation.attention = this.attention;
-    existingQuotation.email = this.email;
-    existingQuotation.phone = this.phone;
-    existingQuotation.clientrfq = this.clientrfq;
-    existingQuotation.subject = this.subject;
-    existingQuotation.basis = this.basis;
-    existingQuotation.payment = this.payment;
-    existingQuotation.validity = this.validity;
-    existingQuotation.availability = this.availability;
-    existingQuotation.products = this.items;
-    existingQuotation.clientPo = this.clientPo;
-    existingQuotation.date = this.date
-    existingQuotation.discount = this.discount
-    existingQuotation.totalprice = totalPrice
-    existingQuotation.totalAmount = totalAmount 
-  
-  
-    this.addQuotationService.updateQuotation(existingQuotation._id , existingQuotation)
-      .subscribe(response => {
-        console.log('Quotation updated successfully', response);
-      }, error => {
-        console.error('Error updating quotation', error);
-      });
+  try {
+    await firstValueFrom(this.addQuotationService.updateQuotation(existingQuotation._id, existingQuotation));
+    console.log('Quotation updated successfully');
+  } catch (error) {
+    console.error('Error updating quotation:', error);
   }
-
+}
 
   openSnackBar(message: string) {
     this.snackBar.open(message, 'Close', {

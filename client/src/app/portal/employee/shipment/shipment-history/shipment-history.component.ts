@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ShipmentHistoryService } from './shipment-history.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { firstValueFrom } from 'rxjs';
+import { Shipment } from '../../../../model/shipment.model';
 
 @Component({
   selector: 'app-shipment-history',
@@ -10,7 +12,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 export class ShipmentHistoryComponent implements OnInit {
 
-  shipmentDetails: any
+  shipmentDetails: Shipment[] = []
 
   constructor(private shipmentService: ShipmentHistoryService, private snackBar: MatSnackBar, ) { }
 
@@ -20,41 +22,41 @@ export class ShipmentHistoryComponent implements OnInit {
   }
 
 
-  getShipDetails() {
-    this.shipmentService.getShip().subscribe(
-      (response) => {
-        this.shipmentDetails = response; // Store the fetched RFQ details
-        console.log(this.shipmentDetails);
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
-  }
 
-  confirmDelivery(shipmentId: string) {
-    this.shipmentService.updateShipmentStatus(shipmentId).subscribe(
-      (response) => {
-        // Handle success
-        console.log('Shipment status updated successfully');
-        this.openSnackBar('Shipment delivered successfully');
-        this.getShipDetails();
-      },
-      (error) => {
-        console.error('Error updating shipment status:', error);
-      }
-    );
+  async getShipDetails() {
+    try {
+      const response = await firstValueFrom(this.shipmentService.getShip());
+      this.shipmentDetails = response; // Store the fetched shipment details
+      console.log(this.shipmentDetails);
+    } catch (error) {
+      console.error('Error fetching shipment details:', error);
+    }
   }
 
 
-  getRFQ(detail: any): string {
+
+async confirmDelivery(shipmentId: string) {
+  try {
+    await firstValueFrom(this.shipmentService.updateShipmentStatus(shipmentId));
+
+    console.log('Shipment status updated successfully');
+    this.openSnackBar('Shipment delivered successfully');
+
+    // After successfully updating, refresh shipment details
+    this.getShipDetails();
+  } catch (error) {
+    console.error('Error updating shipment status:', error);
+  }
+}
+
+  getRFQ(detail: Shipment): string {
     if (detail &&  detail.invoice_id.purchase_id.po_id.quotation_id.salesRFQ_id  ) {
       return detail.invoice_id.purchase_id.po_id.quotation_id.salesRFQ_id.srfq; 
     }
     return '';
   }
 
-  getClient(detail: any): string {
+  getClient(detail: Shipment): string {
     if (detail && detail.invoice_id.purchase_id.po_id.quotation_id  ) {
       return detail.invoice_id.purchase_id.po_id.quotation_id.to; 
     }
@@ -63,14 +65,14 @@ export class ShipmentHistoryComponent implements OnInit {
 
 
 
-  getInvoice(detail: any): string {
+  getInvoice(detail: Shipment): string {
     if (detail && detail.invoice_id ) {
       return detail.invoice_id.invoice; 
     }
     return '';
   }
 
-  getDelivery(detail: any): string {
+  getDelivery(detail: Shipment): string {
     if (detail && detail.invoice_id ) {
       return detail.invoice_id.delivery; 
     }
@@ -79,11 +81,11 @@ export class ShipmentHistoryComponent implements OnInit {
 
 
   
-  getResponsible(detail: any): string {
-    if (detail && detail.employee_id) {
-      return detail.employee_id.fname + ' ' + detail.employee_id.lname ; 
+  getResponsible(detail: Shipment): string {
+    if (typeof detail.employee_id === 'object' && 'fname' in detail.employee_id && 'lname' in detail.employee_id) {
+      return `${detail.employee_id.fname} ${detail.employee_id.lname}`;
     }
-    return '';
+    return 'Unknown';
   }
 
 

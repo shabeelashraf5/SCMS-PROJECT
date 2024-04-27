@@ -32,36 +32,9 @@ export class EmployeeLoginComponent implements OnInit {
     });
   }
 
-  /*
-  onSubmit(): void {
-    if (this.loginForm.valid) {
-      const { email, password } = this.loginForm.value;
-      this.store.dispatch(loginEmployee({ email, password }));
-    }
-  }*/
 
-  /*
-  onSubmit(): void {
-    if (this.loginForm.valid) {
-      const { email, password } = this.loginForm.value;
-      of(this.store.dispatch(loginEmployee({ email, password }))).pipe(
-        tap((response: any) => {
-          if (response && response.message === 'Authentication successful') {
-            this.openSnackBar('Login Success');
-          } else {
-            this.openSnackBar('Invalid Email or password');
-          }
-        }),
-        catchError(error => {
-          this.openSnackBar('Server Error');
-          return of(null); // Return a valid observable to continue the stream
-        })
-      ).subscribe();
-    } else {
-      this.openSnackBar('Enter Email and Password');
-    }
-  }
-*/
+
+ 
 
 onSubmit(): void {
   const emailControl = this.loginForm.get('email');
@@ -98,12 +71,6 @@ onSubmit(): void {
   // Dispatch login action
   this.store.dispatch(loginEmployee({ email, password }))
 }
-
-
-
-
-
-
 
 
 

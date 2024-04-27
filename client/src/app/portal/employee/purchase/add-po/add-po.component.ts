@@ -5,6 +5,8 @@ import { PurchaseOrderService } from '../purchase-order/purchase-order.service';
 import { AddPoService } from './add-po.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SalesOrderService } from '../../sales/sales-order/sales-order.service';
+import { firstValueFrom } from 'rxjs';
+import { Po } from '../../../../model/purchase-po.model';
 
 @Component({
   selector: 'app-add-po',
@@ -13,7 +15,7 @@ import { SalesOrderService } from '../../sales/sales-order/sales-order.service';
 })
 export class AddPoComponent {
 
-  poDetail: any
+  poDetail: Po | null = null;
   po_id: string = ''
   to: string = ''
   attention: string = ''
@@ -37,49 +39,43 @@ export class AddPoComponent {
 
   constructor(private route: ActivatedRoute, private addPoService: AddPoService, private poService: PurchaseOrderService, private snackBar: MatSnackBar,
     private salesOrderService :  SalesOrderService  ) { 
-/*
-    this.route.params.subscribe(params => {
-      this.po_id= params['id']; // Get the sales RFQ ID from the route parameters
-  }); */
+
   }
 
 
-  ngOnInit() {
-    this.route.params.subscribe(params => {
-      this.po_id = params['id']; 
 
-      this.addPoService.getPoBypurchaePOId(this.po_id)
-        .subscribe((data: AddPo) => {
-          if (data) {
-       
-            this.to = data.to;
-            this.attention = data.attention;
-            this.email = data.email;
-            this.phone = data.phone;
-            this.supplierrfq = data.supplierrfq;
-            this.subject = data.subject;
-            this.payment = data.payment;
-            this.basis = data.basis;
-            this.validity = data.validity;
-            this.availability = data.availability;
-            this.items = data.products;
+async ngOnInit() {
+  try {
+    const params = await firstValueFrom(this.route.params);
+    this.po_id = params['id'];
 
-            this.poService.poSingle(this.po_id).subscribe((poData: any) => {
-              if (poData) {
-                this.poDetail = poData;
-              }
-            }, error => {
-              console.error('Error fetching PO number', error);
-            });
-          }
+    if (this.po_id) {
+      const data = await firstValueFrom(this.addPoService.getPoBypurchaePOId(this.po_id));
 
-        }, error => {
-          console.error('Error fetching submitted data', error);
-        });
-    });
+      if (data) {
+        this.to = data.to;
+        this.attention = data.attention;
+        this.email = data.email;
+        this.phone = data.phone;
+        this.supplierrfq = data.supplierrfq;
+        this.subject = data.subject;
+        this.payment = data.payment;
+        this.basis = data.basis;
+        this.validity = data.validity;
+        this.availability = data.availability;
+        this.items = data.products;
 
-  
+        const poData = await firstValueFrom(this.poService.poSingle(this.po_id));
+
+        if (poData) {
+          this.poDetail = poData;
+        }
+      }
+    }
+  } catch (error) {
+    console.error('Error during initialization:', error);
   }
+}
 
   
 
@@ -105,70 +101,50 @@ export class AddPoComponent {
 
   
 
-  submitPo() {
+async submitPo() {
+  try {
+    const existingQuotation = await firstValueFrom(this.addPoService.getPoBypurchaePOId(this.po_id));
 
-    const totalAmount = this.calculateTotal();
+    if (existingQuotation) {
+      console.log('A quotation already exists for this po_id:', existingQuotation);
+      await this.updatePo(existingQuotation);
+      this.openSnackBar('Purchase Order Updated');
+    } else {
+      const formData: AddPo = {
+        _id: '',
+        po_id: this.po_id as unknown as Po,
+        employee_id: this.employee_id,
+        to: this.to,
+        attention: this.attention,
+        email: this.email,
+        phone: this.phone,
+        supplierrfq: this.supplierrfq,
+        products: this.items,
+        subject: this.subject,
+        basis: this.basis,
+        payment: this.payment,
+        validity: this.validity,
+        availability: this.availability,
+        totalAmount: this.calculateTotal(),
+        status: 'not confirmed',
+        createdAt: new Date()
+      };
 
-    
+      console.log('AddPo data:', formData);
 
-    this.addPoService.getPoBypurchaePOId(this.po_id)
-      .subscribe(existingQuotation => {
-        if (existingQuotation) {
-          
-          
-          console.log('A quotation already exists for this po_id:', existingQuotation);
-          this.updatePo(existingQuotation); 
-          this.openSnackBar('Purchase Order Updated');
-        } else { 
-      
-          const formData: AddPo = {
-            _id: '',
-            po_id: this.po_id,
-            employee_id: this.employee_id,
-            to: this.to,
-      
-            attention: this.attention,
-            email: this.email,
-            phone: this.phone,
-            supplierrfq: this.supplierrfq,
-            products: this.items,
-            subject: this.subject,
-            basis: this.basis,
-            payment: this.payment,
-            validity: this.validity,
-            availability: this.availability,
-            totalAmount: totalAmount,
-            status: 'not confirmed'
-            
-          };
-
-          
-
-          console.log('AddPo data:', formData);
-
-          // Submit the quotation
-          this. addPoService.addPo(formData)
-            .subscribe(response => {
-              console.log('Quotation submitted successfully', response);
-              this.openSnackBar('Purchase Order submitted');
-              
-
-          
-            }, error => {
-              console.error('Error submitting quotation', error);
-            });
-            
-        }
-      }, error => {
-        console.error('Error checking existing quotation', error);
-      });
+      const response = await firstValueFrom(this.addPoService.addPo(formData));
+      console.log('Quotation submitted successfully', response);
+      this.openSnackBar('Purchase Order submitted');
+    }
+  } catch (error) {
+    console.error('Error submitting quotation', error);
   }
+}
 
-
-  updatePo(existingQuotation: AddPo) {
-
+async updatePo(existingQuotation: AddPo) {
+  try {
     const totalAmount = this.calculateTotal();
-   
+
     existingQuotation.to = this.to;
     existingQuotation.attention = this.attention;
     existingQuotation.email = this.email;
@@ -181,17 +157,13 @@ export class AddPoComponent {
     existingQuotation.availability = this.availability;
     existingQuotation.products = this.items;
     existingQuotation.totalAmount = totalAmount;
-    
-  
-  
-    this. addPoService.updatePo(existingQuotation._id , existingQuotation)
-      .subscribe(response => {
-        console.log('Quotation updated successfully', response);
-      }, error => {
-        console.error('Error updating quotation', error);
-      });
-  }
 
+    const response = await firstValueFrom(this.addPoService.updatePo(existingQuotation._id, existingQuotation));
+    console.log('Quotation updated successfully', response);
+  } catch (error) {
+    console.error('Error updating quotation', error);
+  }
+}
 
   openSnackBar(message: string) {
     this.snackBar.open(message, 'Close', {
@@ -201,6 +173,8 @@ export class AddPoComponent {
     });
   }
 
+  
+  /*
   getClient(detail: any): string {
     if (detail && detail.quotation_id ) {
       return detail.quotation_id.to; 
@@ -213,14 +187,8 @@ export class AddPoComponent {
       return detail.quotation_id.totalAmount; 
     }
     return '';
-  }
+  }*/
 
 
-  
- 
-
-
-
-  
 
 }

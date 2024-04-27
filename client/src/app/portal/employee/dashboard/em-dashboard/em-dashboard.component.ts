@@ -61,15 +61,7 @@ export class EmDashboardComponent implements OnInit {
    
 }
 
-/*
-deleteMessage(message: any) {
-  if (message && message._id) {
-    this.store.dispatch(EmMessagingActions.deleteMessage({ messageId: message._id }));
-    console.log(message._id);
-  } else {
-    console.error('Category or its ID is undefined');
-  }
-}*/
+
 
 
 deleteMessage(message: Messaging) {

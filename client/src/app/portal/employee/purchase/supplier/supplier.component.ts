@@ -1,14 +1,17 @@
-import { Component } from '@angular/core';
+import { Component , OnInit} from '@angular/core';
 import { SupplierService } from './supplier.service';
+import { firstValueFrom } from 'rxjs';
+import { AddPo } from '../../../../model/purchase-addpo.model';
+
 
 @Component({
   selector: 'app-supplier',
   templateUrl: './supplier.component.html',
   styleUrl: './supplier.component.css'
 })
-export class SupplierComponent {
+export class SupplierComponent implements OnInit {
 
-  supplierDetails: any;
+  supplierDetails: AddPo[] =[]
 
 
   constructor(private supplierService: SupplierService ) { }
@@ -20,16 +23,16 @@ export class SupplierComponent {
 
   }
 
-  getClientDetails() {
-    this.supplierService.getSupplier().subscribe(
-      (response) => {
-        this.supplierDetails = response; 
-        console.log(this.supplierDetails);
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
+ 
+
+  async getClientDetails() {
+    try {
+      const response = await firstValueFrom(this.supplierService.getSupplier());
+      this.supplierDetails = response; // Store the fetched supplier details
+      console.log(this.supplierDetails);
+    } catch (error) {
+      console.error('Error fetching supplier details:', error);
+    }
   }
 
 }

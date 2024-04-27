@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Chart, registerables } from 'chart.js';
 import { AdDashboardService } from './ad-dashboard.service';
 import { AdEmployeeService } from '../../employee/ad-employee/ad-employee.service';
+import { AddQuotation } from '../../../../model/sales-addquo';
+import { Employee } from '../../../../model/ad-employee.model';
 
 
 Chart.register(...registerables)
@@ -13,13 +15,13 @@ Chart.register(...registerables)
 })
 export class AdDashboardComponent implements OnInit {
 
-  myChart: any;
+  myChart!: Chart 
   currentData: number[] = []; // Default data for month
   currentTimePeriod: string = 'month'; // Default time period
-  employeeDetails: any
+  employeeDetails: Employee[] =[]
   currentDate: Date = new Date();
 
-  spoDetails: any;
+  spoDetails: AddQuotation[] = [];
 
   constructor(private dashboardService :  AdDashboardService , private emService: AdEmployeeService) { }
 
@@ -58,7 +60,7 @@ export class AdDashboardComponent implements OnInit {
     );
   }
 
-  calculateEmployee(details: any[]): number {
+  calculateEmployee(details: Employee[]): number {
     const uniqueCustomers: string[] = [];
     for (const detail of details) {
         if (!uniqueCustomers.includes(detail.fname)) {
@@ -69,19 +71,19 @@ export class AdDashboardComponent implements OnInit {
 }
 
 
-  calculateUniqueCustomers(details: any[]): number {
+  calculateUniqueCustomers(details: AddQuotation[]): number {
     
     const uniqueCustomers = new Set(details.map(detail => detail.to));
     return uniqueCustomers.size;
 }
 
 
-calculateOrders(details: any[]): number {
+calculateOrders(details: AddQuotation[]): number {
   
   return details.filter(detail => detail.status === 'Confirmed').length;
 }
 
-calculateTotalOrders(details: any[]): number {
+calculateTotalOrders(details: AddQuotation[]): number {
   
   return details.reduce((total, detail) => total + detail.totalAmount, 0);
 }

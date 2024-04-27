@@ -1,65 +1,59 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { PurchaseOrderService } from './purchase-order.service';
 import { Router } from '@angular/router';
 import { Invoice } from '../../../../model/invoice.model';
+import { firstValueFrom } from 'rxjs';
+import { Po } from '../../../../model/purchase-po.model';
+import { Quotation } from '../../../../model/sales-quotation.model';
+import { AddQuotation } from '../../../../model/sales-addquo';
+
 
 @Component({
   selector: 'app-purchase-order',
   templateUrl: './purchase-order.component.html',
   styleUrl: './purchase-order.component.css'
 })
-export class PurchaseOrderComponent {
+export class PurchaseOrderComponent implements OnInit {
 
 
-
-
-  poDetails: any;
+  poDetails: Po[] = []
 
   _id!: string; 
   employee_id: string = ''
 
 
-
   constructor(private purchaseService:PurchaseOrderService, private router: Router) { }
 
   ngOnInit() {
-    this.getPoDetails(); // Call getRFQDetails() when the component initializes
+    this.getPoDetails(); 
+
+  }
+
+
+async getPoDetails() {
+  try {
+    const response = await firstValueFrom(this.purchaseService.getPo());
+    this.poDetails = response; // Store the fetched PO details
+    console.log(this.poDetails);
+  } catch (error) {
+    console.error('Error fetching PO details:', error);
+  }
+}
+
+ 
+
+  async getPurchaseDetail(_id: string) {
+    try {
+      const data = await firstValueFrom(this.purchaseService.poSingle(_id));
+      // Navigate to AddQuotationComponent with the ID parameter
+      this.router.navigate(['/portal/purchase/purchase-order', _id]);
+    } catch (error) {
+      console.error('Error fetching quotation detail:', error);
+    }
+  }
+
+
 /*
-    this.route.params.subscribe(params => {
-      const _id = params['id']; // Get the 'id' parameter from the route
-      this.getQuotationDetail(_id);
-    });*/
-  }
-
-
-  getPoDetails() {
-    this.purchaseService.getPo().subscribe(
-      (response) => {
-        this.poDetails = response; // Store the fetched RFQ details
-        console.log(this.poDetails);
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
-  }
-
-
-  
-  getPurchaseDetail(_id: string) {
-    this.purchaseService.poSingle(_id).subscribe(
-      (data) => {
-        // Navigate to AddQuotationComponent with the ID parameter
-        this.router.navigate(['/portal/purchase/purchase-order', _id]);
-      },
-      (error) => {
-        console.error('Error fetching quotation detail:', error);
-      }
-    );
-  }
-
-
-
   getSpo(rfqId: any): string {
     if (typeof rfqId === 'object') {
       return rfqId.spo  ;
@@ -75,15 +69,23 @@ export class PurchaseOrderComponent {
   }
   return '';
 }
+*/
 
-
-getResponsible(detail: any): string {
-  if (detail && detail.employee_id) {
-    return detail.employee_id.fname + ' ' + detail.employee_id.lname ; 
-  }
-  return '';
+getSpo(rfqId: AddQuotation): string {
+  return rfqId.spo || '';
 }
 
+getSrfq(quotation: AddQuotation): string {
+  return quotation.salesRFQ_id?.srfq || '';
+}
+
+
+getResponsible(detail: Po): string {
+  if (typeof detail.employee_id === 'object' && 'fname' in detail.employee_id && 'lname' in detail.employee_id) {
+    return `${detail.employee_id.fname} ${detail.employee_id.lname}`;
+  }
+  return 'Unknown';
+}
 
 
 }

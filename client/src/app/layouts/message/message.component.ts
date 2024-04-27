@@ -7,6 +7,7 @@ import { EmployeeLoginService } from '../../portal/employee/employeelogin/employ
 import { ToastrService } from 'ngx-toastr';
 import { ToasterService } from '../../service/toaster.service';
 import { environment } from '../../../environment/environment';
+import { firstValueFrom } from 'rxjs';
 
 
 
@@ -124,7 +125,7 @@ export class MessageComponent implements OnInit,  AfterViewChecked {
     });
   }
   
-
+/*
   loadProfile() {
     this.employeeService.getProfile().subscribe(
       (response) => {
@@ -135,10 +136,20 @@ export class MessageComponent implements OnInit,  AfterViewChecked {
         console.error(error);
       }
     );
+  } */
+
+  async loadProfile() {
+    try {
+      const response = await firstValueFrom(this.employeeService.getProfile());
+      this.employeeProfile = response; // Store the fetched employee profile
+      console.log('Employee Profile:', this.employeeProfile);
+    } catch (error) {
+      console.error('Error fetching employee profile:', error);
+    }
   }
 
 
-
+/*
   openChat(user: any) {
     this.selectedUser = user;
 
@@ -157,10 +168,31 @@ export class MessageComponent implements OnInit,  AfterViewChecked {
     this.requestExistingChat(user._id); 
   } 
 
+*/
 
+async openChat(user: any) {
+  this.selectedUser = user;
+
+  try {
+    // Mark message as 'Seen' when chat is opened
+    const response = await firstValueFrom(
+      this.employeeService.markMessageAsSeen(user._id)
+    );
+    console.log('Message marked as Seen:', response);
+
+    // Clear chat arrays
+    this.chatMessages = [];
+    this.receiverChat = [];
+
+    // Request existing chat data for the user
+    this.requestExistingChat(user._id);
+  } catch (error) {
+    console.error('Error marking message as Seen:', error);
+  }
+}
  
 
-
+/*
   createChat(receiverId: string) {
 
     const senderId = this.authService.getLoggedInEmployeeId();
@@ -200,7 +232,43 @@ export class MessageComponent implements OnInit,  AfterViewChecked {
      
       }
     );
-  } 
+  } */
+
+  async createChat(receiverId: string) {
+    const senderId = this.authService.getLoggedInEmployeeId();
+    if (!senderId) {
+      console.error('Sender ID is null');
+      return;
+    }
+
+    const newChat: Chat = {
+      _id: '', 
+      sender_id: senderId,
+      receiver_id: receiverId, 
+      message: this.message,
+      createdAt: new Date(),
+      isRead: 'Delivered',
+    };
+
+    console.log('Creating new chat:', newChat);
+
+    try {
+      const response = await firstValueFrom(this.employeeService.addChat(newChat));
+
+      console.log('Chat created:', response);
+
+      // Extract the receiver_id from the response and emit a socket event
+      this.receiver_id = response.data.receiver_id;
+      this.socket.emit('chatMessage', response.data);
+
+      // Clear the message input
+      this.message = '';
+
+      // You can call additional functions here if needed
+    } catch (error) {
+      console.error('Error creating chat:', error);
+    }
+  }
 
 
   requestExistingChat(receiverId: string) {

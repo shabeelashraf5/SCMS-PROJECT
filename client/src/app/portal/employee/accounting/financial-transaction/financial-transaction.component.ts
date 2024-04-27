@@ -1,6 +1,10 @@
 import { Component } from '@angular/core';
 import { FinancialTransactionService } from './financial-transaction.service';
 import { Router } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Invoice } from '../../../../model/invoice.model';
+import { AddQuotation } from '../../../../model/sales-addquo';
 
 @Component({
   selector: 'app-financial-transaction',
@@ -9,13 +13,12 @@ import { Router } from '@angular/router';
 })
 export class FinancialTransactionComponent {
 
-  invDetails: any;
+  invDetails: Invoice[] = [];
 
   _id!: string; 
   employee_id: string = ''
   purchase_id: string =''
   errorMessage: string = '';
-
 
 
   constructor(private transactionService: FinancialTransactionService, private router: Router) { }
@@ -25,47 +28,45 @@ export class FinancialTransactionComponent {
 
   }
 
-
-  getTransDetail(_id: string) {
-    this.transactionService.transSingle(_id).subscribe(
-      (data) => {
-        // Navigate to AddQuotationComponent with the ID parameter
-        this.router.navigate(['/portal/accounting/financial-transaction', _id]);
-      },
-      (error) => {
-        console.error('Error fetching quotation detail:', error);
-      }
-    );
-  } 
-
-
-  getTransactionDetails() {
-    this.transactionService.getTrans().subscribe(
-      (response) => {
-        this.invDetails = response; // Store the fetched RFQ details
-        console.log(this. invDetails);
-      },
-      (error) => {
-        console.error(error);
-        if (error.status === 403) {
-          this.errorMessage = 'You are not authorized to access this page.';
-        } else {
-          this.errorMessage = 'An error occurred while fetching data.';
-        }
-      }
-    );
-  }
-
-
-
-  getAmount(amtId: any): string {
-    if (typeof amtId === 'object') {
-      return amtId.totalAmount  ;
+  async getTransDetail(_id: string) {
+    try {
+      await firstValueFrom( this.transactionService.transSingle(_id));
+      this.router.navigate(['/portal/accounting/financial-transaction', _id]);
+    } catch (error) {
+      console.error('Error fetching transaction detail:', error);
     }
-    return '';
   }
 
-  getPO(detail: any): string {
+  
+
+async  getTransactionDetails() {
+  try {
+    const response = await firstValueFrom(
+      this.transactionService.getTrans()
+    );
+    this.invDetails = response; // Store the fetched RFQ details
+    console.log(this.invDetails);
+  } catch (error) {
+    console.error(error);
+
+    if (error instanceof HttpErrorResponse && error.status === 403) {
+      this.errorMessage = 'You are not authorized to access this page.';
+    } else {
+      this.errorMessage = 'An error occurred while fetching data.';
+    }
+  }
+}
+
+
+  getAmount(detail: Invoice): number {
+    if (detail && detail.purchase_id  ) {
+      return detail.purchase_id.totalAmount; 
+    }
+    return 0;
+  }
+
+  
+  getPO(detail: Invoice): string {
     if (detail && detail.purchase_id && detail.purchase_id.po_id && detail.purchase_id.po_id.po) {
       return detail.purchase_id.po_id.po; 
     }
@@ -73,14 +74,14 @@ export class FinancialTransactionComponent {
   }
 
 
-  getSupplier(detail: any): string {
+  getSupplier(detail: Invoice): string {
     if (detail && detail.purchase_id) {
       return detail.purchase_id.to; 
     }
     return '';
   }
 
-  getSRFQ(detail: any): string {
+  getSRFQ(detail: Invoice): string {
     if (detail && detail.purchase_id && detail.purchase_id.po_id && detail.purchase_id.po_id.quotation_id && detail.purchase_id.po_id.quotation_id.salesRFQ_id) {
       return detail.purchase_id.po_id.quotation_id.salesRFQ_id.srfq; 
     }
@@ -88,11 +89,11 @@ export class FinancialTransactionComponent {
   }
   
 
-  getResponsible(detail: any): string {
-    if (detail && detail.employee_id) {
-      return detail.employee_id.fname + ' ' + detail.employee_id.lname ; 
+  getResponsible(detail: Invoice): string {
+    if (typeof detail.employee_id === 'object' && 'fname' in detail.employee_id && 'lname' in detail.employee_id) {
+      return `${detail.employee_id.fname} ${detail.employee_id.lname}`;
     }
-    return '';
+    return 'Unknown';
   }
 
 

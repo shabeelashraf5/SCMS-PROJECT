@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { Quotation } from './sales-quotation.model';
 
 export interface Product {
     product: string;
@@ -11,7 +12,7 @@ export interface Product {
 
 export interface AddQuotation {
     _id: string;
-    salesRFQ_id: mongoose.Types.ObjectId | string
+    salesRFQ_id: Quotation;
     employee_id: mongoose.Types.ObjectId | string;
     to: string;
     attention: string;
@@ -33,5 +34,6 @@ export interface AddQuotation {
     date: string;
     spo: string;
     status: 'not confirmed' | 'Confirmed';
+    createdAt: Date
    
 }

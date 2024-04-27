@@ -61,7 +61,7 @@ export class VideoChatComponent {
       const roomID = getUrlParams().get('roomID') || randomID(5);
 
      // generate Kit Token
-      const appID = 1511448381 ;
+      const appID = 792852619 ;
       const serverSecret = environment.secret_key ;
       const kitToken =  ZegoUIKitPrebuilt.generateKitTokenForTest(appID, serverSecret, roomID,  randomID(5),  randomID(5));
 

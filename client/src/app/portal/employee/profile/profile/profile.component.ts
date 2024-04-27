@@ -9,6 +9,7 @@ import { ProfileService } from './profile.service';
 import * as AdEmployeeActions from '../../../admin/employee/ad-employee/store/ad-employee.action'
 import { AdEmployeeService } from '../../../admin/employee/ad-employee/ad-employee.service';
 import { environment } from '../../../../../environment/environment';
+import { firstValueFrom } from 'rxjs';
 
 
 @Component({
@@ -44,15 +45,15 @@ export class ProfileComponent implements OnInit {
     this.loadProfile();
   }
 
-  loadProfile() {
-    this.employeeService.getProfile().subscribe(
-      (profile: Employee) => {
-        this.employeeProfile = profile;
-      },
-      (error) => {
-        console.error('Error fetching employee profile:', error);
-      }
-    );
+  
+
+  async loadProfile() {
+    try {
+      const profile = await firstValueFrom(this.employeeService.getProfile());
+      this.employeeProfile = profile;
+    } catch (error) {
+      console.error('Error fetching employee profile:', error);
+    }
   }
 
 
@@ -63,32 +64,29 @@ export class ProfileComponent implements OnInit {
 
 
 
-  editProfileEmployee(employee: Partial<Employee>) {
-    const _id = employee._id;
 
-    if (_id !== undefined) {
-      const formData = new FormData();
+async editProfileEmployee(employee: Partial<Employee>) {
+  const _id = employee._id;
 
-      if (this.selectedFile) {
-        formData.append('image', this.selectedFile);
-      }
+  if (_id !== undefined) {
+    const formData = new FormData();
 
-      this.emService.updateEmployee(_id, formData).subscribe(() => {
-        // Handle success if needed
-        this.loadProfile();
-      }, error => {
-        console.error('Error updating profile employee:', error);
-      });
-    } else {
-      console.error('Employee ID is undefined');
+    if (this.selectedFile) {
+      formData.append('image', this.selectedFile);
     }
 
-    this.modal2.nativeElement.close();
-
+    try {
+      await firstValueFrom(this.emService.updateEmployee(_id, formData));
+      // Handle success if needed
+      this.loadProfile(); // Reload the profile after successful update
+    } catch (error) {
+      console.error('Error updating profile employee:', error);
+    } finally {
+      this.modal2.nativeElement.close(); // Close the modal in any case
+    }
   }
 
-
-
+}
 
 
   onFileSelected(event: any): void {

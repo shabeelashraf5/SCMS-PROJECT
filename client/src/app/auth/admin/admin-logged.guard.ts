@@ -1,26 +1,20 @@
-import { Injectable } from '@angular/core';
-import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { Injectable, inject } from '@angular/core';
+import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot, CanActivateFn } from '@angular/router';
 import { AdminLoginService } from '../../portal/admin/adminlogin/admin-login/admin-login.service';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class CanAdminLogged implements CanActivate {
 
-  constructor(private authService: AdminLoginService, private router: Router) {}
+export const CanAdminLogged: CanActivateFn = (route, state) => {
+  const authService = inject(AdminLoginService);
+  const router = inject(Router);
 
-  canActivate(): boolean {
-    const token = this.authService.getToken();
+  const token = authService.getToken();
 
-    if (token) {
-      console.log('CanActivateAdmin guard activated: Token exists:', token);
-      return true;
-    } else {
-      console.log('CanActivateAdmin guard activated: Token does not exist');
-      this.router.navigate(['/admin']);
-      return false;
-    }
+  if (token) {
+    console.log('canAdminLogged guard activated: Token exists:', token);
+    return true;
+  } else {
+    console.log('canAdminLogged guard activated: Token does not exist');
+    router.navigate(['/admin']);
+    return false;
   }
-  
-  
-}
+};

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { QuotationService } from './quotation.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Quotation } from '../../../../model/sales-quotation.model';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-quotation',
@@ -11,7 +12,7 @@ import { Quotation } from '../../../../model/sales-quotation.model';
 
 export class QuotationComponent implements OnInit {
 
-  rfqDetails: any;
+  rfqDetails: Quotation[] = [];
 
   _id!: string; 
   employee_id: string = ''
@@ -21,73 +22,67 @@ export class QuotationComponent implements OnInit {
   constructor(private salesService: QuotationService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit() {
-    this.getRFQDetails(); // Call getRFQDetails() when the component initializes
-/*
-    this.route.params.subscribe(params => {
-      const _id = params['id']; // Get the 'id' parameter from the route
-      this.getQuotationDetail(_id);
-    });*/
+    this.getRFQDetails(); 
+
   }
 
+ 
 
-  getRFQDetails() {
-    this.salesService.getRFQ().subscribe(
-      (response) => {
-        this.rfqDetails = response; // Store the fetched RFQ details
-        console.log(this.rfqDetails);
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
-  }
-
-
-  
-  createRFQ() {
-    const newRFQ: Quotation = {
-      _id: '', 
-      employee_id: this.employee_id,
-      srfq: '', 
-      status: 'not submitted'
-    };
-
-    console.log(newRFQ)
-  
-    this.salesService.addRFQ(newRFQ).subscribe(
-      (response) => {
-        console.log(response);
-      
-        this.getRFQDetails();
-      },
-      (error) => {
-        console.error(error);
-     
-      }
-    );
-  }
-
-
-
-  getQuotationDetail(_id: string) {
-    this.salesService.qsingle(_id).subscribe(
-      (data) => {
-        // Navigate to AddQuotationComponent with the ID parameter
-        this.router.navigate(['/portal/sales/quotations', _id]);
-      },
-      (error) => {
-        console.error('Error fetching quotation detail:', error);
-      }
-    );
-  }
-
-
-  
-  getResponsible(detail: any): string {
-    if (detail && detail.employee_id) {
-      return detail.employee_id.fname + ' ' + detail.employee_id.lname ; 
+  async getRFQDetails() {
+    try {
+      const response = await firstValueFrom(this.salesService.getRFQ());
+      this.rfqDetails = response; // Store the fetched RFQ details
+      console.log(this.rfqDetails);
+    } catch (error) {
+      console.error('Error fetching RFQ details:', error);
     }
-    return '';
+  }
+
+
+
+
+async createRFQ() {
+  const newRFQ: Quotation = {
+    _id: '',
+    employee_id: this.employee_id,
+    srfq: '',
+    status: 'not submitted',
+    createdAt: new Date()
+  };
+
+  console.log('Creating new RFQ:', newRFQ);
+
+  try {
+    await firstValueFrom(this.salesService.addRFQ(newRFQ));
+    console.log('RFQ created successfully');
+
+    // After creating the RFQ, refresh the RFQ details
+    await this.getRFQDetails(); // This could also be asynchronous
+  } catch (error) {
+    console.error('Error creating RFQ:', error);
+    // You can also add further error handling here, like showing a snackbar or alert
+  }
+}
+
+
+
+
+async getQuotationDetail(_id: string) {
+  try {
+    await firstValueFrom(this.salesService.qsingle(_id));
+    this.router.navigate(['/portal/sales/quotations', _id]);
+    console.log('Navigated to quotation detail for ID:', _id);
+  } catch (error) {
+    console.error('Error fetching quotation detail:', error);
+  }
+}
+
+  
+  getResponsible(detail: Quotation): string {
+    if (typeof detail.employee_id === 'object' && 'fname' in detail.employee_id && 'lname' in detail.employee_id) {
+      return `${detail.employee_id.fname} ${detail.employee_id.lname}`;
+    }
+    return 'Unknown';
   }
 
 

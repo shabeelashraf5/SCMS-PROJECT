@@ -7,6 +7,7 @@ export interface Quotation {
     employee_id: mongoose.Types.ObjectId | string;
     srfq: string;
     status: 'not submitted' | 'Submitted';
+    createdAt: Date
 
 
 }
