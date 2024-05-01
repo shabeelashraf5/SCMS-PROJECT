@@ -9,7 +9,7 @@ export const loadProductFailure = createAction('[Product] Load Product Failure',
 
 export const addProduct = createAction('[Ad Product ] Create Product', props<{ category_id: string, product: string, description: string, uom: string, price: number, availability: string }>());
 export const addProductSuccess = createAction('[Ad Product] Create Product Success', props<{ product: Product }>());
-export const addProductFailure = createAction('[Ad Product] Create Product Failure', props<{ error: any }>());  
+export const addProductFailure = createAction('[Ad Product] Create Product Failure', props<{ error: string}>());  
 
 
 export const updateProduct = createAction('[Ad Product] Update Product', props<{ product: Partial<Product> }>());

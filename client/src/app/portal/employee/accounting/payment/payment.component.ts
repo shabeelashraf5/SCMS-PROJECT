@@ -10,13 +10,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Subscription , firstValueFrom } from 'rxjs';
 import { Invoice } from '../../../../model/invoice.model';
+import { PaymentMethod } from '../../../../enums/payment.enum';
+import { lastValueFrom } from 'rxjs';
 
-
-
-enum PaymentMethod {
-  Online = 'online',
-  Cash = 'cash',
-}
 
 @Component({
   selector: 'app-payment',
@@ -31,7 +27,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
 
   transDetail!: Invoice
 
-  quotation_id: any;
+  quotationId!: string;
 
   _id!: string; 
   employee_id: string = ''
@@ -39,23 +35,20 @@ export class PaymentComponent implements OnInit, OnDestroy {
 
   selectedPaymentMethod: string = '';
   amount: number = 0;
-  stripePromise: any;
+  stripePromise: Promise<Stripe | null>;
 
   private routeSub!: Subscription;
 
 
   constructor(private http: HttpClient , private route: ActivatedRoute, private transService: FinancialTransactionService, private paymentService:  PaymentService ,  private snackBar: MatSnackBar, private router: Router  ) {
     this.stripePromise = loadStripe(environment.stripeKey);
-   
-   
-
    }
 
 
-  ngOnInit() {
+   ngOnInit(): void {
     this.routeSub = this.route.params.subscribe((params) => {
-      this.quotation_id = params['id'];
-      this.fetchTransDetails(this.quotation_id);
+      this.quotationId = params['id']; 
+      this.fetchTransDetails(this.quotationId);
     });
   }
 
@@ -124,10 +117,17 @@ async fetchTransDetails(quotation_id: string) {
 async payNow() {
   if (this.selectedPaymentMethod === PaymentMethod.Online) {
     try {
+
       const amountInCents = this.getAmount(this.transDetail) * 100;
-      const response = await this.paymentService.createPaymentIntent(amountInCents, this.getCurrency(this.transDetail)).toPromise();
+      const response = await lastValueFrom(this.paymentService.createPaymentIntent(amountInCents, this.getCurrency(this.transDetail)) );
       this.openSnackBar('Payment process initiated. Please wait...');
       const stripe = await this.stripePromise;
+
+      if (!stripe) {
+        // Handle the case where stripe could not be initialized
+        this.openSnackBar('Stripe could not be initialized. Please try again later.');
+        return;
+      }
       
       const { error } = await stripe.redirectToCheckout({
         sessionId: response.sessionId

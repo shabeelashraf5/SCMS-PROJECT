@@ -59,13 +59,6 @@ async getInvDetails() {
 }
 
 
-/*
-  getAmount(amtId: any): string {
-    if (typeof amtId === 'object') {
-      return amtId.totalAmount  ;
-    }
-    return '';
-  } */
 
   getPO(detail: Invoice): string {
     if (detail && detail.purchase_id && detail.purchase_id.po_id && detail.purchase_id.po_id.po) {
@@ -96,6 +89,9 @@ async getInvDetails() {
     return 'Unknown';
   }
   
+  trackByInvoice(index: number, invoice: Invoice): string {
+    return invoice._id 
+  }
   
 
 }

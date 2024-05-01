@@ -1,4 +1,4 @@
-import { createReducer, on } from '@ngrx/store';
+import { Action, createReducer, on } from '@ngrx/store';
 import { initialEmMessagingState, EmMessagingState } from './em-dashboard.state';
 import * as EmMessagingActions from '../store/em-dashboard.action';
 
@@ -39,7 +39,7 @@ export const emDashboardReducer = createReducer(
   
 );
 
-export function reducer(state: EmMessagingState | undefined, action: any) {
+export function reducer(state: EmMessagingState | undefined, action: Action) {
   return emDashboardReducer(state, action); 
  
 }

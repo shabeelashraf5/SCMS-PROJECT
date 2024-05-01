@@ -1,8 +1,8 @@
-import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnInit, OnDestroy,} from '@angular/core';
 import { Store, select  } from '@ngrx/store';
 import * as AdProductActions from '../ad-product/store/ad-product.action';
 import { Product } from '../../../../model/ad-product.model';
-import { Observable, map } from 'rxjs';
+import { Observable, map, Subject, takeUntil } from 'rxjs';
 import { AppState } from '../../../../state/app.state';
 import { AdCategoryService } from '../../category/ad-category/ad-category.service'; 
 import { Category } from '../../../../model/ad-category.model';
@@ -14,9 +14,10 @@ import { ObjectId, Types } from 'mongoose';
   templateUrl: './ad-product.component.html',
   styleUrl: './ad-product.component.css'
 })
-export class AdProductComponent {
 
-  _id: string = ''
+export class AdProductComponent implements OnInit, OnDestroy {
+  // Component attributes
+  _id: string = '';
   category_id: string = '';
   product: string = '';
   description: string = '';
@@ -30,164 +31,153 @@ export class AdProductComponent {
   totalPages: number = 1;
 
   selectedProduct: Product | null = null;
-  categories$: Observable<Category[]>;
+  categories$!: Observable<Category[]>;
   product$: Observable<Product[]>;
 
   categories: Category[] = [];
 
-categoryMap: { [key: string]: string } = {};;
+  //categoryMap: { [key: string]: string } = {};
 
   productToEdit: Partial<Product> = {};
 
-@ViewChild('my_modal_1') modal!: ElementRef;
-@ViewChild('my_modal_2') modal2!: ElementRef;
+  // Subject for managing unsubscription
+  private destroy$ = new Subject<void>();
 
-constructor(private store: Store<AppState> , private adCategoryService: AdCategoryService) {
-  this.product$ = this.store.pipe(select(state => state.product.products));
+  @ViewChild('my_modal_1') modal!: ElementRef;
+  @ViewChild('my_modal_2') modal2!: ElementRef;
 
-  this.categories$ = this.adCategoryService.getCategory()
-  this.categories$.subscribe(categories => {
-    this.categories = categories;
-    console.log('Categories:', this.categories); // Log categories array
-  }); 
-  
-}
+  constructor(private store: Store<AppState>, private adCategoryService: AdCategoryService) {
+    this.product$ = this.store.pipe(select(state => state.product.products));
+  }
 
-ngOnInit(): void {
-  this.store.dispatch(AdProductActions.loadProduct());
-
-  this.adCategoryService.getCategory().subscribe(categories => {
-    this.categories = categories;
-    console.log('Categories:', this.categories);
-  });
-
-  this.calculateTotalPages();
-
-}
-
-onSubmit(): void {
-  
-  const product  = {
-
-    category_id: this.category_id,
-    product: this.product,
-    description: this.description,
-    uom: this.uom,
-    price: this.price,
-    availability: this.availability,
- 
-    
-  };
-
-  console.log('Employee object before dispatching:', product);
-
-  this.store.dispatch(AdProductActions.addProduct(product));
- 
-  this.category_id = '';
-  this.product = '';
-  this.description = '';
-  this.uom = '';
-  this.price = 0;
-  this.availability = '';
-  
-  this.modal.nativeElement.close(); 
-  
-} 
+  ngOnInit(): void {
+    this.store.dispatch(AdProductActions.loadProduct());
 
 
-editProducts(product: Partial<Product>) {
-  this.productToEdit = { ...product }; // Copy the user details to the userToEdit object
-  this.modal2.nativeElement.showModal();
-}
+    // Subscribe to categories and store the subscription to unsubscribe later
+    this.categories$ = this.adCategoryService.getCategory();
+    this.categories$.pipe(takeUntil(this.destroy$)).subscribe(categories => {
+      this.categories = categories;
+      console.log('Categories:', this.categories);
+    }); 
 
+    this.calculateTotalPages();
+  }
 
-editProduct(product: Partial<Product>) {
-  this.store.dispatch(AdProductActions.updateProduct({ product }));
+  onSubmit(): void {
+    const product = {
+      category_id: this.category_id,
+      product: this.product,
+      description: this.description,
+      uom: this.uom,
+      price: this.price,
+      availability: this.availability,
+    };
+
+    this.store.dispatch(AdProductActions.addProduct(product));
+
+    // Reset form fields
+    this.resetForm();
+
+    this.modal.nativeElement.close();
+  }
+
+  // Method to reset form fields
+  resetForm(): void {
+    this.category_id = '';
+    this.product = '';
+    this.description = '';
+    this.uom = '';
+    this.price = 0;
+    this.availability = '';
+  }
+
+  editProducts(product: Partial<Product>) {
+    this.productToEdit = { ...product };
+    this.modal2.nativeElement.showModal();
+  }
+
+  editProduct(product: Partial<Product>) {
+    this.store.dispatch(AdProductActions.updateProduct({ product }));
     this.modal2.nativeElement.close();
   }
 
-
-  deleteProduct(product: any) {
-    if (product && product._id) {
+  deleteProduct(product: Product): void {
+    if (product._id) {
       this.store.dispatch(AdProductActions.deleteProduct({ productId: product._id }));
-      console.log(product._id);
+      console.log(`Deleted product with ID: ${product._id}`);
     } else {
       console.error('Product or its ID is undefined');
     }
-  } 
+  }
 
-  confirmDelete(employee: any) {
-    if (confirm('Are you sure you want to delete?')) {
-        this.deleteProduct(employee);
+  confirmDelete(product: Product): void {
+    if (confirm('Are you sure you want to delete this product?')) {
+      this.deleteProduct(product);
     }
   }
 
-/*
-onFileSelected(event: any): void {
-  if (event.target.files.length > 0) {
-    const file = event.target.files[0];
-    this.image = file; // Assign the selected file to the image property
+  showModal(): void {
+    this.modal.nativeElement.showModal();
   }
-}
-*/
 
-showModal(): void {
-  this.modal.nativeElement.showModal();
-}
-
-get filteredRecords() {
-  const searchTermLower = this.searchTerm.toLowerCase();
-  return this.product$.pipe(
-    map(records => records.filter(record => 
-      record.product.toLowerCase().includes(searchTermLower) ||
-      record.description.toLowerCase().includes(searchTermLower) ||
-      record.uom.toLowerCase().includes(searchTermLower) ||
-      record.availability.toLowerCase().includes(searchTermLower)
-    ))
-  );
-}
-
-
-
-getCategory(categoryId: any): string {
-  if (typeof categoryId === 'object') {
-    return categoryId.category;
+  get filteredRecords(): Observable<Product[]> {
+    const searchTermLower = this.searchTerm.toLowerCase();
+    return this.product$.pipe(
+      map(records => records.filter(record => 
+        record.product.toLowerCase().includes(searchTermLower) ||
+        record.description.toLowerCase().includes(searchTermLower) ||
+        record.uom.toLowerCase().includes(searchTermLower) ||
+        record.availability.toLowerCase().includes(searchTermLower)
+      ))
+    );
   }
-  return '';
-}
 
 
-calculateTotalPages(): void {
-  this.product$.subscribe(product => {
-    this.totalPages = Math.ceil(product.length / this.itemsPerPage);
-  });
-}
-
-getCurrentPageRecords(): Observable<Product[]> {
-  return this.filteredRecords.pipe(
-    map(records => {
-      const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-      return records.slice(startIndex, startIndex + this.itemsPerPage);
-    })
-  );
-}
-
-
-previousPage(): void {
-  if (this.currentPage > 1) {
-    this.currentPage--;
+  getCategory(categoryId: string | Category): string {
+    if (typeof categoryId === 'object' && 'category' in categoryId) {
+      return categoryId.category;
+    }
+    return 'Unknown Category'; // Provide a default value or fallback if it's not valid
   }
-}
 
-// Method to navigate to the next page
-nextPage(): void {
-  if (this.currentPage < this.totalPages) {
-    this.currentPage++;
+  trackByCategory(index: number, category: Category): string {
+    return category._id 
   }
-}
 
+  trackByProduct(index: number, product: Product): string {
+    return product._id;
+  }
 
+  calculateTotalPages(): void {
+    this.product$.pipe(takeUntil(this.destroy$)).subscribe(product => {
+      this.totalPages = Math.ceil(product.length / this.itemsPerPage);
+    });
+  }
 
+  getCurrentPageRecords(): Observable<Product[]> {
+    return this.filteredRecords.pipe(
+      map(records => {
+        const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+        return records.slice(startIndex, startIndex + this.itemsPerPage);
+      })
+    );
+  }
 
+  previousPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+    }
+  }
 
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next(); // Emit value to trigger unsubscription
+    this.destroy$.complete(); // Complete the subject
+  }
 }

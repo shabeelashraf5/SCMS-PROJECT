@@ -1,3 +1,4 @@
+import { OnlineStatus } from "../enums/online-status.enum";
 export interface Employee {
   _id: string;
   fname: string;
@@ -9,5 +10,6 @@ export interface Employee {
   area: string;
   image: string;
   token?: string;
+  is_online?: OnlineStatus;
   
   }

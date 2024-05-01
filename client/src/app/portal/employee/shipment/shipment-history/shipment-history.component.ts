@@ -13,15 +13,15 @@ import { Shipment } from '../../../../model/shipment.model';
 export class ShipmentHistoryComponent implements OnInit {
 
   shipmentDetails: Shipment[] = []
+  confirmedDelivery: Set<string> = new Set();
 
   constructor(private shipmentService: ShipmentHistoryService, private snackBar: MatSnackBar, ) { }
 
   ngOnInit() {
     this.getShipDetails(); 
+    this.loadConfirmedDelivery()
 
   }
-
-
 
   async getShipDetails() {
     try {
@@ -33,9 +33,22 @@ export class ShipmentHistoryComponent implements OnInit {
     }
   }
 
+  loadConfirmedDelivery() {
+    const storedDelivery = localStorage.getItem('confirmedDelivery');
+    if (storedDelivery) {
+      const parsedPurchase = JSON.parse(storedDelivery);
+      this.confirmedDelivery = new Set(parsedPurchase);
+    }
+  }
+
 
 
 async confirmDelivery(shipmentId: string) {
+
+  if (this.confirmedDelivery.has(shipmentId)) {
+    return; 
+  }
+
   try {
     await firstValueFrom(this.shipmentService.updateShipmentStatus(shipmentId));
 
@@ -44,6 +57,9 @@ async confirmDelivery(shipmentId: string) {
 
     // After successfully updating, refresh shipment details
     this.getShipDetails();
+    this.confirmedDelivery.add(shipmentId);  // Mark this quotation as confirmed
+    localStorage.setItem('confirmedDelivery', JSON.stringify([...this.confirmedDelivery]));
+
   } catch (error) {
     console.error('Error updating shipment status:', error);
   }
@@ -86,6 +102,11 @@ async confirmDelivery(shipmentId: string) {
       return `${detail.employee_id.fname} ${detail.employee_id.lname}`;
     }
     return 'Unknown';
+  }
+
+  
+  trackByShipment(index: number, shipment: Shipment): string {
+    return shipment._id; // Return a unique identifier for the product
   }
 
 

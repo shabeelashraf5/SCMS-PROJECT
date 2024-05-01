@@ -12,7 +12,6 @@ import { SalesOrderService } from '../sales-order/sales-order.service';
 })
 export class ClientPoComponent {
 
-  clientPoDetail: any
   employee_id: string = ''
   quotation_id: string = ''
   clientPo: string = ''

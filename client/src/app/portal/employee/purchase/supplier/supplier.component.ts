@@ -35,4 +35,8 @@ export class SupplierComponent implements OnInit {
     }
   }
 
+  trackBySupplier(index: number, supplier: AddPo): string {
+    return supplier._id 
+  }
+
 }

@@ -1,4 +1,4 @@
-import { createReducer, on } from '@ngrx/store';
+import { Action , createReducer, on } from '@ngrx/store';
 import { initialAdProductState, AdProductState } from './ad-product.state';
 import * as AdProductActions from './ad-product.action'
 
@@ -53,6 +53,6 @@ export const adProductReducer = createReducer(
 
 )
 
-export function reducer(state: AdProductState | undefined, action: any) {
+export function reducer(state: AdProductState | undefined, action: Action) {
     return adProductReducer(state, action);
   }

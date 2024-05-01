@@ -8,7 +8,7 @@ export const loadAdminFailure = createAction('[Admin] Load Admin Failure', props
 
 export const addAdmin = createAction('[Ad Admin ] Create Admin', props<{ fname: string, lname: string, email: string, password: string }>());
 export const addAdminSuccess = createAction('[Ad Admin] Create Admin Success', props<{ admin: Admin }>());
-export const addAdminFailure = createAction('[Ad Admin] Create Admin Failure', props<{ error: any }>());
+export const addAdminFailure = createAction('[Ad Admin] Create Admin Failure', props<{ error: string}>());
 
 export const updateAdmin = createAction('[Ad Admin] Update Admin', props<{ admin: Partial<Admin> }>());
 export const updateAdminSuccess = createAction('[Ad Admin] Update Admin Success', props<{ admin: Admin }>());

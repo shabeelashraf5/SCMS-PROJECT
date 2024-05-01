@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { AddQuotation } from './sales-addquo';
+import { SubmitStatus } from '../enums/submit-status.enum';
 
 export interface Po {
 
@@ -8,7 +9,7 @@ export interface Po {
     employee_id: mongoose.Types.ObjectId | string;
     quotation_id: AddQuotation 
     po: string;
-    status: 'not submitted' | 'Submitted';
+    status:  SubmitStatus ;
     createdAt: Date
 
 }

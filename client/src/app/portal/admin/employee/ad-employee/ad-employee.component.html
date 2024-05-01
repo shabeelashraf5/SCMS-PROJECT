@@ -103,7 +103,7 @@
         </thead>
         <tbody>
           <!-- row 1 -->
-          <tr  *ngFor="let employee of getCurrentPageRecords() | async; let i = index">
+          <tr  *ngFor="let employee of getCurrentPageRecords() | async; let i = index; trackBy: trackByEmployee">
             <th>
               1
             </th>

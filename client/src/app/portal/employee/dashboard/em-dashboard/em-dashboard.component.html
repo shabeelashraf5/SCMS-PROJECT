@@ -12,7 +12,7 @@
 </form>
 
 
-<div *ngFor="let message of messages$ | async;" class="flex flex-col max-w-lg p-6 space-y-6 overflow-hidden rounded-lg shadow-md bg-base-300 text-white-800 relative mt-4 ml-20 ">
+<div *ngFor="let message of messages$ | async; trackBy: trackByDashboard" class="flex flex-col max-w-lg p-6 space-y-6 overflow-hidden rounded-lg shadow-md bg-base-300 text-white-800 relative mt-4 ml-20 ">
   
 	<div class="flex space-x-4">
 		<img alt=""  [src]="getImageUrl(getImage(message.employee_id))" class="object-cover w-12 h-12 rounded-full shadow bg-gray-500">

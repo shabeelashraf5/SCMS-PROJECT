@@ -1,4 +1,4 @@
-import { createReducer, on } from '@ngrx/store';
+import { Action , createReducer, on } from '@ngrx/store';
 import { initialProfileState, ProfileState } from './profile.state';
 import * as AdProfileActions from './profile.action'
 
@@ -21,6 +21,6 @@ export const emProfileReducer = createReducer(
 
 )
 
-export function reducer(state: ProfileState | undefined, action: any) {
+export function reducer(state: ProfileState | undefined, action: Action) {
     return emProfileReducer(state, action);
   }

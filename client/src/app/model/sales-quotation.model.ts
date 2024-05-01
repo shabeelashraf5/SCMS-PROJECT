@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { SubmitStatus } from '../enums/submit-status.enum';
 
 export interface Quotation {
 
@@ -6,7 +7,7 @@ export interface Quotation {
     _id: string;
     employee_id: mongoose.Types.ObjectId | string;
     srfq: string;
-    status: 'not submitted' | 'Submitted';
+    status: SubmitStatus;
     createdAt: Date
 
 

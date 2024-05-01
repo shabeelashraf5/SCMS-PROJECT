@@ -7,6 +7,8 @@ import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { AddQuotation } from '../../../../model/sales-addquo';
 import { Po } from '../../../../model/purchase-po.model';
+import { OrderStatus } from '../../../../enums/order-status.enum';
+import { PayStatus } from '../../../../enums/pay-status.enum';
 
 @Component({
   selector: 'app-purchase-history',
@@ -19,12 +21,14 @@ export class PurchaseHistoryComponent {
 
   _id!: string; 
   employee_id: string = ''
+  confirmedPurchase: Set<string> = new Set();
  
   
   constructor(private purchaseHistoryService :  PurchaseHistoryService, private snackBar: MatSnackBar, private router: Router  ) { }
 
   ngOnInit() {
 
+    this.loadConfirmedPurchase()
     this.getClientDetails(); 
 
   }
@@ -40,8 +44,21 @@ async getClientDetails() {
   }
 }
 
+loadConfirmedPurchase() {
+  const storedPurchase = localStorage.getItem('confirmedQuotations');
+  if (storedPurchase) {
+    const parsedPurchase = JSON.parse(storedPurchase);
+    this.confirmedPurchase = new Set(parsedPurchase);
+  }
+}
+
 
   async createInv(purchaseId: string) {
+
+    if (this.confirmedPurchase.has(purchaseId)) {
+      return; 
+    }
+  
     console.log('purchaseId:', purchaseId);
 
     const newInv: Invoice = {
@@ -51,8 +68,8 @@ async getClientDetails() {
       invoice: '',
       delivery: '',
       transaction: '',
-      payment: 'to be Paid',
-      status: 'not confirmed'
+      payment: PayStatus.NOTPAID,
+      status: OrderStatus.PENDING
     };
 
     console.log(newInv);
@@ -62,6 +79,8 @@ async getClientDetails() {
       console.log(response);
 
       await this.getClientDetails(); // Await this function to ensure completion before proceeding
+      this.confirmedPurchase.add(purchaseId);  // Mark this quotation as confirmed
+      localStorage.setItem('confirmedQuotations', JSON.stringify([...this.confirmedPurchase]));
       this.openSnackBar('Purchase Confirmed');
     } catch (error) {
       console.error('Error creating invoice:', error);
@@ -86,6 +105,11 @@ async getClientDetails() {
     return 'Unknown';
   
   }
+
+  trackByPurchaseHistory(index: number, purchasehistory: AddPo): string {
+    return purchasehistory._id 
+  }
+  
 
   openSnackBar(message: string) {
     this.snackBar.open(message, 'Close', {

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { EmployeeLoginService } from '../../../../portal/employee/employeelogin/employee-login/employee-login.service';
-import io from 'socket.io-client';
+import { io, Socket } from 'socket.io-client';
 import { environment } from '../../../../../environment/environment';
 
 
@@ -13,7 +13,7 @@ import { environment } from '../../../../../environment/environment';
 export class EmployeeSbComponent implements OnInit {
 
   sidebarItems : string[] = [];
-  socket: any;
+  socket!: Socket;
 
   constructor(private authService: EmployeeLoginService, private router: Router ) { }
 
@@ -98,6 +98,11 @@ export class EmployeeSbComponent implements OnInit {
         return '/';
     }
   }
+
+  trackBysideBar(index: number, sidebar: string): string {
+    return sidebar;
+  }
+
 
   logout(): void {
     

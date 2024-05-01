@@ -34,6 +34,10 @@ export class CustomerComponent implements OnInit {
       console.error('Error fetching client details:', error);
     }
   }
+
+  trackByCustomer(index: number, customer: AddQuotation): string {
+    return customer._id; // Return a unique identifier for the product
+  }
   
 
 }

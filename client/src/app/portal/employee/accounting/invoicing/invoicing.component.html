@@ -26,7 +26,7 @@
       </thead>
       <tbody>
         <!-- row 1 -->
-        <tr *ngFor="let detail of invDetails">
+        <tr *ngFor="let detail of invDetails; trackBy: trackByInvoice">
           <th></th>
           <td>
             <div class="flex items-center gap-3">

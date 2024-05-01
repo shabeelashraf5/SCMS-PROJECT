@@ -1,17 +1,18 @@
-import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Store, select  } from '@ngrx/store';
 import { AppState } from '../../../../state/app.state';
 import * as AdUserActions from '../ad-user/store/ad-user.action';
 import { Admin } from '../../../../model/ad-user.model'
-import { Observable,map } from 'rxjs';
+import { Observable,map, Subject  } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-ad-user',
   templateUrl: './ad-user.component.html',
   styleUrl: './ad-user.component.css'
 })
-export class AdUserComponent implements OnInit  {
+export class AdUserComponent implements OnInit, OnDestroy  {
   _id: string = ''
   fname: string = '';
   lname: string = '';
@@ -29,6 +30,7 @@ export class AdUserComponent implements OnInit  {
    admins$: Observable<Admin[]>; 
 
    adminToEdit: Partial<Admin> = {};
+   private destroy$ = new Subject<void>();
 
 
   @ViewChild('my_modal_1') modal!: ElementRef;
@@ -36,7 +38,8 @@ export class AdUserComponent implements OnInit  {
   
 
   constructor(private store: Store<AppState>,  private formBuilder: FormBuilder,) {
-    this.admins$ = this.store.pipe(select(state => state.admin.admins));
+    //this.admins$ = this.store.pipe(select(state => state.admin.admins));
+     this.admins$ = this.store.pipe(select(state => state.admin.admins), takeUntil(this.destroy$));
     
     
   }
@@ -78,23 +81,26 @@ export class AdUserComponent implements OnInit  {
     this.modal2.nativeElement.close();
   }
 
-  deleteAdmin(admin: any) {
-    if (admin && admin._id) {
+ 
+
+  deleteAdmin(admin: Admin): void {
+    if (admin._id) {
       this.store.dispatch(AdUserActions.deleteAdmin({ adminId: admin._id }));
-      console.log(admin._id);
+      console.log(`Deleted admin with ID: ${admin._id}`);
     } else {
-      console.error('Category or its ID is undefined');
+      console.error('Admin or its ID is undefined');
     }
   }
 
 
-  confirmDelete(employee: any) {
-    if (confirm('Are you sure you want to delete?')) {
-        this.deleteAdmin(employee);
+  confirmDelete(admin: Admin): void {
+    if (confirm('Are you sure you want to delete this admin?')) {
+      this.deleteAdmin(admin);
     }
   }
+
   
-
+  
   showModal(): void {
     this.modal.nativeElement.showModal();
   }
@@ -111,8 +117,15 @@ export class AdUserComponent implements OnInit  {
     );
   }
 
+  /*
   calculateTotalPages(): void {
     this.admins$.subscribe(admins => {
+      this.totalPages = Math.ceil(admins.length / this.itemsPerPage);
+    });
+  } */
+
+  calculateTotalPages(): void {
+    this.admins$.pipe(takeUntil(this.destroy$)).subscribe(admins => {
       this.totalPages = Math.ceil(admins.length / this.itemsPerPage);
     });
   }
@@ -141,11 +154,15 @@ export class AdUserComponent implements OnInit  {
     }
   }
 
+  trackByAdmin(index: number, admin: Admin): string {
+    return admin._id;
+  }
 
 
-
-
-
+  ngOnDestroy(): void {
+    this.destroy$.next(); // Trigger unsubscription
+    this.destroy$.complete(); // Complete the Subject
+  }
 
   
 }

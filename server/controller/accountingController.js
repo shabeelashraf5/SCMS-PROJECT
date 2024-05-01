@@ -328,7 +328,9 @@ const paymentSup = async function (req, res) {
             billing_address_collection: 'required',
         });
 
-        await invoicing.findOneAndUpdate({ _id: invoiceId }, { $set: { payment: 'Paid' } });
+        const test = await invoicing.findOneAndUpdate({ _id: invoiceId }, { $set: { payment: 'Paid' } });
+        console.log('Hello:', test)
+
 
         res.json({ sessionId: session.id });
     } catch (error) {
@@ -347,35 +349,6 @@ const createPaymentSession = (req, res, next) => {
 };
 
 
-/*
-const createPaymentSession = async function(req, res) {
-    try {
-        const { amount } = req.body;
-        if (!amount) {
-            return res.status(400).json({ error: 'Price ID is required.' });
-        }
-
-        const session = await stripe.checkout.sessions.create({
-            payment_method_types: ['card'],
-            line_items: [
-                {
-                    price: amount,
-                    quantity: 1, // Assuming quantity is 1
-                },
-            ],
-            mode: 'payment',
-            success_url: 'http://localhost:4200/success',
-            cancel_url: 'http://localhost:4200/cancel',
-        });
-
-        res.json({ sessionId: session.id });
-    } catch (error) {
-        console.error('Error creating checkout session:', error);
-        res.status(500).json({ error: 'An internal server error occurred.' });
-    }
-}
-
-*/
 
 const confirmPayment = async function (req, res)  {
     const invoiceId = req.params.id;

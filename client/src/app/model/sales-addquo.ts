@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { Quotation } from './sales-quotation.model';
+import { OrderStatus } from '../enums/order-status.enum';
 
 export interface Product {
     product: string;
@@ -33,7 +34,7 @@ export interface AddQuotation {
     clientPo: string;
     date: string;
     spo: string;
-    status: 'not confirmed' | 'Confirmed';
+    status: OrderStatus;
     createdAt: Date
    
 }

@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { Invoice } from './invoice.model';
+import { DeliveryStatus } from '../enums/delivery-status.enum';
 
 export interface Shipment {
 
@@ -8,9 +9,7 @@ export interface Shipment {
     employee_id: mongoose.Types.ObjectId | string;
     invoice_id: Invoice 
     shipment: string;
-    status: 'Not Delivered' | 'Delivered';
+    status: DeliveryStatus;
   
-  
-
 }
 

@@ -4,6 +4,8 @@ import { AdDashboardService } from './ad-dashboard.service';
 import { AdEmployeeService } from '../../employee/ad-employee/ad-employee.service';
 import { AddQuotation } from '../../../../model/sales-addquo';
 import { Employee } from '../../../../model/ad-employee.model';
+import { firstValueFrom } from 'rxjs';
+import { OrderStatus } from '../../../../enums/order-status.enum';
 
 
 Chart.register(...registerables)
@@ -13,6 +15,7 @@ Chart.register(...registerables)
   templateUrl: './ad-dashboard.component.html',
   styleUrl: './ad-dashboard.component.css'
 })
+
 export class AdDashboardComponent implements OnInit {
 
   myChart!: Chart 
@@ -33,7 +36,7 @@ export class AdDashboardComponent implements OnInit {
     
   }
 
-
+/*
   getClientDetails() {
     this.dashboardService.getSPO().subscribe(
       (response) => {
@@ -47,8 +50,20 @@ export class AdDashboardComponent implements OnInit {
       }
     );
   }
+*/
+
+  async getClientDetails() {
+    try {
+      const response = await firstValueFrom( this.dashboardService.getSPO());
+      this.spoDetails = response; 
+      console.log('SPO Details:', this.spoDetails);
+    } catch (error) {
+      console.error('Error fetching SPO details:', error);
+    }
+  }
 
 
+  /*
   loadEmployee() {
     this.emService.getEmployees().subscribe(
       (response) => {
@@ -58,7 +73,19 @@ export class AdDashboardComponent implements OnInit {
         console.error('Error fetching employee profile:', error);
       }
     );
+  }*/
+
+  async  loadEmployee() {
+    try {
+      const response = await firstValueFrom( this.emService.getEmployees());
+      this.employeeDetails = response; 
+      console.log('Employee Details:', this.employeeDetails);
+    } catch (error) {
+      console.error('Error fetching Employee details:', error);
+    }
   }
+
+
 
   calculateEmployee(details: Employee[]): number {
     const uniqueCustomers: string[] = [];
@@ -80,7 +107,7 @@ export class AdDashboardComponent implements OnInit {
 
 calculateOrders(details: AddQuotation[]): number {
   
-  return details.filter(detail => detail.status === 'Confirmed').length;
+  return details.filter(detail => detail.status === OrderStatus.CONFIRMED).length;
 }
 
 calculateTotalOrders(details: AddQuotation[]): number {
@@ -119,44 +146,18 @@ calculateTotalOrders(details: AddQuotation[]): number {
     const weekWiseOrders =  Array(4).fill(0);
     const dayWiseOrders =  Array(7).fill(0);
 
-   /*  // Calculate month-wise confirmed orders
-  this.spoDetails.forEach((detail: any) => {
-    const date = new Date(detail.createdAt);
-    const monthIndex = date.getMonth();
-    if (detail.status === 'Confirmed') {
-      monthWiseOrders[monthIndex]++;
-    }
-  });
+   
 
-  this.spoDetails.forEach((detail: any) => {
-    const date = new Date(detail.createdAt);
-    const weekIndex = Math.floor(date.getDate() / 7);
-    if (detail.status === 'Confirmed') {
-      weekWiseOrders[weekIndex]++;
-    }
-  });
-
-
-  this.spoDetails.forEach((detail: any) => {
-    const date = new Date(detail.createdAt);
-    const dayIndex = date.getDay();;
-    if (detail.status === 'Confirmed') {
-      dayWiseOrders[dayIndex]++;
-    }
-  });*/
-
-  this.spoDetails.forEach((detail: any) => {
+  this.spoDetails.forEach((detail: AddQuotation) => {
     const date = new Date(detail.createdAt);
     const monthIndex = date.getMonth();
     const weekIndex = this.getWeekIndex(date);
-    if (detail.status === 'Confirmed') {
+    if (detail.status === OrderStatus.CONFIRMED) {
         monthWiseOrders[monthIndex]++;
         weekWiseOrders[weekIndex]++;
         dayWiseOrders[date.getDay()]++;
     }
 });
-
-
 
 
     switch (this.currentTimePeriod) {

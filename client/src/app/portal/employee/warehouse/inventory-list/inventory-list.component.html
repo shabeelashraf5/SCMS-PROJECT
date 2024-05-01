@@ -29,9 +29,9 @@
               
             </tr>
           </thead>
-          <tbody>
+          <tbody >
             <!-- row 1 -->
-            <tr *ngFor="let product of product$ | async; let i = index">
+            <tr *ngFor="let product of product$ | async; let i = index; trackBy: trackByProductId">
               <th>
                 {{ i + 1 }}
               </th>

@@ -21,7 +21,7 @@
       
         <select class="select select-bordered w-full max-w-xs mt-5" [(ngModel)]="category_id" name="category_id" required>
           <option disabled [ngValue]="null">Select Category</option>
-          <option *ngFor="let category of categories$ | async" [value]="category._id">{{ category.category }}</option>
+          <option *ngFor="let category of categories$ | async; trackBy: trackByCategory" [value]="category._id">{{ category.category }}</option>
         </select>
         <div *ngIf="productForm.controls['category_id'].invalid && (productForm.controls['category_id'].dirty || productForm.controls['category_id'].touched)">
           <small class="text-red-500">Select a Category</small>
@@ -88,7 +88,7 @@
       </thead>
       <tbody>
         <!-- row 1 -->
-        <tr *ngFor="let product of getCurrentPageRecords() | async; let i = index">
+        <tr *ngFor="let product of getCurrentPageRecords() | async; let i = index; trackBy: trackByProduct">
           <th>
             1
           </th>
@@ -123,7 +123,7 @@
 
                   <select name="category" [(ngModel)]="productToEdit.category_id" class="select select-bordered w-full max-w-xs mt-5">
                     <option disabled selected>Select Category</option>
-                    <option *ngFor="let category of categories$ | async" [value]="category._id">{{ category.category }}</option>
+                    <option *ngFor="let category of categories$ | async; trackBy: trackByCategory" [value]="category._id">{{ category.category }}</option>
                   </select>
                   
           

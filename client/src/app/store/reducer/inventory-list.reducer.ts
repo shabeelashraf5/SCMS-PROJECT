@@ -1,4 +1,4 @@
-import { createReducer, on } from '@ngrx/store';
+import {Action, createReducer, on } from '@ngrx/store';
 import { initialInventoryState, InventoryState } from '../state/inventory-list.state';
 import * as AdProductActions from '../action/inventory-list.action'
 
@@ -18,10 +18,8 @@ export const inventoryReducer = createReducer(
         error
       }))
     
-    
-    
     )
     
-    export function reducer(state: InventoryState | undefined, action: any) {
+    export function reducer(state: InventoryState | undefined, action: Action) {
         return inventoryReducer(state, action);
       }

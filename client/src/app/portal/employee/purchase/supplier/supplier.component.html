@@ -32,9 +32,9 @@
               
             </tr>
           </thead>
-          <tbody>
+          <tbody *ngIf="supplierDetails.length > 0">
             <!-- row 1 -->
-            <tr  *ngFor="let detail of supplierDetails" >
+            <tr  *ngFor="let detail of supplierDetails; trackBy: trackBySupplier" >
               <th>
                 
               </th>
@@ -56,6 +56,14 @@
             </tr>
            
             
+          </tbody>
+
+          <tbody *ngIf="supplierDetails.length === 0">
+            <tr>
+              <td colspan="5" class="text-3xl text-center font-bold text-gray-600 h-20 ">
+                No Data
+              </td>
+            </tr>
           </tbody>
           <!-- foot -->
           <tfoot>

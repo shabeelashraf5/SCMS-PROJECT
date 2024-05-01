@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Employee } from '../../../../model/ad-employee.model';
 import { tap , map } from 'rxjs/operators';
 import { environment } from '../../../../../environment/environment';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -60,16 +61,33 @@ login(email: string, password: string): Observable<{ employee: Employee; token: 
 
 logout(employeeId: string): void {
 
-  
   this.http.put(`${this.apiUrl}/logout`, { employeeId }).subscribe(
     () => console.log('User status updated to offline'),
     error => console.error('Error updating user status:', error)
   );
-    
 
   localStorage.removeItem(this.tokenKey);
   console.log('User logged out');
+} 
+
+/*
+async logout(employeeId: string): Promise<void> {
+  try {
+    // Use firstValueFrom to convert observable to a promise and await its result
+    await firstValueFrom(this.http.put(`${this.apiUrl}/logout`, { employeeId }));
+    console.log('User status updated to offline');
+
+    // Perform local storage cleanup
+    localStorage.removeItem(this.tokenKey);
+    console.log('User logged out');
+
+  } catch (error) {
+    console.error('Error during logout process:', error);
+  }
 }
+*/
+
+
 
 getToken(): string | null {
 

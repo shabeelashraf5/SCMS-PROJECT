@@ -1,13 +1,16 @@
 import { Component, OnInit, AfterViewChecked, ViewChild, ElementRef } from '@angular/core';
 import { MessageService } from './message.service';
 import { Employee } from '../../model/ad-employee.model';
-import io from 'socket.io-client';
+//import io from 'socket.io-client';
+import { io, Socket } from 'socket.io-client';
 import { Chat } from '../../model/chat.model';
 import { EmployeeLoginService } from '../../portal/employee/employeelogin/employee-login/employee-login.service';
 import { ToastrService } from 'ngx-toastr';
 import { ToasterService } from '../../service/toaster.service';
 import { environment } from '../../../environment/environment';
 import { firstValueFrom } from 'rxjs';
+import { OnlineStatus } from '../../enums/online-status.enum';
+import { ChatStatus } from '../../enums/chat-status.enum';
 
 
 
@@ -21,20 +24,15 @@ export class MessageComponent implements OnInit,  AfterViewChecked {
 
   @ViewChild('chatContainer') chatContainer!: ElementRef;
 
-  employeeProfile!: any
-  selectedContact: any;
-  socket: any;
-  sender_id: any;
-  receiver_id: any
+  employeeProfile: Employee[] = []
+  socket!: Socket;
+  sender_id: string | null = null;
+  receiver_id: string | null = null;
   message: string = '';
-  selectedUser: any; 
+  selectedUser: Employee | null = null; 
   chatMessages: Chat[] = [];
-  chat: any
   receiverChat: Chat[] = [];
   mergedMessages: Chat[] = [];
-  sender: any
-  receiver: string = ''
-  onlineUsers: any[] = [];
   showToastr: boolean = false;
   
 
@@ -79,15 +77,8 @@ export class MessageComponent implements OnInit,  AfterViewChecked {
         console.error('Logged-in employee ID not found');
         return;
       }
-      /*
-      if (message.receiver_id === loggedInEmployeeId) {
-        
-        this.toastr.success('New message received', 'New Message');
-        this.showToastr = true; // Set to true to display the Toastr notification
-        setTimeout(() => {
-          this.showToastr = false; // Hide the Toastr notification after a certain period
-        }, 5000); // Adjust the time as per your preference
-      } */
+      
+
       if (message.sender_id === loggedInEmployeeId || message.receiver_id === loggedInEmployeeId) {
         this.chatMessages.push(message);
         
@@ -119,58 +110,32 @@ export class MessageComponent implements OnInit,  AfterViewChecked {
 
   
   loadExistingChats() {
-    // Emit event to request existing chats
+   
     this.socket.emit('existsChat', {
       sender_id: this.authService.getLoggedInEmployeeId()
     });
   }
   
-/*
-  loadProfile() {
-    this.employeeService.getProfile().subscribe(
-      (response) => {
-        this.employeeProfile = response; 
-        console.log(this.employeeProfile);
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
-  } */
+
 
   async loadProfile() {
     try {
       const response = await firstValueFrom(this.employeeService.getProfile());
-      this.employeeProfile = response; // Store the fetched employee profile
-      console.log('Employee Profile:', this.employeeProfile);
+      if (Array.isArray(response)) {
+        this.employeeProfile = response;
+      } else {
+        // If not an array, handle the error case
+        console.error('Expected an array of Employee, but got:', response);
+      }
     } catch (error) {
       console.error('Error fetching employee profile:', error);
     }
   }
 
 
-/*
-  openChat(user: any) {
-    this.selectedUser = user;
 
-    // Mark message as 'Seen' when chat is opened
-    this.employeeService.markMessageAsSeen(user._id).subscribe(
-      (response) => {
-        console.log('Message marked as Seen:', response);
-      },
-      (error) => {
-        console.error('Error marking message as Seen:', error);
-      }
-    );
 
-    this.chatMessages = [];
-    this.receiverChat = [];
-    this.requestExistingChat(user._id); 
-  } 
-
-*/
-
-async openChat(user: any) {
+async openChat(user: Employee) {
   this.selectedUser = user;
 
   try {
@@ -192,47 +157,7 @@ async openChat(user: any) {
 }
  
 
-/*
-  createChat(receiverId: string) {
 
-    const senderId = this.authService.getLoggedInEmployeeId();
-    if (!senderId) {
-        console.error('Sender ID is null');
-        return;
-    }
-
-    const newChat: Chat = {
-
-      _id: '', 
-      sender_id: senderId,
-      receiver_id: receiverId, 
-      message: this.message, 
-      createdAt: new Date(),
-      isRead: 'Delivered'
-      
-    };
-
-    console.log(newChat)
-
-    this.employeeService.addChat(newChat).subscribe(
-      (response) => {
-
-        //this.chat = response.data.message
-       // this.chatMessages.push(response.data);
-        console.log(response);
-        this.receiver_id = response.data.receiver_id
-        console.log(this.receiver_id );
-        this.socket.emit('chatMessage', response.data);
-        this.message = '';
-
-        // this.loadOldChats(senderId, receiverId);
-      },
-      (error) => {
-        console.error(error);
-     
-      }
-    );
-  } */
 
   async createChat(receiverId: string) {
     const senderId = this.authService.getLoggedInEmployeeId();
@@ -247,7 +172,7 @@ async openChat(user: any) {
       receiver_id: receiverId, 
       message: this.message,
       createdAt: new Date(),
-      isRead: 'Delivered',
+      isRead: ChatStatus.DELIVERED,
     };
 
     console.log('Creating new chat:', newChat);
@@ -290,11 +215,22 @@ async openChat(user: any) {
     return   environment.apiUrl + `/images/${imageFileName}`; 
   }
 
-
-  isOnline(): boolean {
-    return this.onlineUsers.includes(this.sender_id);
+  trackByEmployee(index: number, employee: Employee): string {
+    return employee._id;
   }
-  
+
+  trackByChat(index: number, chat: Chat): string {
+    return chat._id;
+  }
+
+
+  getOnlineStatusClass(status: OnlineStatus): string {
+    return `avatar ${status === OnlineStatus.ONLINE ? OnlineStatus.ONLINE : OnlineStatus.OFFLINE}`;
+  }
+
+  getEmployeeProfileClass(detail: Employee): string {
+    return this.getOnlineStatusClass(detail.is_online === OnlineStatus.ONLINE ? OnlineStatus.ONLINE :  OnlineStatus.OFFLINE);
+  }
 
 
 

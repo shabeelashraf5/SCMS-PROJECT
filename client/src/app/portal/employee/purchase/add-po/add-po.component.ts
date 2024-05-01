@@ -7,6 +7,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { SalesOrderService } from '../../sales/sales-order/sales-order.service';
 import { firstValueFrom } from 'rxjs';
 import { Po } from '../../../../model/purchase-po.model';
+import { OrderStatus } from '../../../../enums/order-status.enum';
 
 @Component({
   selector: 'app-add-po',
@@ -28,10 +29,7 @@ export class AddPoComponent {
   validity: string = ''
   availability: string = ''
   submitted: boolean = false;
-  quoDetails: any
   employee_id: string = ''
-  
-
   
 
   
@@ -81,7 +79,7 @@ async ngOnInit() {
 
 
   addItem() {
-    this.items.push({ product: '', qty: 1, uom: '', unit: 0, total: 0 });
+    this.items.push({ product: '', qty: 1, uom: '', unit: 0, total: 0 })
   }
 
 
@@ -103,6 +101,26 @@ async ngOnInit() {
 
 async submitPo() {
   try {
+    const to = this.to.trim();
+    const attention = this.attention.trim();
+    const email = this.email.trim();
+    const phone = this.phone.trim();
+    const supplierrfq = this.supplierrfq.trim();
+    const subject = this.subject.trim();
+    const basis = this.basis.trim();
+    const payment = this.payment.trim();
+    const validity = this.validity.trim();
+    const availability = this.availability.trim();
+
+    const hasEmptyFields = [to, attention, email, phone, supplierrfq, subject, basis, payment, validity, availability].some(
+      (field) => field === ''
+    );
+
+    if (hasEmptyFields) {
+      this.openSnackBar('Please fill in all required fields with valid data');
+      return; 
+    }
+
     const existingQuotation = await firstValueFrom(this.addPoService.getPoBypurchaePOId(this.po_id));
 
     if (existingQuotation) {
@@ -114,19 +132,19 @@ async submitPo() {
         _id: '',
         po_id: this.po_id as unknown as Po,
         employee_id: this.employee_id,
-        to: this.to,
-        attention: this.attention,
-        email: this.email,
-        phone: this.phone,
-        supplierrfq: this.supplierrfq,
+        to: to,
+        attention: attention,
+        email: email,
+        phone: phone,
+        supplierrfq: supplierrfq,
         products: this.items,
-        subject: this.subject,
-        basis: this.basis,
-        payment: this.payment,
-        validity: this.validity,
-        availability: this.availability,
+        subject: subject,
+        basis: basis,
+        payment: payment,
+        validity: validity,
+        availability: availability,
         totalAmount: this.calculateTotal(),
-        status: 'not confirmed',
+        status: OrderStatus.PENDING,
         createdAt: new Date()
       };
 
@@ -165,6 +183,10 @@ async updatePo(existingQuotation: AddPo) {
   }
 }
 
+trackByAddPo(index: number, addpo: Product): string {
+  return addpo.product 
+}
+
   openSnackBar(message: string) {
     this.snackBar.open(message, 'Close', {
       duration: 4000,
@@ -174,21 +196,6 @@ async updatePo(existingQuotation: AddPo) {
   }
 
   
-  /*
-  getClient(detail: any): string {
-    if (detail && detail.quotation_id ) {
-      return detail.quotation_id.to; 
-    }
-    return '';
-  }
-
-  getTotal(detail: any): string {
-    if (detail && detail.quotation_id ) {
-      return detail.quotation_id.totalAmount; 
-    }
-    return '';
-  }*/
-
 
 
 }

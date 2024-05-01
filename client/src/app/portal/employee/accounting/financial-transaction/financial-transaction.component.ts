@@ -96,5 +96,9 @@ async  getTransactionDetails() {
     return 'Unknown';
   }
 
+  trackByFT(index: number, financialtrans: Invoice): string {
+    return financialtrans._id 
+  }
+
 
 }

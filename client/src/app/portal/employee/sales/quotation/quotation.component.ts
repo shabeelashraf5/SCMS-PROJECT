@@ -3,6 +3,7 @@ import { QuotationService } from './quotation.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Quotation } from '../../../../model/sales-quotation.model';
 import { firstValueFrom } from 'rxjs';
+import { SubmitStatus } from '../../../../enums/submit-status.enum';
 
 @Component({
   selector: 'app-quotation',
@@ -46,7 +47,7 @@ async createRFQ() {
     _id: '',
     employee_id: this.employee_id,
     srfq: '',
-    status: 'not submitted',
+    status: SubmitStatus.NOTSUBMIT,
     createdAt: new Date()
   };
 
@@ -75,6 +76,10 @@ async getQuotationDetail(_id: string) {
   } catch (error) {
     console.error('Error fetching quotation detail:', error);
   }
+}
+
+trackByQuotation(index: number, quotation: Quotation): string {
+  return quotation._id; // Return a unique identifier for the product
 }
 
   

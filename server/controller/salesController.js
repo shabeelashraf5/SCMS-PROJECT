@@ -127,7 +127,7 @@ const addQuotation = async (req, res) => {
         validity: req.body.validity,
         availability: req.body.availability, 
         spo: genereateCustomSPO(),
-        status: req.body.status || 'not confirmed',
+        status: 'not confirmed',
         totalAmount: req.body.totalAmount,
         discount: req.body.discount,
         totalprice: req.body.totalprice,

@@ -6,6 +6,7 @@ import { AddQuotation, Product } from '../../../../model/sales-addquo';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { firstValueFrom } from 'rxjs';
 import { Quotation } from '../../../../model/sales-quotation.model';
+import { OrderStatus } from '../../../../enums/order-status.enum';
 //import jsPDF from 'jspdf';
 //import 'jspdf-autotable';
 
@@ -133,9 +134,30 @@ async submitQuotation() {
   const totalPrice = this.calculateTotalprice();
 
   try {
+
+    const to = this.to.trim();
+    const attention = this.attention.trim();
+    const email = this.email.trim();
+    const phone= this.phone.trim();
+    const clientrfq = this.clientrfq.trim();
+    const subject = this.subject.trim();
+    const basis = this.basis.trim();
+    const payment = this.payment.trim();
+    const validity = this.validity.trim();
+    const availability = this.availability.trim();
+
+    const hasEmptyFields = [to, attention, email, phone, clientrfq, subject, basis, payment, validity, availability].some(
+      (field) => field === ''
+    );
+
     const existingQuotation = await firstValueFrom(
       this.addQuotationService.getQuotationBySalesRFQId(this.salesRFQ_id)
     );
+
+    if (hasEmptyFields) {
+      this.openSnackBar('Please fill in all required fields with valid data');
+      return; 
+    }
 
     if (existingQuotation) {
       console.log('A quotation already exists for this salesRFQ_id:', existingQuotation);
@@ -146,19 +168,19 @@ async submitQuotation() {
         _id: '',
         salesRFQ_id: this.salesRFQ_id as unknown as Quotation ,
         employee_id: this.employee_id,
-        to: this.to,
+        to: to,
         spo: '',
-        attention: this.attention,
-        email: this.email,
-        phone: this.phone,
-        clientrfq: this.clientrfq,
+        attention: attention,
+        email: email,
+        phone: phone,
+        clientrfq: clientrfq,
         products: this.items,
-        subject: this.subject,
+        subject: subject,
         basis: this.basis,
-        payment: this.payment,
-        validity: this.validity,
-        availability: this.availability,
-        status: 'not confirmed',
+        payment: payment,
+        validity: validity,
+        availability: availability,
+        status: OrderStatus.PENDING,
         totalAmount: totalAmount,
         discount: this.discount,
         clientPo: this.clientPo,
@@ -206,6 +228,11 @@ async updateQuotation(existingQuotation: AddQuotation) {
     console.error('Error updating quotation:', error);
   }
 }
+
+trackByAddQuotation(index: number, addquotation: Product): string {
+  return addquotation.product // Return a unique identifier for the product
+}
+
 
   openSnackBar(message: string) {
     this.snackBar.open(message, 'Close', {

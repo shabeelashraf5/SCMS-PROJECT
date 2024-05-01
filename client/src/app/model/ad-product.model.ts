@@ -1,9 +1,10 @@
 import mongoose from 'mongoose';
+import { Category } from './ad-category.model';
 
 export interface Product {
 
     _id: string;
-    category_id: mongoose.Types.ObjectId | string ; 
+    category_id: Category | string ; 
     product: string;
     description: string;
     uom: string;

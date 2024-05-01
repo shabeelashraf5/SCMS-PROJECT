@@ -4,14 +4,9 @@ import { Chart, registerables } from 'chart.js';
 import { PlotlyService } from 'angular-plotly.js';
 import { firstValueFrom } from 'rxjs';
 import { AddQuotation } from '../../../../model/sales-addquo';
+import { OrderStatus } from '../../../../enums/order-status.enum';
 
 Chart.register(...registerables)
-
-enum OrderStatus {
-  Confirmed = 'Confirmed',
-  Pending = 'Not Confirmed',
-}
-
 
 @Component({
   selector: 'app-sales-analysis',
@@ -59,10 +54,10 @@ export class SalesAnalysisComponent implements OnInit {
 
 calculateOrders(details: AddQuotation[]): number {
   
-  return details.filter(detail => detail.status === OrderStatus.Confirmed ).length;
+  return details.filter(detail => detail.status === OrderStatus.CONFIRMED ).length;
 }
 
-calculateTotalOrders(details: any[]): number {
+calculateTotalOrders(details: AddQuotation[]): number {
   
   return details.reduce((total, detail) => total + detail.totalAmount, 0);
 }
@@ -76,10 +71,10 @@ RenderChart() {
    
 
   // Calculate month-wise confirmed orders
-  this.spoDetails.forEach((detail: any) => {
+  this.spoDetails.forEach((detail: AddQuotation) => {
     const date = new Date(detail.createdAt);
     const monthIndex = date.getMonth();
-    if (detail.status === OrderStatus.Confirmed ) {
+    if (detail.status === OrderStatus.CONFIRMED ) {
       monthWiseOrders[monthIndex]++;
     }
   });

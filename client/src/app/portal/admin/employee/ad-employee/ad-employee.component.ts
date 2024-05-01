@@ -1,9 +1,10 @@
-import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnInit, OnDestroy, } from '@angular/core';
 import { Store, select  } from '@ngrx/store';
 import * as AdEmployeeActions from '../ad-employee/store/ad-employee.action';
 import { Employee } from '../../../../model/ad-employee.model';
-import { Observable, map } from 'rxjs';
+import { Observable, map, Subject, of } from 'rxjs';
 import { AppState } from '../../../../state/app.state';
+import { takeUntil } from 'rxjs/operators';
 import { environment } from '../../../../../environment/environment';
 
 
@@ -12,7 +13,8 @@ import { environment } from '../../../../../environment/environment';
   templateUrl: './ad-employee.component.html',
   styleUrl: './ad-employee.component.css'
 })
-export class AdEmployeeComponent implements OnInit {
+
+export class AdEmployeeComponent implements OnInit, OnDestroy {
   
   _id: string = ''
   fname: string = '';
@@ -36,6 +38,7 @@ export class AdEmployeeComponent implements OnInit {
   
   employees$: Observable<Employee[]>;
   employeeToEdit: Partial<Employee> = {};
+  private destroy$ = new Subject<void>();
 
   selectedFile: File | null = null;
 
@@ -47,14 +50,23 @@ constructor(private store: Store<AppState>) {
   this.employees$ = this.store.pipe(select(state => state.employee.employees));
 }
 
+/*
 ngOnInit(): void {
   this.store.dispatch(AdEmployeeActions.loadEmployee());
 
   this.calculateTotalPages();
-
-  
 }
+*/
 
+ngOnInit(): void {
+  // Use takeUntil to ensure proper unsubscription
+  this.employees$.pipe(takeUntil(this.destroy$)).subscribe(employees => {
+    console.log('Employees:', employees);
+  });
+
+  this.store.dispatch(AdEmployeeActions.loadEmployee());
+  this.calculateTotalPages();
+}
 
 
 onSubmit(): void {
@@ -131,59 +143,39 @@ editEmployee(employee: Partial<Employee>) {
 }
 
 
-  deleteEmployee(employee: any) {
-    if (employee && employee._id) {
+
+  deleteEmployee(employee: Employee): void {
+    if (employee._id) {
       this.store.dispatch(AdEmployeeActions.deleteEmployee({ employeeId: employee._id }));
-      console.log(employee._id);
+      console.log(`Deleted admin with ID: ${employee._id}`);
     } else {
-      console.error('Category or its ID is undefined');
+      console.error('Admin or its ID is undefined');
     }
   }
 
-/*
-onFileSelected(event: any): void {
-  if (event.target.files.length > 0) {
-    const file = event.target.files[0];
-    this.image = file; // Assign the selected file to the image property
-  }
-}
-*/
+
 
 showModal(): void {
   this.modal.nativeElement.showModal();
 }
 
-/*
-
-onFileSelected(event: any): void {
-  this.selectedFile = event.target.files[0] as File;
-  console.log('Selected file:', this.selectedFile);
-  this.image = this.selectedFile.name; 
-  console.log('Image filename:', this.image);
-  this.isImageSelected = event.target.files && event.target.files.length > 0;
-} */
 
 
-onFileSelected(event: any): void {
-  if (event.target.files && event.target.files.length > 0) {
-    this.selectedFile = event.target.files[0] as File;
+onFileSelected(event: Event): void {
+  const input = event.target as HTMLInputElement; 
+
+  if (input.files && input.files.length > 0) {
+    this.selectedFile = input.files[0];
     console.log('Selected file:', this.selectedFile);
     this.image = this.selectedFile.name;
     console.log('Image filename:', this.image);
     this.isImageSelected = true;
   } else {
     this.image = 'dp.jpg'; // Set default image filename
-    console.log('Default image filename is:', this.image); // Log the default image filename
+    console.log('Default image filename is:', this.image); 
     this.isImageSelected = false;
   }
 }
-
-
-
-
-
-
-
 
 
 get filteredRecords() {
@@ -205,9 +197,15 @@ getImageUrl(imageFileName: string): string {
   return environment.apiUrl + `/images/${imageFileName}`; // Adjust the URL based on your backend server configuration
 }
 
-
+/*
 calculateTotalPages(): void {
   this.employees$.subscribe(employees => {
+    this.totalPages = Math.ceil(employees.length / this.itemsPerPage);
+  });
+}*/
+
+calculateTotalPages(): void {
+  this.employees$.pipe(takeUntil(this.destroy$)).subscribe(employees => {
     this.totalPages = Math.ceil(employees.length / this.itemsPerPage);
   });
 }
@@ -236,10 +234,21 @@ nextPage(): void {
 }
 
 
-confirmDelete(employee: any) {
-  if (confirm('Are you sure you want to delete?')) {
-      this.deleteEmployee(employee);
+
+confirmDelete(employee: Employee): void {
+  if (confirm('Are you sure you want to delete this admin?')) {
+    this.deleteEmployee(employee);
   }
+}
+
+trackByEmployee(index: number, employee: Employee): string {
+  return employee._id;
+}
+
+
+ngOnDestroy(): void {
+  this.destroy$.next(); // Emit to trigger unsubscription
+  this.destroy$.complete(); // Complete the Subject to ensure it's cleaned up
 }
 
 

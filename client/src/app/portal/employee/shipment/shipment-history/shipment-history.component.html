@@ -42,7 +42,7 @@
           </thead>
           <tbody>
             <!-- row 1 -->
-            <tr   *ngFor="let detail of shipmentDetails"  >
+            <tr   *ngFor="let detail of shipmentDetails; trackBy: trackByShipment"  >
               <th>
                 
               </th>
@@ -69,7 +69,7 @@
               
           
              <td>{{detail.status}}</td>
-             <td><button class="btn btn-outline btn-error btn-xs" (click)="confirmDelivery(detail._id)" >Confirm</button></td>
+             <td><button class="btn btn-outline btn-error btn-xs"  [disabled]="confirmedDelivery.has(detail._id)"  (click)="confirmDelivery(detail._id)" >Confirm</button></td>
             
               
             </tr>

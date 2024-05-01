@@ -1,5 +1,7 @@
 import mongoose from 'mongoose';
 import { AddPo } from './purchase-addpo.model';
+import { OrderStatus } from '../enums/order-status.enum';
+import { PayStatus } from '../enums/pay-status.enum';
 
 export interface Invoice {
 
@@ -9,8 +11,8 @@ export interface Invoice {
     invoice: string;
     delivery: string;
     transaction: string;
-    status: 'not confirmed' | 'Confirmed';
-    payment: 'to be Paid' | 'Paid'
+    status: OrderStatus;
+    payment: PayStatus
   
   
 

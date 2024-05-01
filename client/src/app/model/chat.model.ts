@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { ChatStatus } from '../enums/chat-status.enum';
 
 export interface Chat {
     _id: string;
@@ -6,6 +7,6 @@ export interface Chat {
     receiver_id: mongoose.Types.ObjectId | string  
     message: string;
     createdAt: Date;
-    isRead: 'Seen' | 'Delivered'
+    isRead: ChatStatus
     
   }

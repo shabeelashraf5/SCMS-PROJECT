@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { Po } from './purchase-po.model';
+import { OrderStatus } from '../enums/order-status.enum';
 
 
 export interface Product {
@@ -27,7 +28,7 @@ export interface AddPo {
     validity: string;
     availability: string;
     totalAmount: number;
-    status: 'not confirmed' | 'Confirmed';
+    status:  OrderStatus;
     createdAt: Date
      
    

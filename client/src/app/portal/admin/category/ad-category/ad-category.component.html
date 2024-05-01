@@ -50,7 +50,7 @@
       </thead>
       <tbody>
         <!-- row 1 -->
-        <tr *ngFor="let category of getCurrentPageRecords() | async; let i = index">
+        <tr *ngFor="let category of getCurrentPageRecords() | async; let i = index; trackBy: trackByCategory">
           <th>
             {{ i + 1 }}
           </th>

@@ -76,10 +76,6 @@ import { AdminLoginService } from './portal/admin/adminlogin/admin-login/admin-l
 import { EmployeeLoginService } from './portal/employee/employeelogin/employee-login/employee-login.service';
 
 
-
-//const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
-
-
 @NgModule({
   declarations: [
     AppComponent,

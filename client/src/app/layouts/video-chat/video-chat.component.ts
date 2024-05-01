@@ -4,6 +4,7 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import { VideoChatService } from './video-chat.service';
 import { Employee } from '../../model/ad-employee.model';
 import { environment } from '../../../environment/environment';
+import { firstValueFrom } from 'rxjs';
 
 
 function randomID(len:number) {
@@ -46,15 +47,14 @@ export class VideoChatComponent {
     this.loadProfile();
   }
 
-  loadProfile() {
-    this.employeeService.getProfile().subscribe(
-      (profile: Employee) => {
-        this.employeeProfile = profile;
-      },
-      (error) => {
-        console.error('Error fetching employee profile:', error);
-      }
-    );
+
+  async loadProfile() {
+    try {
+      const profile = await firstValueFrom(this.employeeService.getProfile());
+      this.employeeProfile = profile;
+    } catch (error) {
+      console.error('Error fetching employee profile:', error);
+    }
   }
 
   ngAfterViewInit() {

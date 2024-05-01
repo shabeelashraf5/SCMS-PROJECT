@@ -9,25 +9,7 @@ import { Employee } from '../../model/ad-employee.model';
 })
 export class ChatService {
 
-  private apiUrl = 'http://localhost:3000/api';
-
-  constructor( private http: HttpClient) { }
-
-  /*
-  loadMessages(): Observable<any[]> {
-    return this.socket.fromEvent<any[]>('load messages');
-  }
-
-  getMessage(): Observable<any> {
-    return this.socket.fromEvent<any>('new message');
-  }
-
-  sendMessage(message: { username: string, text: string }) {
-    this.socket.emit('new message', message);
-  }
-*/
-
-
+  
 
 
 }

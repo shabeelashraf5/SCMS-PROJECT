@@ -8,7 +8,7 @@ export const loadCategoryFailure = createAction('[Category] Load Category Failur
 
 export const addCategory = createAction('[Ad Category] Create Category', props<{ category: string }>());
 export const addCategorySuccess = createAction('[Ad Category] Create Category Success', props<{ category: Category }>());
-export const addCategoryFailure = createAction('[Ad Category] Create Category Failure', props<{ error: any }>());
+export const addCategoryFailure = createAction('[Ad Category] Create Category Failure', props<{ error: string }>());
 
 export const updateCategory = createAction('[Ad Category] Update Category', props<{ category: Partial<Category> }>());
 export const updateCategorySuccess = createAction('[Ad Category] Update Category Success', props<{ category: Category }>());

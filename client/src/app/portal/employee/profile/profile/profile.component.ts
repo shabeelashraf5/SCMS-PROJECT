@@ -63,8 +63,6 @@ export class ProfileComponent implements OnInit {
   }
 
 
-
-
 async editProfileEmployee(employee: Partial<Employee>) {
   const _id = employee._id;
 
@@ -89,19 +87,21 @@ async editProfileEmployee(employee: Partial<Employee>) {
 }
 
 
-  onFileSelected(event: any): void {
-    if (event.target.files && event.target.files.length > 0) {
-      this.selectedFile = event.target.files[0] as File;
-      console.log('Selected file:', this.selectedFile);
-      this.image = this.selectedFile.name;
-      console.log('Image filename:', this.image);
-      this.isImageSelected = true;
-    } else {
-      this.image = 'dp.jpg'; // Set default image filename
-      console.log('Default image filename is:', this.image); // Log the default image filename
-      this.isImageSelected = false;
-    }
+onFileSelected(event: Event): void {
+  const input = event.target as HTMLInputElement; 
+
+  if (input.files && input.files.length > 0) {
+    this.selectedFile = input.files[0];
+    console.log('Selected file:', this.selectedFile);
+    this.image = this.selectedFile.name;
+    console.log('Image filename:', this.image);
+    this.isImageSelected = true;
+  } else {
+    this.image = 'dp.jpg'; // Set default image filename
+    console.log('Default image filename is:', this.image); 
+    this.isImageSelected = false;
   }
+}
 
 
 

@@ -10,7 +10,7 @@
               <li>
                 <input type="hidden" name="invoice_id" [value]="invoiceDetail._id">
               </li>
-              <button class="btn btn-outline btn-sm " >Confirm</button>
+              <button class="btn btn-outline btn-sm " [disabled]="confirmedInvoice.has(invoiceDetail._id)" >Confirm</button>
             </ul>
           </form>
         
@@ -54,7 +54,7 @@
             </thead>
             <tbody>
                 <!-- Example Row -->
-                <tr  *ngFor="let product of getProduct(invoiceDetail?.purchase_id?.po_id?.quotation_id?.products); let i = index  ">
+                <tr  *ngFor="let product of getProduct(invoiceDetail?.purchase_id?.po_id?.quotation_id?.products); let i = index; trackBy: trackByProductId ">
                     <td>{{ i + 1 }}</td>
                     <td>{{ product.product }}</td>
                     <td class="text-right">{{ product.qty }}</td>

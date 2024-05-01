@@ -17,50 +17,42 @@
         <table class="table">
           <!-- head -->
           <thead>
-            <tr >
-              <th>
-                
-              </th>
+            <tr>
+              <th></th>
               <th>Client</th>
               <th>Email</th>
-              <th>Contant</th>
+              <th>Contact</th>
               <th>Payment Method</th>
-              
-              <th></th>
-              <th></th>
-              
             </tr>
           </thead>
-          <tbody>
-            <!-- row 1 -->
-            <tr *ngFor="let detail of clientDetails" >
-              <th>
-                
-              </th>
+      
+          <!-- Check if clientDetails is empty -->
+          <tbody *ngIf="clientDetails.length > 0">
+            <tr *ngFor="let detail of clientDetails; trackBy: trackByCustomer">
+              <th></th>
               <td>
                 <div class="flex items-center gap-3">
-                  <div>
-                 {{detail.to}}
-                    
-                    
-                  </div>
+                  <div>{{ detail.to }}</div>
                 </div>
               </td>
               <td>
-                {{detail.email}}
-                <br/>
+                {{ detail.email }}
+                <br />
               </td>
-              <td>{{detail.phone}}</td>
-              <td>{{detail.payment}}</td>
-              
-           
-    
-              
-             
+              <td>{{ detail.phone }}</td>
+              <td>{{ detail.payment }}</td>
             </tr>
-           
-            
           </tbody>
+      
+          <!-- Display "No Data" message if clientDetails is empty -->
+          <tbody *ngIf="clientDetails.length === 0">
+            <tr>
+              <td colspan="5" class="text-3xl text-center font-bold text-gray-600 h-20">
+                No Data
+              </td>
+            </tr>
+          </tbody>
+      
           <!-- foot -->
           <tfoot>
             <tr>
@@ -68,15 +60,12 @@
               <th>Client</th>
               <th>Email</th>
               <th>Contact</th>
-              <th>Paymend Method</th>
-             
-              <th></th>
-              <th></th>
+              <th>Payment Method</th>
             </tr>
           </tfoot>
-          
         </table>
       </div>
+
     
      
 </main>

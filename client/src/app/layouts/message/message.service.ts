@@ -2,28 +2,28 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Employee } from '../../model/ad-employee.model';
-import io from 'socket.io-client';
+import { io, Socket } from 'socket.io-client';
 import { Chat } from '../../model/chat.model';
 import { EmployeeLoginService } from '../../portal/employee/employeelogin/employee-login/employee-login.service';
 import { environment } from '../../../environment/environment';
 
+type CurrentUserType = string | null;
 
 @Injectable({
   providedIn: 'root'
 })
 export class MessageService {
 
-  private socket: any;
-  private currentUser: any;
+  private socket: Socket;
+  private currentUser: CurrentUserType = null;
 
   private apiUrl = environment.apiUrl  + '/api/portal';
 
   constructor( private http: HttpClient , private authService: EmployeeLoginService) { 
     this.socket = io(environment.apiUrl);
-    this.currentUser = authService.getToken;
+    this.currentUser = authService.getToken();
 
   }
-
 
 
   getProfile(): Observable<Employee> {

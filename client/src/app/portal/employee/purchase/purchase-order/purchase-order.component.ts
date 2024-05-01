@@ -53,23 +53,6 @@ async getPoDetails() {
   }
 
 
-/*
-  getSpo(rfqId: any): string {
-    if (typeof rfqId === 'object') {
-      return rfqId.spo  ;
-    }
-    return '';
-  }
-
-
-
-  getSrfq(quotationId: any): string {
-  if (quotationId && quotationId.salesRFQ_id && quotationId.salesRFQ_id.srfq) {
-    return quotationId.salesRFQ_id.srfq;
-  }
-  return '';
-}
-*/
 
 getSpo(rfqId: AddQuotation): string {
   return rfqId.spo || '';
@@ -87,5 +70,8 @@ getResponsible(detail: Po): string {
   return 'Unknown';
 }
 
+trackByPurchaseOrder(index: number, purchaseorder: Po): string {
+  return purchaseorder._id 
+}
 
 }

@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 import {  Subscription , firstValueFrom } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AddQuotation, Product } from '../../../../model/sales-addquo';
+import { DeliveryStatus } from '../../../../enums/delivery-status.enum';
 
 @Component({
   selector: 'app-invoice-details',
@@ -25,6 +26,7 @@ export class InvoiceDetailsComponent implements OnInit, OnDestroy {
   _id!: string; 
   employee_id: string = ''
   invoice_id: string = '';
+  confirmedInvoice: Set<string> = new Set();
 
   private routeSubscription!: Subscription;
 
@@ -36,6 +38,16 @@ export class InvoiceDetailsComponent implements OnInit, OnDestroy {
       this.quotation_id = params['id'];
       this.fetchInvoiceDetails(this.quotation_id);
     });
+
+    this.loadConfirmedInvoice()
+  }
+
+  loadConfirmedInvoice() {
+    const storedInvoice = localStorage.getItem('confirmedInvoice');
+    if (storedInvoice) {
+      const parsedInvoice = JSON.parse(storedInvoice);
+      this.confirmedInvoice = new Set(parsedInvoice);
+    }
   }
   
   
@@ -54,6 +66,10 @@ export class InvoiceDetailsComponent implements OnInit, OnDestroy {
 
 
   async createShipment(invoiceId: string) {
+
+    if (this.confirmedInvoice.has(invoiceId)) {
+      return; 
+    }
     console.log('purchaseId:', invoiceId);
 
     const newShip: Shipment = {
@@ -61,7 +77,7 @@ export class InvoiceDetailsComponent implements OnInit, OnDestroy {
       employee_id: this.employee_id,
       invoice_id: invoiceId as unknown as Invoice,
       shipment: '',
-      status: 'Not Delivered'
+      status: DeliveryStatus.PENDING
     };
 
     console.log(newShip);
@@ -69,6 +85,8 @@ export class InvoiceDetailsComponent implements OnInit, OnDestroy {
     try {
       const response = await firstValueFrom(this.invoicedetailsService.addShip(newShip));
       this.openSnackBar('Invoice Confirmed');
+      this.confirmedInvoice.add(invoiceId);  // Mark this quotation as confirmed
+      localStorage.setItem('confirmedInvoice', JSON.stringify([...this.confirmedInvoice]));
       this.router.navigate(['/portal/accounting/invoicing']);
       console.log(response);
     } catch (error) {
@@ -102,6 +120,10 @@ getTotalamount(detail: Invoice): number {
     return detail.purchase_id.po_id.quotation_id.totalAmount; 
   }
   return 0;
+}
+
+trackByProductId(index: number, product: Product): string {
+  return product.product; // Use unique identifier
 }
 
 

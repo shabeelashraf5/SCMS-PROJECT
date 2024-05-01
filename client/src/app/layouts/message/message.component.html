@@ -21,10 +21,10 @@
     </div>
     <!-- end search compt -->
     <!-- user list -->
-    <div *ngFor="let detail of employeeProfile" 
+    <div *ngFor="let detail of employeeProfile; trackBy: trackByEmployee" 
       class="flex flex-row py-4 px-2 justify-center items-center border-b-2 cursor-pointer bg-slate-400 " (click)="openChat(detail)"
     >
-      <div class="w-1/4 avatar"  [class]="'avatar ' + (detail.is_online === 'online' ? 'online' : 'offline')">
+      <div class="w-1/4 avatar" [ngClass]="getEmployeeProfileClass(detail)">
         <img
         [src]="getImageUrl(detail.image)"
           class="object-cover h-12 w-12 rounded-full"
@@ -38,29 +38,7 @@
       </div>
     </div>
 
-
-    <!--
-
-       <div *ngFor="let detail of employeeProfile" 
-  class="flex flex-row py-4 px-2 justify-center items-center border-b-2 cursor-pointer bg-slate-400" 
-  (click)="openChat(detail)">
-  <div class="w-1/4 avatar">
-    <img [src]="getImageUrl(detail.image)" class="object-cover h-12 w-12 rounded-full" alt="" />
-    <span class="absolute bottom-0 right-0 block h-3 w-3 border-2 border-white rounded-full"
-      [ngClass]="{'bg-green-500': detail.online, 'bg-red-500': !detail.online}">
-    </span>
-  </div>
-  <div class="w-full ml-2">
-    <div class="text-lg font-semibold text-gray-800">{{detail.fname}} {{detail.lname}}</div>
-    <span class="text-gray-800">{{detail.position}}</span>
-  </div>
-</div>
-
-
-
-
-    -->
-    
+  
     <!-- end user list -->
   </div>
   <!-- end chat list -->
@@ -84,7 +62,7 @@
       <div class="overflow-auto mt-2  "  #chatContainer style="max-height: 300px;  ">
   
        
-         <div *ngFor="let chatMessage of chatMessages" class="flex mb-4 justify-{{ chatMessage.sender_id === sender_id ? 'end' : 'start' }}">
+         <div *ngFor="let chatMessage of chatMessages; trackBy: trackByChat" class="flex mb-4 justify-{{ chatMessage.sender_id === sender_id ? 'end' : 'start' }}">
           <div *ngIf="chatMessage.sender_id === sender_id" >
             <time class="text-xs opacity-50">{{ chatMessage.createdAt | date: 'medium' }}</time>
     <div class="mr-2 py-3 px-4 bg-blue-400 rounded-bl-3xl rounded-tl-3xl rounded-tr-xl text-white ">

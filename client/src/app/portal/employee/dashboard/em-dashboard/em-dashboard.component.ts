@@ -16,6 +16,7 @@ import { environment } from '../../../../../environment/environment';
   templateUrl: './em-dashboard.component.html',
   styleUrl: './em-dashboard.component.css'
 })
+
 export class EmDashboardComponent implements OnInit {
 
   _id: string = ''
@@ -83,7 +84,7 @@ deleteMessage(message: Messaging) {
   }
 }
 
-confirmDelete(message: any) {
+confirmDelete(message: Messaging) {
   if (confirm('Are you sure you want to delete?')) {
       this.deleteMessage(message);
   }
@@ -99,17 +100,20 @@ canDeleteMessage(message: Messaging): boolean {
   return loggedInEmployeeId === messageEmployeeId;
 }
 
+trackByDashboard(index: number, dashboard: Messaging): string {
+  return dashboard._id 
+}
 
 
-getEmployee(employeeId: any): string {
+getEmployee(employeeId: string | Employee): string {
   if (typeof employeeId === 'object') {
     return employeeId.fname + ' ' + employeeId.lname ;
   }
   return '';
-}
+} 
 
 
-getPosition(employeeId: any): string {
+getPosition(employeeId: string | Employee): string  {
   if (typeof employeeId === 'object') {
     return employeeId.position ;
   }
@@ -118,7 +122,7 @@ getPosition(employeeId: any): string {
 
 
 
-getImage(employeeId: any): string {
+getImage(employeeId: string | Employee): string  {
   if (typeof employeeId === 'object') {
     return employeeId.image ;
   }

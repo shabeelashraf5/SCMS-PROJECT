@@ -82,7 +82,7 @@ const addPo = async (req, res) => {
         validity: req.body.validity,
         availability: req.body.availability, 
         totalAmount: req.body.totalAmount,
-        status: req.body.status || 'not confirmed',
+        status: 'not confirmed',
    
     };
 
@@ -232,7 +232,7 @@ const addInvoice = async (req, res) => {
         delivery: generateCustomDelivery(), 
         transaction: generateCustomTransaction(),
         purchase_id: req.body.purchase_id,
-        status: req.body.status || 'not confirmed',
+        status:  'not confirmed',
         payment: 'to be Paid'
       
          

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { SalesOrderService } from './sales-order.service';
 import { Po } from '../../../../model/purchase-po.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -6,48 +6,53 @@ import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { AddQuotation } from '../../../../model/sales-addquo';
 import { Quotation } from '../../../../model/sales-quotation.model';
+import { SubmitStatus } from '../../../../enums/submit-status.enum';
 
 @Component({
   selector: 'app-sales-order',
   templateUrl: './sales-order.component.html',
   styleUrl: './sales-order.component.css'
 })
-export class SalesOrderComponent {
+
+export class SalesOrderComponent implements OnInit {
 
 
   spoDetails: AddQuotation[] = [];
   employee_id: string = ''
   quotation_id: string =''
+  confirmedQuotations: Set<string> = new Set();
   
 
   constructor(private salesOrderService :  SalesOrderService,  private snackBar: MatSnackBar, private router: Router  ) { }
 
   ngOnInit() {
 
+    this.loadConfirmedQuotations()
     this.getClientDetails(); 
 
   }
 
 
-
   async getClientDetails() {
     try {
       const response = await firstValueFrom(this.salesOrderService.getSPO());
-      this.spoDetails = response; // Store the fetched SPO details
+      this.spoDetails = response; 
       console.log('SPO Details:', this.spoDetails);
     } catch (error) {
       console.error('Error fetching SPO details:', error);
     }
   }
 
-/*
-  getSrfq(rfqId: any): string {
-    if (typeof rfqId === 'object') {
-      return rfqId.srfq  ;
+
+  loadConfirmedQuotations() {
+    const storedQuotations = localStorage.getItem('confirmedQuotations');
+    if (storedQuotations) {
+      const parsedQuotations = JSON.parse(storedQuotations);
+      this.confirmedQuotations = new Set(parsedQuotations);
     }
-    return '';
   }
-*/
+
+
 
 getSrfq(quotation: Quotation): string {
   return quotation.srfq || '';
@@ -55,23 +60,29 @@ getSrfq(quotation: Quotation): string {
 
 
   async createPO(quotationId: string) {
+    if (this.confirmedQuotations.has(quotationId)) {
+      return; 
+    }
+
     const newPo: Po = {
-      _id: '', 
+      _id: '',
       employee_id: this.employee_id,
-      quotation_id: quotationId as unknown as AddQuotation ,
-      po: '', 
-      status: 'not submitted',
-      createdAt: new Date()
+      quotation_id: quotationId as unknown as AddQuotation,
+      po: '',
+      status: SubmitStatus.NOTSUBMIT,
+      createdAt: new Date(),
     };
 
-    console.log('New PO:', newPo);
-
     try {
-      const response = await firstValueFrom(this.salesOrderService.addPo(newPo));
-      console.log('Sales order created:', response);
+      const response = await firstValueFrom(
+        this.salesOrderService.addPo(newPo)
+      );
+      this.confirmedQuotations.add(quotationId); // Mark as confirmed
+      localStorage.setItem('confirmedQuotations', JSON.stringify([...this.confirmedQuotations])
+      ); // Update local storage
 
-      this.getClientDetails(); // Refresh client details after creating a PO
-      this.openSnackBar('Sales Order Confirmed'); // Notify the user
+      this.getClientDetails();
+      this.openSnackBar('Sales Order Confirmed');
     } catch (error) {
       console.error('Error creating sales order:', error);
     }
@@ -85,13 +96,18 @@ getSrfq(quotation: Quotation): string {
     return 'Unknown';
   }
 
+  
+  trackBySalesOrder(index: number, salesOrder: AddQuotation): string {
+    return salesOrder._id; // Return a unique identifier for the product
+  }
+
 
 
   openSnackBar(message: string) {
     this.snackBar.open(message, 'Close', {
       duration: 4000,
-      verticalPosition: 'top', // Set position to top
-      horizontalPosition: 'center', // Set position to center horizontally
+      verticalPosition: 'top', 
+      horizontalPosition: 'center', 
     });
   }
 

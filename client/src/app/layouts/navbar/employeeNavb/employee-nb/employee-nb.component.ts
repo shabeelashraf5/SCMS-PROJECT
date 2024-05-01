@@ -11,7 +11,7 @@ import { firstValueFrom } from 'rxjs';
   templateUrl: './employee-nb.component.html',
   styleUrl: './employee-nb.component.css'
 })
-export class EmployeeNbComponent  {
+export class EmployeeNbComponent implements OnInit  {
 
   @Output() sidebarUpdate: EventEmitter<string> = new EventEmitter<string>();
 
@@ -26,18 +26,7 @@ export class EmployeeNbComponent  {
     this.loadProfile();
   }
 
-  /*
-  loadProfile() {
-    this.pService.getProfile().subscribe(
-      (profile: Employee) => {
-        this.employeeProfile = profile;
-      },
-      (error) => {
-        console.error('Error fetching employee profile:', error);
-      }
-    );
-  } */
-
+ 
   async loadProfile() {
     try {
       const profile = await firstValueFrom(this.pService.getProfile());
