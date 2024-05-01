@@ -8,6 +8,7 @@ const bodyparser = require('body-parser')
 let http = require ('http')
 const dotenv = require('dotenv').config()
 console.log(dotenv.parsed)
+console.log('URLs:', process.env.URLs); 
 const chatMessage = require('./model/chatDB')
 const collectionemployee = require('./model/employeeDB')
 
