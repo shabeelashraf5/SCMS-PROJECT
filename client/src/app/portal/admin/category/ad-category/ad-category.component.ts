@@ -8,6 +8,7 @@ import { Observable, map,  Subject  } from 'rxjs';
 import { AdCategoryService } from './ad-category.service';
 import { AdCategoryState } from './store/ad-category.state';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { noWhitespaceValidator } from '../../../../validator/no-whitespace.validator';
 
 
 @Component({
@@ -58,6 +59,7 @@ export class AdCategoryComponent implements OnInit, OnDestroy   {
     
   }
 
+  
   onSubmit(): void {
     const category = this.category; // Assuming this.category is a string
     console.log('Dispatching addCategory action with category:', category);
@@ -66,6 +68,8 @@ export class AdCategoryComponent implements OnInit, OnDestroy   {
     this.category = '';
     this.modal1.nativeElement.close();
 }
+
+
 
 // Method to open the update modal and set the selected category
 

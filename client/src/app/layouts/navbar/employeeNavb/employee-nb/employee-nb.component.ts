@@ -5,6 +5,10 @@ import { ProfileService } from '../../../../portal/employee/profile/profile/prof
 import { environment } from '../../../../../environment/environment';
 import { firstValueFrom } from 'rxjs';
 
+import { EmployeeLoginService } from '../../../../portal/employee/employeelogin/employee-login/employee-login.service';
+import { io, Socket } from 'socket.io-client';
+
+
 
 @Component({
   selector: 'app-employee-nb',
@@ -17,13 +21,19 @@ export class EmployeeNbComponent implements OnInit  {
 
   employeeProfile!: Employee;
   isImageSelected: boolean = false;
+  socket!: Socket;
 
 
-  constructor(private pService: ProfileService ) {}
+  constructor(private pService: ProfileService, private authService: EmployeeLoginService, private router: Router ) {}
 
 
   ngOnInit(): void {
     this.loadProfile();
+
+    this.socket = io( environment.apiUrl + '/user-namespace');
+    this.socket.on('disconnect', () => {
+      console.log('Disconnected from Socket.IO server');
+    });
   }
 
  
@@ -45,6 +55,25 @@ export class EmployeeNbComponent implements OnInit  {
   updateSidebar(section: string) {
     this.sidebarUpdate.emit(section);
   }
+
+
+  logout(): void {
+    
+    let employeeId =  this.authService.getLoggedInEmployeeId()
+    
+    if (employeeId) {
+      this.authService.logout(employeeId);
+    } else {
+      console.error('EmployeeId is null or undefined');
+    }
+
+    this.socket.disconnect();
+    this.router.navigate(['/employee-login']);
+
+  
+}
+
+
 
   
 

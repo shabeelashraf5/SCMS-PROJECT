@@ -117,12 +117,7 @@ export class AdUserComponent implements OnInit, OnDestroy  {
     );
   }
 
-  /*
-  calculateTotalPages(): void {
-    this.admins$.subscribe(admins => {
-      this.totalPages = Math.ceil(admins.length / this.itemsPerPage);
-    });
-  } */
+ 
 
   calculateTotalPages(): void {
     this.admins$.pipe(takeUntil(this.destroy$)).subscribe(admins => {
