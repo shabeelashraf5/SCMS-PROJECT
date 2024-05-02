@@ -26,7 +26,7 @@ let purchaseRouter = require('./routes/purchase');
 let warehouseRouter = require('./routes/warehouse');
 let accountingRouter = require('./routes/accounting');
 let shipmentRouter = require('./routes/shipment');
-const allowedOrigins = [process.env.URLs, process.env.URL];
+
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -51,7 +51,7 @@ app.use('/api/portal/shipment', shipmentRouter);
 
 const io = require("socket.io")(server, {
   cors: {
-    origin: allowedOrigins , 
+    origin: [ 'https://www.scmsbiz.online' , 'http://localhost:4200' ], 
     methods: ["GET", "POST"],
     allowedHeaders: ["Authorization", "Content-Type"], 
     credentials: true, 
