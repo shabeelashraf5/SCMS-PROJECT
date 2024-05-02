@@ -69,10 +69,28 @@ export class AdUserComponent implements OnInit, OnDestroy  {
     this.modal.nativeElement.close();
   }
 
+  isWhitespaceOnly(text: string | undefined): boolean {
+    return !text || !text.trim(); // Checks if the text is empty or only whitespace
+  }
+  
+  checkWhitespace(event: any): void {
+    // This function can be used to trim input or alert when only whitespace is detected
+    this.fname = event.trim();
+    this.lname = event.trim();
+    this.email = event.trim();
+    this.password = event.trim(); // Automatically trim the input
+  }
+  
+
 
   editAdmins(admin: Partial<Admin>) {
-    this.adminToEdit = { ...admin }; // Copy the user details to the userToEdit object
-    this.modal2.nativeElement.showModal();
+    this.adminToEdit = { ...admin, // Ensure the object has default values
+      fname: admin.fname || '',
+      lname: admin.lname || '',
+      email: admin.email || '',
+      password: admin.password || ''
+    };
+    this.modal2.nativeElement.showModal(); // Open the modal
   }
 
 

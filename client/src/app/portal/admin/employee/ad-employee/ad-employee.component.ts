@@ -101,10 +101,34 @@ onSubmit(): void {
   
 } 
 
+isWhitespaceOnly(text: string | undefined): boolean {
+  return !text || !text.trim(); // Checks if the text is empty or only whitespace
+}
+
+checkWhitespace(event: any): void {
+  // This function can be used to trim input or alert when only whitespace is detected
+  this.fname = event.trim();
+  this.lname = event.trim();
+  this.email = event.trim();
+  this.password = event.trim();
+  this.position = event.trim(); 
+  this.area = event.trim(); 
+  this.department = event.trim();  // Automatically trim the input
+}
+
 
 editEmployees(employee: Partial<Employee>) {
-  this.employeeToEdit = { ...employee }; // Copy the user details to the userToEdit object
-  this.modal2.nativeElement.showModal();
+  this.employeeToEdit = {
+    ...employee,
+    fname: employee.fname || '', // Ensure default empty string
+    lname: employee.lname || '',
+    email: employee.email || '',
+    password: employee.password || '',
+    position: employee.position || '',
+    department: employee.department || '',
+    area: employee.area || '',
+  };
+  this.modal2.nativeElement.showModal(); // Open the modal
 }
 
 

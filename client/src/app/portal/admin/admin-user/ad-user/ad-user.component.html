@@ -14,13 +14,13 @@
       <form (ngSubmit)="onSubmit()" #userForm="ngForm">
         <div class="form-group">
           <input type="text" name="fname" [(ngModel)]="fname" required placeholder="First Name" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
-          <div *ngIf="userForm.controls['fname']?.invalid && (userForm.controls['fname']?.dirty || userForm.controls['fname']?.touched)">
+          <div *ngIf="isWhitespaceOnly(fname) && userForm.controls['fname']?.dirty">
             <small class="text-red-500">Enter your First Name</small>
           </div>
         </div>
         <div class="form-group mt-5">
           <input type="text" name="lname" [(ngModel)]="lname" required placeholder="Last Name" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
-          <div *ngIf="userForm.controls['lname']?.invalid && (userForm.controls['lname']?.dirty || userForm.controls['lname']?.touched)">
+          <div *ngIf="isWhitespaceOnly(lname) && userForm.controls['lname']?.dirty">
             <small class="text-red-500">Enter your Last Name</small>
           </div>
         </div>
@@ -32,13 +32,13 @@
         </div>
         <div class="form-group mt-5">
           <input type="password" name="password" [(ngModel)]="password" required minlength="6" placeholder="Password" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
-          <div *ngIf="userForm.controls['password']?.invalid && (userForm.controls['password']?.dirty || userForm.controls['password']?.touched)">
+          <div *ngIf="isWhitespaceOnly(password) && userForm.controls['password']?.invalid && (userForm.controls['password']?.dirty)">
             <small class="text-red-500">Enter a valid Password (at least 6 characters)</small>
           </div>
         </div>
         
         <div class="modal-action">
-          <button type="submit" [disabled]="!userForm.form.valid" class="btn">Submit</button>
+          <button type="submit" [disabled]="!userForm.form.valid || isWhitespaceOnly(fname) || isWhitespaceOnly(lname) || isWhitespaceOnly(password)" class="btn">Submit</button>
           <button type="button" class="btn" (click)="modal.nativeElement.close()">Close</button>
         </div>
       </form>
@@ -93,23 +93,35 @@
             <button class="btn btn-outline btn-success btn-xs" (click)="editAdmins(admin)">Update</button>
             <dialog #my_modal_2  class="modal">
              <div class="modal-box">
-               <form  (submit)="editAdmin(adminToEdit)">
+               <form  #editForm="ngForm"  (submit)="editAdmin(adminToEdit)">
                 <div class="form-group">
                   <input type="text" name="fname" [(ngModel)]="adminToEdit.fname" placeholder="First Name" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
+                  <div *ngIf="isWhitespaceOnly(adminToEdit.fname) && editForm.controls['fname']?.dirty">
+                    <small class="text-red-500">Please enter a valid first name.</small>
+                  </div>
                 </div>
                 <div class="form-group mt-5">
                   <input type="text" name="lname" [(ngModel)]="adminToEdit.lname" placeholder="Last Name" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
+                  <div *ngIf="isWhitespaceOnly(adminToEdit.lname) && editForm.controls['lname']?.dirty">
+                    <small class="text-red-500">Please enter a valid last name.</small>
+                  </div>
                 </div>
                 <div class="form-group mt-5">
                   <input type="email" name="email" [(ngModel)]="adminToEdit.email" placeholder="Email" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
+                  <div *ngIf="isWhitespaceOnly(adminToEdit.email) && editForm.controls['email']?.dirty">
+                    <small class="text-red-500">Please enter a valid email address.</small>
+                  </div>
                 </div>
                 <div class="form-group mt-5">
                   <input type="password" name="password" [(ngModel)]="adminToEdit.password" placeholder="Password" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
+                  <div *ngIf="isWhitespaceOnly(adminToEdit.password) && editForm.controls['password']?.dirty">
+                    <small class="text-red-500">Please enter a valid password.</small>
+                  </div>
                 </div>
            
                  
                  <div class="modal-action">
-                   <button type="submit" class="btn">Update</button>
+                   <button type="submit" class="btn" [disabled]="[adminToEdit.fname, adminToEdit.lname, adminToEdit.email, adminToEdit.password].some(isWhitespaceOnly)">Update</button>
                    <button type="button" class="btn" (click)="modal2.nativeElement.close()">Close</button>
                  </div>
                </form>

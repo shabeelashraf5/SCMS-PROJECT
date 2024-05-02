@@ -77,24 +77,42 @@ export class AdProductComponent implements OnInit, OnDestroy {
     this.store.dispatch(AdProductActions.addProduct(product));
 
     // Reset form fields
-    this.resetForm();
+    
 
     this.modal.nativeElement.close();
   }
 
-  // Method to reset form fields
-  resetForm(): void {
-    this.category_id = '';
-    this.product = '';
-    this.description = '';
-    this.uom = '';
-    this.price = 0;
-    this.availability = '';
+  isWhitespaceOnly(text: string | number | undefined): boolean {
+    if (typeof text !== 'string') {
+      // If the value is not a string, consider it not whitespace-only
+      return false;
+    }
+    return !text.trim(); // Checks if the text is empty or only whitespace
+  }
+  
+  checkWhitespace(event: any): void {
+    // This function can be used to trim input or alert when only whitespace is detected
+    this.product = event.trim();
+    this.description = event.trim();
+    this.uom = event.trim();
+    this.price = event.trim();
+    this.availability = event.trim(); 
+     // Automatically trim the input
   }
 
+ 
+
   editProducts(product: Partial<Product>) {
-    this.productToEdit = { ...product };
-    this.modal2.nativeElement.showModal();
+    // Ensure fields have default values
+    this.productToEdit = {
+      ...product,
+      product: product.product || '',
+      description: product.description || '',
+      uom: product.uom || '',
+      price: typeof product.price === 'number' ? product.price : undefined,
+      availability: product.availability || '',
+    };
+    this.modal2.nativeElement.showModal(); // Open the modal
   }
 
   editProduct(product: Partial<Product>) {

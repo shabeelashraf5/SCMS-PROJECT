@@ -14,7 +14,7 @@
       <form #productForm="ngForm" (ngSubmit)="onSubmit()">
         <div class="form-group">
           <input type="text" name="product" id="product" [(ngModel)]="product" placeholder="Product" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800" required>
-          <div *ngIf="productForm.controls['product'].invalid && (productForm.controls['product'].dirty || productForm.controls['product'].touched)">
+          <div *ngIf="isWhitespaceOnly(product) && productForm.controls['product']?.dirty">
             <small class="text-red-500">Enter the Product</small>
           </div>
         </div>
@@ -29,14 +29,14 @@
       
         <div class="form-group mt-5">
           <input type="text" name="description" id="description" [(ngModel)]="description" placeholder="Description" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800" required>
-          <div *ngIf="productForm.controls['description'].invalid && (productForm.controls['description'].dirty || productForm.controls['description'].touched)">
+          <div *ngIf="isWhitespaceOnly(description) && productForm.controls['description']?.dirty">
             <small class="text-red-500">Enter the Description</small>
           </div>
         </div>
       
         <div class="form-group mt-5">
           <input type="text" name="uom" id="uom" placeholder="UOM" [(ngModel)]="uom" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800" required>
-          <div *ngIf="productForm.controls['uom'].invalid && (productForm.controls['uom'].dirty || productForm.controls['uom'].touched)">
+          <div  *ngIf="isWhitespaceOnly(uom) && productForm.controls['uom']?.dirty">
             <small class="text-red-500">Enter the UOM</small>
           </div>
         </div>
@@ -50,13 +50,13 @@
       
         <div class="form-group mt-5">
           <input type="text" name="availability" id="availability" [(ngModel)]="availability" placeholder="Availability" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800" required>
-          <div *ngIf="productForm.controls['availability'].invalid && (productForm.controls['availability'].dirty || productForm.controls['availability'].touched)">
+          <div  *ngIf="isWhitespaceOnly(availability) && productForm.controls['availability']?.dirty">
             <small class="text-red-500">Enter the Availability</small>
           </div>
         </div>
       
         <div class="modal-action">
-          <button type="submit" [disabled]="!productForm.form.valid" class="btn">Submit</button>
+          <button type="submit" [disabled]="!productForm.form.valid || isWhitespaceOnly(product) || isWhitespaceOnly(description) || isWhitespaceOnly(uom) || isWhitespaceOnly(availability)" class="btn">Submit</button>
           <button type="button" class="btn" (click)="modal.nativeElement.close()">Close</button>
         </div>
       </form>
@@ -116,9 +116,12 @@
             <button class="btn btn-outline btn-success btn-xs" (click)="editProducts(product)">Update</button>
             <dialog #my_modal_2  class="modal">
               <div class="modal-box">
-                <form (submit)="editProduct(productToEdit)" >
+                <form #editForm="ngForm" (submit)="editProduct(productToEdit)" >
                   <div class="form-group">
                     <input type="text" name="product" id="product"  [(ngModel)]="productToEdit.product" placeholder="Product"  class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
+                    <div *ngIf="isWhitespaceOnly(productToEdit.product) && editForm.controls['product']?.dirty">
+                      <small class="text-red-500">Please enter a valid product name.</small>
+                    </div>
                   </div>
 
                   <select name="category" [(ngModel)]="productToEdit.category_id" class="select select-bordered w-full max-w-xs mt-5">
@@ -129,19 +132,31 @@
           
                   <div class="form-group mt-5">
                     <input type="text" name="description" id="description"  [(ngModel)]="productToEdit.description" placeholder="Description" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
+                    <div *ngIf="isWhitespaceOnly(productToEdit.description) && editForm.controls['description']?.dirty">
+                      <small class="text-red-500">Please enter a valid description.</small>
+                    </div>
                   </div>
                   <div class="form-group mt-5">
                     <input type="text" name="uom" id="uom" placeholder="UOM"  [(ngModel)]="productToEdit.uom" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
+                    <div *ngIf="isWhitespaceOnly(productToEdit.uom) && editForm.controls['uom']?.dirty">
+                      <small class="text-red-500">Please enter a valid UOM.</small>
+                    </div>
                   </div>
                   <div class="form-group mt-5">
                     <input type="text" name="price" id="price"  [(ngModel)]="productToEdit.price" placeholder="Price" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
+                    <div *ngIf="isWhitespaceOnly(productToEdit.price?.toString()) && editForm.controls['price']?.dirty">
+                      <small class="text-red-500">Please enter a valid price.</small>
+                    </div>
                   </div>
                   <div class="form-group mt-5">
                     <input type="text" name="availability"  id="availability"  [(ngModel)]="productToEdit.availability" placeholder="Availability" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
+                    <div *ngIf="isWhitespaceOnly(productToEdit.availability) && editForm.controls['availability']?.dirty">
+                      <small class="text-red-500">Please enter valid availability.</small>
+                    </div>
                   </div>
                  
                   <div class="modal-action">
-                    <button type="submit" class="btn">Submit</button>
+                    <button type="submit" class="btn"  [disabled]="[productToEdit.product, productToEdit.description, productToEdit.uom, productToEdit.price, productToEdit.availability].some(isWhitespaceOnly)">Submit</button>
                     <button type="button" class="btn" (click)="modal2.nativeElement.close()">Close</button>
                   </div>
                 </form>

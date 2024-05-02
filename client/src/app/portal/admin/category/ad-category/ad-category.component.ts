@@ -61,12 +61,23 @@ export class AdCategoryComponent implements OnInit, OnDestroy   {
 
   
   onSubmit(): void {
-    const category = this.category; // Assuming this.category is a string
+   
+    const category = this.category.trim(); // Ensure category is trimmed
     console.log('Dispatching addCategory action with category:', category);
-    this.store.dispatch(AdCategoryActions.addCategory({ category })); // Pass only the category string
+    this.store.dispatch(AdCategoryActions.addCategory({ category })); // Pass the trimmed category string
     
-    this.category = '';
-    this.modal1.nativeElement.close();
+    this.category = ''; // Clear the input field
+    this.modal1.nativeElement.close(); // Close the modal
+  }
+
+
+  isWhitespaceOnly(text: string | undefined): boolean {
+    return !text || !text.trim(); // Checks if the text is empty or only whitespace
+  }
+
+checkWhitespace(event: any): void {
+  // This function can be used to trim input or alert when only whitespace is detected
+  this.category = event.trim(); // Automatically trim the input
 }
 
 
@@ -74,7 +85,7 @@ export class AdCategoryComponent implements OnInit, OnDestroy   {
 // Method to open the update modal and set the selected category
 
 editCategories(category: Partial<Category>) {
-  this.categoryToEdit = { ...category }; // Copy the user details to the userToEdit object
+  this.categoryToEdit = { ...category, category: category.category || '' }; // Copy the user details to the userToEdit object
   this.modal2.nativeElement.showModal();
 }
 
