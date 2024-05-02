@@ -24,7 +24,7 @@ const sentMail = async function (fname,email,token ) {
         from: process.env.SMTP_USER,
         to: email,
         subject: 'Welcome to the Platform ! Reset your Password',
-        html: `<h2> Hello ${fname}, Welcome to our Team. Please click to <a href="https://www.scmsbiz.online/reset-password/?token=${token}">Reset</a> your password<h2>`
+        html: `<h2> Hello ${fname}, Welcome to our Team. Please click to <a href="${process.env.URLs}/reset-password/?token=${token}">Reset</a> your password<h2>`
     };
 
    
