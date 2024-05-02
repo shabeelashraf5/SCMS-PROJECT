@@ -11,6 +11,7 @@ console.log(dotenv.parsed)
 console.log('URLs:', process.env.URLs); 
 const chatMessage = require('./model/chatDB')
 const collectionemployee = require('./model/employeeDB')
+const allowedOrigins = [process.env.URLs, process.env.URL];
 
 let app = express();
 
@@ -51,7 +52,7 @@ app.use('/api/portal/shipment', shipmentRouter);
 
 const io = require("socket.io")(server, {
   cors: {
-    origin: [ 'https://www.scmsbiz.online' , 'http://localhost:4200' ], 
+    origin: allowedOrigins, 
     methods: ["GET", "POST"],
     allowedHeaders: ["Authorization", "Content-Type"], 
     credentials: true, 
