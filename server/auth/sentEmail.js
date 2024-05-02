@@ -18,8 +18,6 @@ const sentMail = async function (fname,email,token ) {
     })
 
 
-    const baseUrl = process.env.URLs;
-
 
     const mailOption = {
         
@@ -29,7 +27,7 @@ const sentMail = async function (fname,email,token ) {
         html: `<h2> Hello ${fname}, Welcome to our Team. Please click to <a href="https://www.scmsbiz.online/reset-password/?token=${token}">Reset</a> your password<h2>`
     };
 
-    console.log('Base URL:', baseUrl);
+   
        
 
         transporter.sendMail(mailOption, function(error,info){
