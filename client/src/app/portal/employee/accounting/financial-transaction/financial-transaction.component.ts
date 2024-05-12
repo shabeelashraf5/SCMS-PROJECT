@@ -1,17 +1,18 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FinancialTransactionService } from './financial-transaction.service';
 import { Router } from '@angular/router';
-import { firstValueFrom } from 'rxjs';
+import { Subscriber, Subscription, firstValueFrom } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Invoice } from '../../../../model/invoice.model';
 import { AddQuotation } from '../../../../model/sales-addquo';
+import { response } from 'express';
 
 @Component({
   selector: 'app-financial-transaction',
   templateUrl: './financial-transaction.component.html',
   styleUrl: './financial-transaction.component.css'
 })
-export class FinancialTransactionComponent {
+export class FinancialTransactionComponent implements OnInit, OnDestroy {
 
   invDetails: Invoice[] = [];
 
@@ -19,6 +20,7 @@ export class FinancialTransactionComponent {
   employee_id: string = ''
   purchase_id: string =''
   errorMessage: string = '';
+  ftSubscription!:  Subscription
 
 
   constructor(private transactionService: FinancialTransactionService, private router: Router) { }
@@ -28,6 +30,7 @@ export class FinancialTransactionComponent {
 
   }
 
+  /*
   async getTransDetail(_id: string) {
     try {
       await firstValueFrom( this.transactionService.transSingle(_id));
@@ -35,10 +38,22 @@ export class FinancialTransactionComponent {
     } catch (error) {
       console.error('Error fetching transaction detail:', error);
     }
+  } */
+
+  getTransDetail(_id: string) {
+
+
+    this.ftSubscription = this.transactionService.transSingle(_id).subscribe({
+      next: (response) => {
+        this.router.navigate(['/portal/accounting/financial-transaction', _id]);
+      }, error: (error) => {
+        console.error('Error fetching transaction detail:', error);
+      }
+    })
   }
 
   
-
+/*
 async  getTransactionDetails() {
   try {
     const response = await firstValueFrom(
@@ -55,7 +70,25 @@ async  getTransactionDetails() {
       this.errorMessage = 'An error occurred while fetching data.';
     }
   }
-}
+} */
+
+  getTransactionDetails(){
+
+    this.ftSubscription = this.transactionService.getTrans().subscribe({
+      next: (response) => {
+        this.invDetails = response; // Store the fetched RFQ details
+        console.log(this.invDetails);
+      },error: (error) => {
+        console.error(error);
+
+        if (error instanceof HttpErrorResponse && error.status === 403) {
+          this.errorMessage = 'You are not authorized to access this page.';
+        } else {
+          this.errorMessage = 'An error occurred while fetching data.';
+        }
+      }
+    })
+  } 
 
 
   getAmount(detail: Invoice): number {
@@ -100,5 +133,11 @@ async  getTransactionDetails() {
     return financialtrans._id 
   }
 
+  ngOnDestroy() {
+
+    if(this.ftSubscription){
+      this.ftSubscription.unsubscribe()
+    }
+  }
 
 }

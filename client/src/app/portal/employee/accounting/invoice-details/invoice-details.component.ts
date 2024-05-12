@@ -11,6 +11,7 @@ import {  Subscription , firstValueFrom } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AddQuotation, Product } from '../../../../model/sales-addquo';
 import { DeliveryStatus } from '../../../../enums/delivery-status.enum';
+import { response } from 'express';
 
 @Component({
   selector: 'app-invoice-details',
@@ -28,7 +29,7 @@ export class InvoiceDetailsComponent implements OnInit, OnDestroy {
   invoice_id: string = '';
   confirmedInvoice: Set<string> = new Set();
 
-  private routeSubscription!: Subscription;
+  routeSubscription!: Subscription;
 
   constructor(private route: ActivatedRoute, private invoiceService: InvoicingService, private invoicedetailsService: InvoiceDetailsService,  private snackBar: MatSnackBar, private router: Router  ) { }
 
@@ -51,7 +52,7 @@ export class InvoiceDetailsComponent implements OnInit, OnDestroy {
   }
   
   
-
+/*
   async fetchInvoiceDetails(quotation_id: string) {
     try {
       const poData = await firstValueFrom(this.invoiceService.invSingle(quotation_id));
@@ -62,9 +63,19 @@ export class InvoiceDetailsComponent implements OnInit, OnDestroy {
       console.error('Error fetching PO details', error);
     }
   }
+*/
 
+fetchInvoiceDetails(quotation_id: string){
+  this.routeSubscription = this.invoiceService.invSingle(quotation_id).subscribe({
+    next: (response) =>{
+      this.invoiceDetail = response;
+    },error: (error) => {
+      console.error('Error fetching PO details', error);
+    }
+  })
+}
 
-
+/*
   async createShipment(invoiceId: string) {
 
     if (this.confirmedInvoice.has(invoiceId)) {
@@ -92,6 +103,36 @@ export class InvoiceDetailsComponent implements OnInit, OnDestroy {
     } catch (error) {
       console.error(error);
     }
+  }*/
+
+  createShipment(invoiceId: string) {
+
+    if (this.confirmedInvoice.has(invoiceId)) {
+      return; 
+    }
+    console.log('purchaseId:', invoiceId);
+
+    const newShip: Shipment = {
+      _id: '',
+      employee_id: this.employee_id,
+      invoice_id: invoiceId as unknown as Invoice,
+      shipment: '',
+      status: DeliveryStatus.PENDING
+    };
+
+    console.log(newShip);
+
+    this.routeSubscription = this.invoicedetailsService.addShip(newShip).subscribe({
+      next: (response) => {
+        this.openSnackBar('Invoice Confirmed');
+        this.confirmedInvoice.add(invoiceId);  // Mark this quotation as confirmed
+        localStorage.setItem('confirmedInvoice', JSON.stringify([...this.confirmedInvoice]));
+        this.router.navigate(['/portal/accounting/invoicing']);
+        console.log(response);
+      },error: (error) => {
+        console.error(error);
+      }
+    })
   }
 
 

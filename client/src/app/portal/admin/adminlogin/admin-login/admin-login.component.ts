@@ -4,6 +4,7 @@ import { Store , select } from '@ngrx/store';
 import { AppState } from '../../../../state/app.state';
 import { loginAdmin } from '../admin-login/store/admin-login.action';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Subscription } from 'rxjs';
 
 
 
@@ -16,22 +17,20 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 export class AdminLoginComponent implements OnInit {
   loginForm!: FormGroup;
-  loading = false;
+  subscription!:  Subscription
 
 
-  
-
-  constructor(private formBuilder: FormBuilder, private store: Store, private snackBar: MatSnackBar ) {
+  constructor(private formBuilder: FormBuilder, private store: Store<AppState>, private snackBar: MatSnackBar ) {
 
   }
 
   ngOnInit(): void {
     this.initForm();
+    this.errorValidation()
   
   }
 
   
-
   initForm(): void {
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
@@ -41,47 +40,23 @@ export class AdminLoginComponent implements OnInit {
 
   
   onSubmit(): void {
-    const emailControl = this.loginForm.get('email');
-    const passwordControl = this.loginForm.get('password');
-  
-    if (!emailControl || !passwordControl) {
-      return; // Exit onSubmit method if controls are not found
-    }
-
-    if (passwordControl.errors && passwordControl.errors['required'] && emailControl.errors && emailControl.errors['required'] ) {
-      this.openSnackBar('Enter Email and Password');
-      return;
-    }
-
-    if (emailControl.errors && emailControl.errors['required']) {
-      this.openSnackBar('Enter Email');
-      return;
-    } else if (emailControl.errors && emailControl.errors['email']) {
-      this.openSnackBar('Invalid Email');
-      return;
-    }
-  
-    if (passwordControl.errors && passwordControl.errors['required']) {
-      this.openSnackBar('Enter Password');
-      return;
-    }
-  
-    if (!emailControl.valid || !passwordControl.valid) {
-      this.openSnackBar('Invalid Email or Password');
-      return; // Exit onSubmit method if email or password is invalid
-    }
-    this.loading = true;
-
-    setTimeout(() => {
+      
       const { email, password } = this.loginForm.value;
       this.store.dispatch(loginAdmin({ email, password }));
-    }, 3000);
+ 
+  }
+
+  errorValidation(){
+
+    this.subscription = this.store.pipe(select(state => state.adminLogin.error)) 
+    .subscribe(error => {
+      if (error) {
+        this.openSnackBar(error);
+      }
+    });
+  
   }
   
-  
-
-
-
 openSnackBar(message: string): void {
   this.snackBar.open(message, 'Close', {
     duration: 3000,

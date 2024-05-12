@@ -9,7 +9,9 @@ import { AdEmployeeService } from '../../admin/employee/ad-employee/ad-employee.
 import { Router, ActivatedRoute } from '@angular/router';
 import { ResetPasswordService } from './reset-password.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, take } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
+import { response } from 'express';
 
 interface ResetPasswordResponse {
   success: boolean;
@@ -62,7 +64,7 @@ export class ResetPasswordComponent implements OnInit  {
     }
   }
 
-
+  
 
   async resetPassword(): Promise<void> {
     if (!this.token || !this.newPassword) {
@@ -77,20 +79,31 @@ export class ResetPasswordComponent implements OnInit  {
         this.resetSuccess = true;
         this.router.navigate(['/employee-login']); // Navigate to employee login on success
         this.snackBar.open('Password reset successfully', 'Close', {
-          duration: 9000,
+          duration: 5000,
           verticalPosition: 'top'
         });
       } else {
         this.errorMessage = response.message || 'Reset failed';
       }
     } catch (error) {
-      console.error('Error resetting password:', error);
-      this.errorMessage = 'An error occurred while resetting password';
+      if (error instanceof HttpErrorResponse) {
+        // Check if the error status is 402
+        if (error.status === 402) {
+          // Display a specific Snackbar message
+          this.snackBar.open('Try another password.', 'Close', {
+            duration: 5000,
+            verticalPosition: 'top',
+          });
+        } else {
+          // General error handling
+          this.errorMessage = 'An error occurred while resetting the password';
+        }
+      } else {
+        console.error('Unknown error:', error);
+        this.errorMessage = 'An unexpected error occurred';
+      }
     }
   }
-
-
-
 
   
   

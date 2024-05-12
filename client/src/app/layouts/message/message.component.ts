@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewChecked, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, AfterViewChecked, ViewChild, ElementRef,OnDestroy } from '@angular/core';
 import { MessageService } from './message.service';
 import { Employee } from '../../model/ad-employee.model';
 //import io from 'socket.io-client';
@@ -8,7 +8,7 @@ import { EmployeeLoginService } from '../../portal/employee/employeelogin/employ
 import { ToastrService } from 'ngx-toastr';
 import { ToasterService } from '../../service/toaster.service';
 import { environment } from '../../../environment/environment';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, Subscription } from 'rxjs';
 import { OnlineStatus } from '../../enums/online-status.enum';
 import { ChatStatus } from '../../enums/chat-status.enum';
 
@@ -20,7 +20,7 @@ import { ChatStatus } from '../../enums/chat-status.enum';
   styleUrl: './message.component.css'
 })
 
-export class MessageComponent implements OnInit,  AfterViewChecked {
+export class MessageComponent implements OnInit,  AfterViewChecked,  OnDestroy {
 
   @ViewChild('chatContainer') chatContainer!: ElementRef;
 
@@ -34,6 +34,8 @@ export class MessageComponent implements OnInit,  AfterViewChecked {
   receiverChat: Chat[] = [];
   mergedMessages: Chat[] = [];
   showToastr: boolean = false;
+  onlineUsers = new Map<string, boolean>();
+  messageSubscription!: Subscription
   
 
   constructor(  private employeeService: MessageService, private authService:  EmployeeLoginService , private toastr: ToastrService  ) {}
@@ -53,22 +55,27 @@ export class MessageComponent implements OnInit,  AfterViewChecked {
     this.socket = io( environment.apiUrl + '/user-namespace', {
 
     auth:{
-      token: this.authService.getLoggedInEmployeeId()
+      token: this.sender_id
     }
-
            
     }); 
-
-   
     this.socket.on('connect', () => {
       console.log('Connected to Socket.IO server');
     });
 
-
+/*
     this.socket.on('disconnect', () => {
       console.log('Disconnected from Socket.IO server');
-    }); 
-    
+    }); */
+
+    this.socket.on('userStatusChange', (data) => {
+      const { userId, status } = data;
+      const employee = this.employeeProfile.find(emp => emp._id === userId);
+
+      if (employee) {
+        employee.is_online = status === 'online' ? OnlineStatus.ONLINE : OnlineStatus.OFFLINE;
+      }
+    });
 
   
     this.socket.on('chatMessage', (message: Chat) => {
@@ -81,9 +88,7 @@ export class MessageComponent implements OnInit,  AfterViewChecked {
 
       if (message.sender_id === loggedInEmployeeId || message.receiver_id === loggedInEmployeeId) {
         this.chatMessages.push(message);
-        
-
-
+  
       }
     });
 
@@ -117,7 +122,7 @@ export class MessageComponent implements OnInit,  AfterViewChecked {
   }
   
 
-
+/*
   async loadProfile() {
     try {
       const response = await firstValueFrom(this.employeeService.getProfile());
@@ -130,11 +135,28 @@ export class MessageComponent implements OnInit,  AfterViewChecked {
     } catch (error) {
       console.error('Error fetching employee profile:', error);
     }
+  } */
+
+  loadProfile() {
+
+    this.messageSubscription = this.employeeService.getProfile().subscribe({
+      next: (response) => {
+        if (Array.isArray(response)) {
+          this.employeeProfile = response;
+        } else {
+          // If not an array, handle the error case
+          console.error('Expected an array of Employee, but got:', response);
+        }
+      },error: (error) => {
+        console.error('Error fetching employee profile:', error);
+      }
+    })
+
   }
 
 
 
-
+/*
 async openChat(user: Employee) {
   this.selectedUser = user;
 
@@ -154,11 +176,30 @@ async openChat(user: Employee) {
   } catch (error) {
     console.error('Error marking message as Seen:', error);
   }
+} */
+
+openChat(user: Employee) {
+
+  this.selectedUser = user;
+
+  this.messageSubscription = this.employeeService.markMessageAsSeen(user._id).subscribe({
+    next: (response) => {
+      console.log('Message marked as Seen:', response);
+
+       this.chatMessages = [];
+       this.receiverChat = [];
+
+      this.requestExistingChat(user._id);
+
+    },error: (error) => {
+      console.error('Error marking message as Seen:', error);
+    }
+  })
+
 }
  
 
-
-
+/*
   async createChat(receiverId: string) {
     const senderId = this.authService.getLoggedInEmployeeId();
     if (!senderId) {
@@ -194,6 +235,44 @@ async openChat(user: Employee) {
       console.error('Error creating chat:', error);
     }
   }
+*/
+
+createChat(receiverId: string){
+
+  const senderId = this.authService.getLoggedInEmployeeId();
+    if (!senderId) {
+      console.error('Sender ID is null');
+      return;
+    }
+
+    const newChat: Chat = {
+      _id: '', 
+      sender_id: senderId,
+      receiver_id: receiverId, 
+      message: this.message,
+      createdAt: new Date(),
+      isRead: ChatStatus.DELIVERED,
+    };
+
+    console.log('Creating new chat:', newChat);
+
+    this.messageSubscription = this.employeeService.addChat(newChat).subscribe({
+      next: (response) => {
+        console.log('Chat created:', response);
+
+      // Extract the receiver_id from the response and emit a socket event
+      this.receiver_id = response.data.receiver_id;
+      this.socket.emit('chatMessage', response.data);
+
+      // Clear the message input
+      this.message = '';
+
+      },error: (error) =>{
+        console.error('Error creating chat:', error);
+      }
+    })
+
+}
 
 
   requestExistingChat(receiverId: string) {
@@ -233,6 +312,13 @@ async openChat(user: Employee) {
   }
 
 
+ngOnDestroy()  {
+
+  if(this.messageSubscription){
+    this.messageSubscription.unsubscribe()
+  }
+  
+}
 
 
 }

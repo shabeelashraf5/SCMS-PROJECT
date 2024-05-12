@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse } from '@angular/common/http';
-import { Observable, throwError, switchMap } from 'rxjs';
+import { Observable, throwError, switchMap, concatMap } from 'rxjs';
 import { EmployeeLoginService } from '../../portal/employee/employeelogin/employee-login/employee-login.service';
 import { catchError } from 'rxjs/operators';
 
@@ -62,10 +62,12 @@ intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<an
 }
  */
 
+
 intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
   // Check if the request URL contains 'employee-login'
   if (request.url.includes('portal')) {
     const token = this.authService.getToken();
+  const refreshToken = this.authService.getRefreshToken();
 
     console.log('Token from AuthInterceptor:', token);
 
@@ -106,11 +108,41 @@ intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<an
       return throwError(error);
     })
   );
+}
 
 
+/*
+  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    // Check if the request URL contains 'employee-login'
+    if (request.url.includes('portal')) {
+      const token = this.authService.getToken();
+
+      console.log('Token from AuthInterceptor:', token);
+
+      if (token) {
+        request = request.clone({
+          setHeaders: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+      }
+    }
+
+    return next.handle(request).pipe(
+      catchError((error: HttpErrorResponse) => {
+        console.error('HTTP error occurred:', error);
+        return throwError(error);
+      })
+    );
+  }*/
 
 
 
 }
+
+
+
+
+
  
-}
+

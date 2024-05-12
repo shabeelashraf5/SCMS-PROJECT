@@ -62,17 +62,33 @@ const io = require("socket.io")(server, {
 
 const usp = io.of('/user-namespace')
 
+const connectedUsers = {};
+
 usp.on('connection', async function(socket){
-
-  console.log('User Connected')
-
-  console.log(socket.handshake.auth.token)
-
   
+  const userId = socket.handshake.auth.token;
+  //console.log('User Connected')
+  console.log('User Connected', userId);
+  //console.log('Handshake Token', userId)
+  socket.userId = userId;
+
+  connectedUsers[userId] = true;
+  usp.emit('userStatusChange', { userId, status: 'online' });
+
+  socket.on('disconnect', async function () {
+    console.log('User Disconnected', socket.userId);
+
+    // Mark the user as offline
+    delete connectedUsers[socket.userId];
+    usp.emit('userStatusChange', { userId: socket.userId, status: 'offline' });
+  });
+
+ 
+  /*
   socket.on('disconnect', async function(){
 
     console.log('User Disconnect')
-  }) 
+  }) */
 
   
   socket.on('chatMessage', function(message){

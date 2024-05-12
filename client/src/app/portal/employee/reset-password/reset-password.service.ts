@@ -18,7 +18,9 @@ export class ResetPasswordService {
   }
 
   resetSuccess(token: string, password: string) {
-    return this.http.put(`${this.apiUrl}/reset-password`, { token, password });
+    const headers = new HttpHeaders({'Authorization': `Bearer ${token}`});
+    const body = { password };
+    return this.http.put(`${this.apiUrl}/reset-password`,  body, { headers });
   }
   
 

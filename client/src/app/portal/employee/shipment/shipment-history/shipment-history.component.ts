@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ShipmentHistoryService } from './shipment-history.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { firstValueFrom } from 'rxjs';
+import { Subscription, firstValueFrom } from 'rxjs';
 import { Shipment } from '../../../../model/shipment.model';
+import { response } from 'express';
 
 @Component({
   selector: 'app-shipment-history',
@@ -10,10 +11,11 @@ import { Shipment } from '../../../../model/shipment.model';
   styleUrl: './shipment-history.component.css'
 })
 
-export class ShipmentHistoryComponent implements OnInit {
+export class ShipmentHistoryComponent implements OnInit, OnDestroy {
 
   shipmentDetails: Shipment[] = []
   confirmedDelivery: Set<string> = new Set();
+  shipmentSubscription!: Subscription
 
   constructor(private shipmentService: ShipmentHistoryService, private snackBar: MatSnackBar, ) { }
 
@@ -23,6 +25,7 @@ export class ShipmentHistoryComponent implements OnInit {
 
   }
 
+  /*
   async getShipDetails() {
     try {
       const response = await firstValueFrom(this.shipmentService.getShip());
@@ -31,7 +34,25 @@ export class ShipmentHistoryComponent implements OnInit {
     } catch (error) {
       console.error('Error fetching shipment details:', error);
     }
+  }*/
+
+  getShipDetails() {
+
+    this.shipmentSubscription = this.shipmentService.getShip().subscribe({
+      next: (response) => {
+        this.shipmentDetails = response
+        console.log(this.shipmentDetails)
+      },
+      error: (error) =>{
+        console.error('Error fetching shipment details:', error);
+      },
+      complete: () =>{
+        console.log('Finished fetching shipment details');
+      }
+    })
+
   }
+
 
   loadConfirmedDelivery() {
     const storedDelivery = localStorage.getItem('confirmedDelivery');
@@ -42,7 +63,7 @@ export class ShipmentHistoryComponent implements OnInit {
   }
 
 
-
+/*
 async confirmDelivery(shipmentId: string) {
 
   if (this.confirmedDelivery.has(shipmentId)) {
@@ -63,7 +84,32 @@ async confirmDelivery(shipmentId: string) {
   } catch (error) {
     console.error('Error updating shipment status:', error);
   }
+} 
+*/
+
+confirmDelivery(shipmentId: string) {
+
+  if (this.confirmedDelivery.has(shipmentId)) {
+    return; 
+  }
+
+  this.shipmentSubscription = this.shipmentService.updateShipmentStatus(shipmentId).subscribe({
+    next: (response) =>{
+
+      console.log('Shipment status updated successfully');
+      this.openSnackBar('Shipment delivered successfully');
+      this.getShipDetails();
+       this.confirmedDelivery.add(shipmentId);  // Mark this quotation as confirmed
+       localStorage.setItem('confirmedDelivery', JSON.stringify([...this.confirmedDelivery]));
+
+    },
+     error: (error) =>{
+      console.error('Error updating shipment status:', error);
+    }
+  })
+
 }
+
 
   getRFQ(detail: Shipment): string {
     if (detail &&  detail.invoice_id.purchase_id.po_id.quotation_id.salesRFQ_id  ) {
@@ -116,6 +162,13 @@ async confirmDelivery(shipmentId: string) {
       verticalPosition: 'top', // Set position to top
       horizontalPosition: 'center', // Set position to center horizontally
     });
+  }
+
+  ngOnDestroy() {
+    // Unsubscribe to prevent memory leaks when component is destroyed
+    if (this.shipmentSubscription) {
+      this.shipmentSubscription.unsubscribe();
+    }
   }
 
 }

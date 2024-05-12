@@ -43,7 +43,7 @@ getToken(): string | null {
   return localStorage.getItem(this.tokenKey);
 }
 
-
+/*
 refreshToken(): Observable<string> {
   // Implement your logic to refresh the token here, for example:
   const refreshToken = 'your_refresh_token';
@@ -53,7 +53,7 @@ refreshToken(): Observable<string> {
     .pipe(
       map(response => response.token)
     );
-}
+}*/
 
 
 }

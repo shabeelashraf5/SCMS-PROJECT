@@ -1,6 +1,6 @@
-import { Component , OnInit} from '@angular/core';
+import { Component , OnInit, OnDestroy} from '@angular/core';
 import { SupplierService } from './supplier.service';
-import { firstValueFrom } from 'rxjs';
+import { Subscription, firstValueFrom } from 'rxjs';
 import { AddPo } from '../../../../model/purchase-addpo.model';
 
 
@@ -9,9 +9,10 @@ import { AddPo } from '../../../../model/purchase-addpo.model';
   templateUrl: './supplier.component.html',
   styleUrl: './supplier.component.css'
 })
-export class SupplierComponent implements OnInit {
+export class SupplierComponent implements OnInit, OnDestroy {
 
   supplierDetails: AddPo[] =[]
+  supplierSubscription!: Subscription
 
 
   constructor(private supplierService: SupplierService ) { }
@@ -24,7 +25,7 @@ export class SupplierComponent implements OnInit {
   }
 
  
-
+/*
   async getClientDetails() {
     try {
       const response = await firstValueFrom(this.supplierService.getSupplier());
@@ -34,9 +35,33 @@ export class SupplierComponent implements OnInit {
       console.error('Error fetching supplier details:', error);
     }
   }
+  */
+
+  getClientDetails(){
+
+    this.supplierSubscription = this.supplierService.getSupplier().subscribe({
+      next: (response) =>{
+        this.supplierDetails = response; 
+        console.log(this.supplierDetails);
+      },
+      error: (error) =>{
+        console.error('Error fetching supplier details:', error);
+      }
+    })
+
+  }
+
+
 
   trackBySupplier(index: number, supplier: AddPo): string {
     return supplier._id 
+  }
+
+  ngOnDestroy() {
+    
+    if(this.supplierSubscription){
+      this.supplierSubscription.unsubscribe()
+    }
   }
 
 }

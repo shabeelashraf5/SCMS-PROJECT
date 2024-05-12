@@ -1,11 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { PurchaseOrderService } from './purchase-order.service';
 import { Router } from '@angular/router';
 import { Invoice } from '../../../../model/invoice.model';
-import { firstValueFrom } from 'rxjs';
+import { Subscription, firstValueFrom } from 'rxjs';
 import { Po } from '../../../../model/purchase-po.model';
 import { Quotation } from '../../../../model/sales-quotation.model';
 import { AddQuotation } from '../../../../model/sales-addquo';
+import { response } from 'express';
 
 
 @Component({
@@ -13,13 +14,14 @@ import { AddQuotation } from '../../../../model/sales-addquo';
   templateUrl: './purchase-order.component.html',
   styleUrl: './purchase-order.component.css'
 })
-export class PurchaseOrderComponent implements OnInit {
+export class PurchaseOrderComponent implements OnInit, OnDestroy {
 
 
   poDetails: Po[] = []
 
   _id!: string; 
   employee_id: string = ''
+  purchaseOrderSubscription!: Subscription
 
 
   constructor(private purchaseService:PurchaseOrderService, private router: Router) { }
@@ -29,7 +31,7 @@ export class PurchaseOrderComponent implements OnInit {
 
   }
 
-
+/*
 async getPoDetails() {
   try {
     const response = await firstValueFrom(this.purchaseService.getPo());
@@ -38,10 +40,22 @@ async getPoDetails() {
   } catch (error) {
     console.error('Error fetching PO details:', error);
   }
+} */
+
+getPoDetails() {
+
+  this.purchaseOrderSubscription = this.purchaseService.getPo().subscribe({
+    next: (response) =>{
+      this.poDetails = response; 
+      console.log(this.poDetails);
+    },
+    error: (error) =>{
+      console.error('Error fetching PO details:', error);
+    }
+  })
 }
 
- 
-
+/*
   async getPurchaseDetail(_id: string) {
     try {
       const data = await firstValueFrom(this.purchaseService.poSingle(_id));
@@ -50,6 +64,17 @@ async getPoDetails() {
     } catch (error) {
       console.error('Error fetching quotation detail:', error);
     }
+  } */
+
+  getPurchaseDetail(_id: string) {
+
+    this.purchaseOrderSubscription = this.purchaseService.poSingle(_id).subscribe({
+      next: (response) =>{
+        this.router.navigate(['/portal/purchase/purchase-order', _id]);
+      },error: (error) => {
+        console.error('Error fetching quotation detail:', error);
+      }
+    })
   }
 
 
@@ -72,6 +97,13 @@ getResponsible(detail: Po): string {
 
 trackByPurchaseOrder(index: number, purchaseorder: Po): string {
   return purchaseorder._id 
+}
+
+ngOnDestroy() {
+
+  if(this.purchaseOrderSubscription){
+    this.purchaseOrderSubscription.unsubscribe()
+  } 
 }
 
 }

@@ -8,7 +8,7 @@ import { Observable, map,  Subject  } from 'rxjs';
 import { AdCategoryService } from './ad-category.service';
 import { AdCategoryState } from './store/ad-category.state';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { noWhitespaceValidator } from '../../../../validator/no-whitespace.validator';
+
 
 
 @Component({

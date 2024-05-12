@@ -1,11 +1,12 @@
-import { Component , OnInit } from '@angular/core';
+import { Component , OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { AppState } from '../../../../state/app.state';
-import { loginEmployee } from './store/employee-login.action';
+import { loginEmployee, loginEmployeeSuccess, loginEmployeeFailure } from './store/employee-login.action';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { tap, catchError } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { of, Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 
 
@@ -14,8 +15,9 @@ import { of } from 'rxjs';
   templateUrl: './employee-login.component.html',
   styleUrl: './employee-login.component.css'
 })
-export class EmployeeLoginComponent implements OnInit {
+export class EmployeeLoginComponent implements OnInit, OnDestroy  {
   loginForm!: FormGroup;
+  subscription!: Subscription;
   
 
   constructor(private formBuilder: FormBuilder, private store: Store<AppState>, private snackBar: MatSnackBar) {}
@@ -23,6 +25,9 @@ export class EmployeeLoginComponent implements OnInit {
   ngOnInit(): void {
 
     this.initForm();
+
+    this.errorValidation()
+   
   }
 
   initForm(): void {
@@ -33,45 +38,34 @@ export class EmployeeLoginComponent implements OnInit {
   }
 
 
-
- 
-
 onSubmit(): void {
-  const emailControl = this.loginForm.get('email');
-  const passwordControl = this.loginForm.get('password');
-
-  if (!emailControl || !passwordControl) {
-    return; 
-  }
-
-  if (passwordControl.errors && passwordControl.errors['required'] && emailControl.errors && emailControl.errors['required'] ) {
-    this.openSnackBar('Enter Email and Password');
-    return;
-  }
-
-  if (emailControl.errors && emailControl.errors['required']) {
-    this.openSnackBar('Enter Email');
-    return;
-  } else if (emailControl.errors && emailControl.errors['email']) {
-    this.openSnackBar('Invalid Email');
-    return;
-  }
-
-  if (passwordControl.errors && passwordControl.errors['required']) {
-    this.openSnackBar('Enter Password');
-    return;
-  }
-
-  if (!emailControl.valid || !passwordControl.valid) {
-    this.openSnackBar('Invalid Email or Password');
-    return; // Exit onSubmit method if email or password is invalid
-  }
-
+  
+  
   const { email, password } = this.loginForm.value;
   // Dispatch login action
   this.store.dispatch(loginEmployee({ email, password }))
 }
 
+
+errorValidation(){
+
+  this.subscription = this.store.pipe(select(state => state.employeeLogin.error)) 
+  .subscribe(error => {
+    if (error) {
+      this.openSnackBar(error);
+    }
+  });
+
+}
+
+
+
+ngOnDestroy(): void {
+  
+  if (this.subscription) {
+    this.subscription.unsubscribe();
+  }
+}
 
 
   openSnackBar(message: string): void {
@@ -81,4 +75,6 @@ onSubmit(): void {
       verticalPosition: 'top', 
     });
   }
+
+
 }

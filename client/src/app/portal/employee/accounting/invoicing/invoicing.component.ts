@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { InvoicingService } from './invoicing.service';
-import { firstValueFrom } from 'rxjs';
+import { Subscription, firstValueFrom } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Invoice } from '../../../../model/invoice.model';
 
@@ -10,7 +10,7 @@ import { Invoice } from '../../../../model/invoice.model';
   templateUrl: './invoicing.component.html',
   styleUrl: './invoicing.component.css'
 })
-export class InvoicingComponent implements OnInit  {
+export class InvoicingComponent implements OnInit, OnDestroy  {
 
   invDetails: Invoice[] = []
 
@@ -18,6 +18,7 @@ export class InvoicingComponent implements OnInit  {
   employee_id: string = ''
   purchase_id: string =''
   errorMessage: string = '';
+  invoicingSubscription! : Subscription
 
 
 
@@ -29,7 +30,7 @@ export class InvoicingComponent implements OnInit  {
   }
 
 
-
+/*
 async getInvoiceDetail(_id: string) {
   try {
     await firstValueFrom(this.invoiceService.invSingle(_id));
@@ -37,9 +38,22 @@ async getInvoiceDetail(_id: string) {
   } catch (error) {
     console.error('Error fetching quotation detail:', error);
   }
+} */
+
+getInvoiceDetail(_id: string) {
+
+  this.invoicingSubscription = this.invoiceService.invSingle(_id).subscribe({
+    next: (response) => {
+      this.router.navigate(['/portal/accounting/invoicing', _id]);
+    },error: (error) => {
+      console.error('Error fetching quotation detail:', error);
+    }
+      
+  })
+
 }
 
-
+/*
 async getInvDetails() {
   try {
     const response = await firstValueFrom(
@@ -56,6 +70,25 @@ async getInvDetails() {
       this.errorMessage = 'An error occurred while fetching data.';
     }
   }
+}
+*/
+
+getInvDetails() {
+  this.invoicingSubscription = this.invoiceService.getInv().subscribe({
+    next: (response) => {
+      this.invDetails = response; // Store the fetched invoice details
+      console.log(this.invDetails);
+    },
+    error: (error) => {
+      console.error(error); // Log the error for debugging
+
+      if (error instanceof HttpErrorResponse && error.status === 403) {
+        this.errorMessage = 'You are not authorized to access this page.';
+      } else {
+        this.errorMessage = 'An error occurred while fetching data.';
+      }
+    },
+  });
 }
 
 
@@ -91,6 +124,14 @@ async getInvDetails() {
   
   trackByInvoice(index: number, invoice: Invoice): string {
     return invoice._id 
+  }
+
+  ngOnDestroy() {
+
+    if(this.invoicingSubscription){
+      this.invoicingSubscription.unsubscribe()
+    }
+    
   }
   
 

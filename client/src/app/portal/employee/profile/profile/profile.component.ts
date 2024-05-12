@@ -1,8 +1,8 @@
-import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnInit, OnDestroy } from '@angular/core';
 import { Store, select  } from '@ngrx/store';
 import * as AdProfileActions from '../../profile/profile/store/profile.action';
 import { Profile } from '../../../../model/emp-profile.model';
-import { Observable, map } from 'rxjs';
+import { Observable, Subscription, map } from 'rxjs';
 import { AppState } from '../../../../state/app.state';
 import { Employee } from '../../../../model/ad-employee.model';
 import { ProfileService } from './profile.service';
@@ -19,7 +19,7 @@ import { firstValueFrom } from 'rxjs';
 })
 
 
-export class ProfileComponent implements OnInit {
+export class ProfileComponent implements OnInit, OnDestroy {
 
 
   employeeProfile!: Employee;
@@ -30,6 +30,7 @@ export class ProfileComponent implements OnInit {
   _id!: string; 
   image: string = ''
   selectedFile!: File; 
+  profileSubscription!: Subscription
 
   @ViewChild('my_modal_2') modal2!: ElementRef;
 
@@ -46,7 +47,7 @@ export class ProfileComponent implements OnInit {
   }
 
   
-
+/*
   async loadProfile() {
     try {
       const profile = await firstValueFrom(this.employeeService.getProfile());
@@ -54,7 +55,20 @@ export class ProfileComponent implements OnInit {
     } catch (error) {
       console.error('Error fetching employee profile:', error);
     }
+  } */
+
+  loadProfile() {
+
+    this.profileSubscription = this.employeeService.getProfile().subscribe({
+      next: (response) => {
+        this.employeeProfile = response;
+      },error: (error) =>{
+        console.error('Error fetching employee profile:', error);
+      }
+    })
   }
+
+
 
 
 
@@ -62,7 +76,7 @@ export class ProfileComponent implements OnInit {
     return environment.apiUrl + `/images/${imageFileName}`; 
   }
 
-
+/*
 async editProfileEmployee(employee: Partial<Employee>) {
   const _id = employee._id;
 
@@ -85,6 +99,34 @@ async editProfileEmployee(employee: Partial<Employee>) {
   }
 
 }
+*/
+
+editProfileEmployee(employee: Employee) {
+
+  const _id = employee._id;
+  let formData = new FormData();
+
+  if (_id !== undefined) {
+    
+    if (this.selectedFile) {
+      formData.append('image', this.selectedFile);
+    }
+}
+
+this.profileSubscription = this.emService.updateEmployee(_id, formData).subscribe({
+  next: (response) => {
+    this.loadProfile();
+
+  },error: (error) => {
+    console.error('Error updating profile employee:', error);
+  }
+})
+
+ this.modal2.nativeElement.close();
+
+}
+
+
 
 
 onFileSelected(event: Event): void {
@@ -107,6 +149,14 @@ onFileSelected(event: Event): void {
 
   showModal(): void {
     this.modal2.nativeElement.showModal();
+  }
+
+  ngOnDestroy() {
+
+    if(this.profileSubscription){
+      this.profileSubscription.unsubscribe()
+    }
+    
   }
 
 

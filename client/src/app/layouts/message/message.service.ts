@@ -21,7 +21,7 @@ export class MessageService {
 
   constructor( private http: HttpClient , private authService: EmployeeLoginService) { 
     this.socket = io(environment.apiUrl);
-    this.currentUser = authService.getToken();
+    //this.currentUser = authService.getToken();
 
   }
 

@@ -24,9 +24,17 @@ const adminLogin = async (req, res) => {
         console.log('Received email:', email);
         console.log('Received password:', password);
 
-        if (!email || !password) {
-            console.log('Email or password missing');
-            return res.status(400).json({ message: 'Email and password are required' });
+        if (!email ) {
+            console.log('Email missing');
+            return res.status(400).json({ message: 'Email are required' });
+        }
+
+        if(!password){
+            console.log('Password is missing')
+            return res.status(401).json({
+                success: false,
+                message: 'Password Required'
+            })
         }
 
         const admin = await collectionadmin.findOne({ email });
@@ -35,7 +43,7 @@ const adminLogin = async (req, res) => {
 
         if (!admin) {
             console.log('Admin not found in database');
-            return res.status(401).json({ message: 'Authentication failed' });
+            return res.status(402).json({ message: 'Invalid Credential' });
         }
 
         // Compare the provided password with the hashed password from the database
@@ -43,7 +51,7 @@ const adminLogin = async (req, res) => {
 
         if (!passwordMatch) {
             console.log('Incorrect password');
-            return res.status(401).json({ message: 'Authentication failed' });
+            return res.status(403).json({ message: 'Incorrect Password' });
         }
 
         const token = generateToken(admin);
@@ -96,6 +104,18 @@ const addAdmin = async (req, res) => {
 
     try {
         // Hash the password
+
+        const existingAdmin = await collectionadmin.findOne({ email });
+
+        if(existingAdmin){
+            console.log('Email Alraedy exist', existingAdmin)
+
+            return res.status(400).json({
+                suceess: false,
+                message: 'Already exist'
+            })
+        }
+
         const hashedPassword = await bcrypt.hash(password, 10); // 10 is the salt rounds
 
         const admin = {
@@ -108,7 +128,9 @@ const addAdmin = async (req, res) => {
         await collectionadmin.insertMany([admin]);
         
         console.log('Admin added successfully');
-        
+
+       
+
         return res.json({
             user: [],
             success: true,

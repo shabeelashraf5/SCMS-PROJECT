@@ -4,6 +4,7 @@ export interface EmployeeLoginState {
     loggedIn: boolean;
     employee: Employee | null;
     token: string | null;
+    refreshToken: string | null; 
     error: string | null;
   }
 
@@ -11,6 +12,7 @@ export interface EmployeeLoginState {
     loggedIn: false,
     employee: null,
     token: null,
+    refreshToken: null,
     error: null,
   };
   

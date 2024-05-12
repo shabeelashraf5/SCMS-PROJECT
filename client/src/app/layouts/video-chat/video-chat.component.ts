@@ -1,10 +1,11 @@
 
 import { ZegoUIKitPrebuilt } from '@zegocloud/zego-uikit-prebuilt';
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { VideoChatService } from './video-chat.service';
 import { Employee } from '../../model/ad-employee.model';
 import { environment } from '../../../environment/environment';
-import { firstValueFrom } from 'rxjs';
+import { Subscription, firstValueFrom } from 'rxjs';
+import { response } from 'express';
 
 
 function randomID(len:number) {
@@ -33,9 +34,10 @@ export function getUrlParams(
   templateUrl: './video-chat.component.html',
   styleUrl: './video-chat.component.css'
 })
-export class VideoChatComponent {
+export class VideoChatComponent implements OnInit, OnDestroy {
 
  employeeProfile!: Employee;
+ videoSubscription!:  Subscription
 
   @ViewChild('root')
   root!: ElementRef;
@@ -47,7 +49,7 @@ export class VideoChatComponent {
     this.loadProfile();
   }
 
-
+/*
   async loadProfile() {
     try {
       const profile = await firstValueFrom(this.employeeService.getProfile());
@@ -55,6 +57,17 @@ export class VideoChatComponent {
     } catch (error) {
       console.error('Error fetching employee profile:', error);
     }
+  } */
+
+  loadProfile() {
+
+    this.videoSubscription = this.employeeService.getProfile().subscribe({
+      next: (response) => {
+        this.employeeProfile = response;
+      },error: (error) => {
+        console.error('Error fetching employee profile:', error);
+      }
+    })
   }
 
   ngAfterViewInit() {
@@ -91,5 +104,13 @@ export class VideoChatComponent {
 
       });
   }
+
+ngOnDestroy() {
+
+  if(this.videoSubscription){
+    this.videoSubscription.unsubscribe()
+  }
+  
+}
   
 }

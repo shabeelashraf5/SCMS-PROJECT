@@ -1,10 +1,12 @@
-import { Component,  OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component,  OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { SalesAnalysisService } from './sales-analysis.service';
 import { Chart, registerables } from 'chart.js';
 import { PlotlyService } from 'angular-plotly.js';
-import { firstValueFrom } from 'rxjs';
+import { Subscription, firstValueFrom } from 'rxjs';
 import { AddQuotation } from '../../../../model/sales-addquo';
 import { OrderStatus } from '../../../../enums/order-status.enum';
+import { response } from 'express';
+import { error } from 'console';
 
 Chart.register(...registerables)
 
@@ -14,9 +16,10 @@ Chart.register(...registerables)
   styleUrl: './sales-analysis.component.css'
 })
 
-export class SalesAnalysisComponent implements OnInit {
+export class SalesAnalysisComponent implements OnInit, OnDestroy {
 
   spoDetails: AddQuotation[] = [];
+  salesAnalysisSubscription!: Subscription
  
   
 
@@ -30,6 +33,7 @@ export class SalesAnalysisComponent implements OnInit {
   }
 
  
+  /*
   async getClientDetails() {
     try {
       const response = await firstValueFrom(this.salesAnalysisService.getSPO());
@@ -40,6 +44,21 @@ export class SalesAnalysisComponent implements OnInit {
     } catch (error) {
       console.error('Error fetching SPO details:', error);
     }
+  } */
+
+  getClientDetails() {
+
+    this.salesAnalysisSubscription = this.salesAnalysisService.getSPO().subscribe({
+      next: (response) => {
+        this.spoDetails = response;
+        console.log('SPO Details:', this.spoDetails);
+        this.RenderChart()
+      },
+      error: (error) => {
+        console.error('Error fetching SPO details:', error);
+      }
+    })
+
   }
 
 
@@ -97,6 +116,14 @@ RenderChart() {
       }
     }
   });
+}
+
+ngOnDestroy(){
+
+  if(this.salesAnalysisSubscription){
+    this.salesAnalysisSubscription.unsubscribe()
+  }
+  
 }
 
 

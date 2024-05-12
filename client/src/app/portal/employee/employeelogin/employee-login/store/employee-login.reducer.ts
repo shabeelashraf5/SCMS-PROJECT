@@ -4,11 +4,12 @@ import * as EmployeeActions from '../store/employee-login.action'
 
 export const employeeLoginReducer = createReducer(
     initialEmployeeLoginState,
-    on(EmployeeActions.loginEmployeeSuccess, (state, { employee, token }) => ({
+    on(EmployeeActions.loginEmployeeSuccess, (state, { employee, token, refreshToken }) => ({
       ...state,
       loggedIn: true,
       employee,
       token,
+      refreshToken,
       error: null,
     })),
 
@@ -34,6 +35,7 @@ export const employeeLoginReducer = createReducer(
       loggedIn: false,
       employee: null,
       token: null,
+      refreshToken: null,
       error,
     }))
   );

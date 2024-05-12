@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Chart, registerables } from 'chart.js';
 import { AdDashboardService } from './ad-dashboard.service';
 import { AdEmployeeService } from '../../employee/ad-employee/ad-employee.service';
 import { AddQuotation } from '../../../../model/sales-addquo';
 import { Employee } from '../../../../model/ad-employee.model';
-import { firstValueFrom } from 'rxjs';
+import { Subscription, firstValueFrom } from 'rxjs';
 import { OrderStatus } from '../../../../enums/order-status.enum';
 
 
@@ -16,7 +16,7 @@ Chart.register(...registerables)
   styleUrl: './ad-dashboard.component.css'
 })
 
-export class AdDashboardComponent implements OnInit {
+export class AdDashboardComponent implements OnInit, OnDestroy {
 
   myChart!: Chart 
   currentData: number[] = []; // Default data for month
@@ -25,6 +25,7 @@ export class AdDashboardComponent implements OnInit {
   currentDate: Date = new Date();
 
   spoDetails: AddQuotation[] = [];
+  dashSubscription!: Subscription
 
   constructor(private dashboardService :  AdDashboardService , private emService: AdEmployeeService) { }
 
@@ -36,22 +37,21 @@ export class AdDashboardComponent implements OnInit {
     
   }
 
-/*
-  getClientDetails() {
-    this.dashboardService.getSPO().subscribe(
-      (response) => {
-        this.spoDetails = response; 
-        console.log(this.spoDetails);
-        this.renderChart()
-       
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
-  }
-*/
 
+  getClientDetails() {
+
+    this.dashSubscription = this.dashboardService.getSPO().subscribe({
+      next: (response) => {
+        this.spoDetails = response; 
+        console.log('SPO Details:', this.spoDetails);
+      }, error: (error) => {
+        console.error('Error fetching SPO details:', error);
+      }
+    })
+  }
+
+
+/*
   async getClientDetails() {
     try {
       const response = await firstValueFrom( this.dashboardService.getSPO());
@@ -61,20 +61,10 @@ export class AdDashboardComponent implements OnInit {
       console.error('Error fetching SPO details:', error);
     }
   }
+*/
 
-
+ 
   /*
-  loadEmployee() {
-    this.emService.getEmployees().subscribe(
-      (response) => {
-        this.employeeDetails = response;
-      },
-      (error) => {
-        console.error('Error fetching employee profile:', error);
-      }
-    );
-  }*/
-
   async  loadEmployee() {
     try {
       const response = await firstValueFrom( this.emService.getEmployees());
@@ -83,8 +73,19 @@ export class AdDashboardComponent implements OnInit {
     } catch (error) {
       console.error('Error fetching Employee details:', error);
     }
-  }
+  } */
 
+  loadEmployee() {
+
+    this.dashSubscription = this.emService.getEmployees().subscribe({
+      next:(response) => {
+        this.employeeDetails = response; 
+        console.log('Employee Details:', this.employeeDetails);
+      },error: (error) => {
+        console.error('Error fetching Employee details:', error);
+      }  
+    })
+  }
 
 
   calculateEmployee(details: Employee[]): number {
@@ -220,9 +221,12 @@ calculateTotalOrders(details: AddQuotation[]): number {
     this.updateChart();
   }
 
+  ngOnDestroy() {
 
-
-
-  
+    if(this.dashSubscription){
+      this.dashSubscription.unsubscribe()
+    }
+    
+  }
 
 }

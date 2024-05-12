@@ -24,10 +24,17 @@ const employeeLogin = async (req, res) => {
         console.log('Received email:', email);
         console.log('Received password:', password);
 
-        if (!email || !password) {
+        if (!email ) {
             console.log('Email or password missing');
             return res.status(400).json({ message: 'Email and password are required' });
         }
+
+        
+        if (!password) {
+            console.log('Password is missing');
+            return res.status(403).json({ message: 'Password is required' });
+        }
+
 
         const employee = await collectionemployee.findOne({ email });
 
@@ -35,7 +42,7 @@ const employeeLogin = async (req, res) => {
 
         if (!employee) {
             console.log('Employee not found in database');
-            return res.status(401).json({ message: 'Authentication failed' });
+            return res.status(402).json({ message: 'Invalid Credentials' });
         }
 
         // Compare the provided password with the hashed password in the database
@@ -48,11 +55,14 @@ const employeeLogin = async (req, res) => {
 
         await collectionemployee.updateOne({ email }, { $set: { is_online: 'online' } });
 
-        const token = generateToken(employee);
+        const { token, refreshToken } = generateToken(employee);
+        //const refreshToken = refreshTokens(employee)
 
-        console.log('Generated JWT Token:', employee, token);
+        console.log('Generated JWT Token:', employee,  token );
+        console.log('Generated Refresh JWT Token:', refreshToken  );
+     
 
-        res.status(200).json({ message: 'Authentication successful', employee, token });
+        res.status(200).json({ message: 'Authentication successful', employee, token , refreshToken });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Server error' });
@@ -63,37 +73,32 @@ const employeeLogin = async (req, res) => {
 
 const refreshToken = async  (req , res) => {
 
+ const refreshSecret = 'refreshSecret'; 
 
-    try {
-        const refreshToken = req.body.refreshToken;
-    
-        // Verify the refresh token
-        const decoded = jwt.verify(refreshToken, 'refreshSecret');
-    
-        // Check if the refresh token is valid
-        if (!decoded || !decoded.email || !decoded.userId) {
-          return res.status(401).json({ message: 'Invalid refresh token' });
-        }
-    
-        // Retrieve the employee from the database based on the decoded user ID
-        const employee = await collectionemployee.findById(decoded.userId);
+   const { refreshToken } = req.body;
 
-    
-        if (!employee) {
-          return res.status(404).json({ message: 'Employee not found' });
-        }
-    
-        // Generate a new access token
-        const accessToken = generateToken(employee);
-    
-        // Send the new access token in the response
-        res.status(200).json({ token: accessToken });
-      } catch (error) {
-        console.error('Error refreshing token:', error);
-        return res.status(500).json({ message: 'Internal server error' });
-      }
+   // Check if refresh token is provided
+   if (!refreshToken) {
+       return res.status(400).json({ message: 'Refresh token is required' });
+   }
 
+   try {
+       // Verify the refresh token
+       const decoded = jwt.verify(refreshToken, refreshSecret);
 
+       // Assuming the decoded token contains user ID
+       const user = await collectionemployee.findById(decoded.userId);
+        
+       console.log('Hello Users', user)
+       // Generate a new access token
+       const token = generateToken(user);
+       console.log('Token' , token)
+
+       res.status(200).json({ token });
+   } catch (error) {
+       console.error(error);
+       res.status(401).json({ message: 'Invalid refresh token' });
+   }
 }
 
 
@@ -251,7 +256,18 @@ const displayResetPasswordPage = async (req, res) => {
 
 const resetPassword = async (req, res) => {
     try {
-        const { token, password } = req.body;
+
+        const authHeader = req.headers.authorization;
+        
+        if (!authHeader) {
+            return res.status(400).json({
+                success: false,
+                message: 'Authorization header missing'
+            });
+        }
+
+        const token = authHeader.split(' ')[1]; 
+        const { password } = req.body;
 
         console.log('Token:', token);
         console.log('Password:', password);
@@ -263,10 +279,21 @@ const resetPassword = async (req, res) => {
                 message: 'Invalid or expired token'
             });
         }
+
+        const isPasswordSame = await bcrypt.compare(password, user.password);
+
+          if (isPasswordSame) {
+            
+            console.log('Change your password')
+             return res.status(402).json({
+                 success: false,
+                  message: 'The new password cannot be the same as the existing password. Please choose a different one.'
+            });
+        }
    
         const hashedPassword = await bcrypt.hash(password, 10);
       
-        await collectionemployee.updateOne({ token }, { password: hashedPassword });
+        await collectionemployee.updateOne({ token }, { $set: { password: hashedPassword }, $unset: { token: '' } });
        
         return res.json({
             success: true,

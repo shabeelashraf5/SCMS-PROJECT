@@ -22,8 +22,18 @@ export class AdminLoginEffects {
           return AdminActions.loginAdminSuccess({ admin, token });
         }),
         catchError((error) => {
-          console.error('Login error:', error);
-          return of(AdminActions.loginAdminFailure({ error: error.message }));
+         // console.error('Login error:', error);
+         let errorMessage = 'Server error'
+         if(error.status === 400){
+          errorMessage = 'Email is Required'
+         }else if(error.status === 401){
+          errorMessage = 'Password Required'
+         }else if(error.status === 402){
+          errorMessage = 'Invalid Credential'
+         }else if(error.status === 403){
+          errorMessage = 'Incorrect Password'
+         }
+          return of(AdminActions.loginAdminFailure({ error: errorMessage}));
         })
       )
     )

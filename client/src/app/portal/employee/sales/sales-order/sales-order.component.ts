@@ -1,12 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { SalesOrderService } from './sales-order.service';
 import { Po } from '../../../../model/purchase-po.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router'; 
-import { firstValueFrom } from 'rxjs';
+import { Subscription, firstValueFrom } from 'rxjs';
 import { AddQuotation } from '../../../../model/sales-addquo';
 import { Quotation } from '../../../../model/sales-quotation.model';
 import { SubmitStatus } from '../../../../enums/submit-status.enum';
+import { response } from 'express';
 
 @Component({
   selector: 'app-sales-order',
@@ -14,13 +15,14 @@ import { SubmitStatus } from '../../../../enums/submit-status.enum';
   styleUrl: './sales-order.component.css'
 })
 
-export class SalesOrderComponent implements OnInit {
+export class SalesOrderComponent implements OnInit, OnDestroy {
 
 
   spoDetails: AddQuotation[] = [];
   employee_id: string = ''
   quotation_id: string =''
   confirmedQuotations: Set<string> = new Set();
+  salesOrderSubscription!: Subscription
   
 
   constructor(private salesOrderService :  SalesOrderService,  private snackBar: MatSnackBar, private router: Router  ) { }
@@ -32,7 +34,7 @@ export class SalesOrderComponent implements OnInit {
 
   }
 
-
+/*
   async getClientDetails() {
     try {
       const response = await firstValueFrom(this.salesOrderService.getSPO());
@@ -41,6 +43,20 @@ export class SalesOrderComponent implements OnInit {
     } catch (error) {
       console.error('Error fetching SPO details:', error);
     }
+  } */
+
+  getClientDetails() {
+
+   this.salesOrderSubscription =  this.salesOrderService.getSPO().subscribe({
+      next: (response) =>{
+        this.spoDetails = response; 
+        console.log('SPO Details:', this.spoDetails);
+      },
+      error: (error) => {
+        console.error('Error fetching SPO details:', error);
+      }
+    })
+ 
   }
 
 
@@ -59,6 +75,7 @@ getSrfq(quotation: Quotation): string {
 }
 
 
+/*
   async createPO(quotationId: string) {
     if (this.confirmedQuotations.has(quotationId)) {
       return; 
@@ -88,7 +105,37 @@ getSrfq(quotation: Quotation): string {
     }
   }
 
-  
+  */
+
+  createPO(quotationId: string) {
+
+    if (this.confirmedQuotations.has(quotationId)) {
+      return; 
+    }
+
+    const newPo: Po = {
+      _id: '',
+      employee_id: this.employee_id,
+      quotation_id: quotationId as unknown as AddQuotation,
+      po: '',
+      status: SubmitStatus.NOTSUBMIT,
+      createdAt: new Date(),
+    };
+
+    this.salesOrderSubscription = this.salesOrderService.addPo(newPo).subscribe({
+      next: (response) =>{
+        this.confirmedQuotations.add(quotationId); // Mark as confirmed
+        localStorage.setItem('confirmedQuotations', JSON.stringify([...this.confirmedQuotations]))
+        this.getClientDetails();
+        this.openSnackBar('Sales Order Confirmed');
+
+      },error: (error) => {
+        console.error('Error creating sales order:', error);
+      }
+    })
+  }
+
+
   getResponsible(detail: AddQuotation): string {
     if (typeof detail.employee_id === 'object' && 'fname' in detail.employee_id && 'lname' in detail.employee_id) {
       return `${detail.employee_id.fname} ${detail.employee_id.lname}`;
@@ -109,6 +156,14 @@ getSrfq(quotation: Quotation): string {
       verticalPosition: 'top', 
       horizontalPosition: 'center', 
     });
+  }
+
+  ngOnDestroy() {
+
+    if(this.salesOrderSubscription){
+      this.salesOrderSubscription.unsubscribe()
+    }
+    
   }
 
 }

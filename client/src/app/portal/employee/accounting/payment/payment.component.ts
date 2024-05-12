@@ -53,7 +53,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
   }
 
 
-
+/*
 async fetchTransDetails(quotation_id: string) {
   try {
     const transData = await firstValueFrom(this.transService.transSingle(quotation_id));
@@ -65,7 +65,21 @@ async fetchTransDetails(quotation_id: string) {
   } catch (error) {
     console.error('Error fetching transaction details', error);
   }
+} */
+
+fetchTransDetails(quotation_id: string) {
+
+  this.routeSub = this.transService.transSingle(quotation_id).subscribe({
+    next: (response) => {
+      this.transDetail = response;
+      this.amount = this.getAmount(response);
+    },error: (error) =>{
+      console.error('Error fetching transaction details', error);
+    }
+  })
 }
+
+
 
  
   getAmount(detail: Invoice): number {
@@ -115,6 +129,8 @@ async fetchTransDetails(quotation_id: string) {
 
 
 async payNow() {
+  const invoiceId = this.transDetail
+
   if (this.selectedPaymentMethod === PaymentMethod.Online) {
     try {
 
@@ -137,7 +153,7 @@ async payNow() {
         this.openSnackBar('An error occurred during payment process.');
       } else {
        
-        await this.updatePaymentStatus();
+         this.updatePaymentStatus(invoiceId);
        
         this.openSnackBar('Payment Successful');
         console.log('Redirecting to Checkout...');
@@ -148,7 +164,7 @@ async payNow() {
     }
   } else {
     try {
-      await this.updatePaymentStatus();
+      this.updatePaymentStatus(invoiceId);
       this.openSnackBar('Payment done by Cash or CDC');
       this.router.navigate(['/portal/accounting/financial-transaction']);
     } catch (error) {
@@ -158,9 +174,7 @@ async payNow() {
   }
 }
 
-
-
-
+/*
 async updatePaymentStatus() {
   try {
     const invoiceId = this.transDetail._id;
@@ -170,7 +184,21 @@ async updatePaymentStatus() {
   } catch (error) {
     throw new Error('Error updating payment status');
   }
+} */
+
+updatePaymentStatus(invoiceId: Invoice) {
+  
+  this.routeSub = this.paymentService.updatePaymentStatus(invoiceId._id).subscribe({
+    next: (response) =>{
+
+    },error: (error) => {
+      console.error('Error updating payment status', error);
+    }
+
+  })
+
 }
+
 
 
 openSnackBar(message: string) {

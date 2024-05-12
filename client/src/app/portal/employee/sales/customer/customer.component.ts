@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AddQuotation } from '../../../../model/sales-addquo';
 import { CustomerService } from './customer.service';
-import { firstValueFrom } from 'rxjs';
+import { Subscription, firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-customer',
@@ -12,6 +12,7 @@ export class CustomerComponent implements OnInit {
 
 
   clientDetails: AddQuotation[] = [];
+  customerSubscription!: Subscription
 
 
   constructor(private clientService: CustomerService ) { }
@@ -24,7 +25,7 @@ export class CustomerComponent implements OnInit {
   }
 
 
-
+/*
   async getClientDetails() {
     try {
       const response = await firstValueFrom(this.clientService.getClient());
@@ -33,7 +34,23 @@ export class CustomerComponent implements OnInit {
     } catch (error) {
       console.error('Error fetching client details:', error);
     }
+  } */
+
+  getClientDetails() {
+
+    this.customerSubscription = this.clientService.getClient().subscribe({
+      next: (response) =>{
+        this.clientDetails = response;
+        console.log(this.clientDetails);
+
+      },error: (error) => {
+        console.error('Error fetching client details:', error);
+      }
+    })
+
   }
+
+
 
   trackByCustomer(index: number, customer: AddQuotation): string {
     return customer._id; // Return a unique identifier for the product
