@@ -1,7 +1,7 @@
 export const environment = {
 
     production : false ,
-   //apiUrl: 'http://localhost:3000',
+    //apiUrl: 'http://localhost:3000',
     apiUrl: 'https://api.scmsbiz.online',
     priceId: 'price_1OvoYASIJEtGIYvE6UW077HI',
     stripeKey : 'pk_test_51OvQEMSIJEtGIYvEYdqTv7BhGV4a9afxYv7abFIIWkVa3CsnZUwqPLmBtGdrokT1O2eaHPTsTbUjYzsbDAvRKo4j00QllpJp87',

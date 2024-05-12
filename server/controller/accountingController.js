@@ -322,10 +322,12 @@ const paymentSup = async function (req, res) {
                 quantity: 1,
             }],
             mode: 'payment',
-            success_url: "${process.env.URLs}/portal/accounting/financial-transaction?session_id={CHECKOUT_SESSION_ID}",
-            cancel_url: "${process.env.URLs}/portal/accounting/financial-transaction",
-            //success_url: "http://localhost:4200/portal/accounting/financial-transaction?session_id={CHECKOUT_SESSION_ID}",
-            //cancel_url: "http://localhost:4200/portal/accounting/financial-transaction",
+           // success_url: "${process.env.URLs}/portal/accounting/financial-transaction?session_id={CHECKOUT_SESSION_ID}",
+           // cancel_url: "${process.env.URLs}/portal/accounting/financial-transaction",
+           // success_url: "http://localhost:4200/portal/accounting/financial-transaction?session_id={CHECKOUT_SESSION_ID}",
+           // cancel_url: "http://localhost:4200/portal/accounting/financial-transaction",
+            success_url: "https://www.scmsbiz.online/portal/accounting/financial-transaction?session_id={CHECKOUT_SESSION_ID}",
+            cancel_url: "https://www.scmsbiz.online/portal/accounting/financial-transaction",
             customer_email: 'test@example.com', 
             billing_address_collection: 'required',
         });
@@ -336,8 +338,6 @@ const paymentSup = async function (req, res) {
         } else {
             console.log('Invoice not found or not updated.');
         }
-
-
         res.json({ sessionId: session.id });
     } catch (error) {
         console.error('Error creating payment intent:', error);
