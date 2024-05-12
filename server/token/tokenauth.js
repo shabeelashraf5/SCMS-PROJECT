@@ -1,44 +1,20 @@
 const jwt = require('jsonwebtoken');
 
 
-// Middleware to generate JWT token
-/*
-function  generateToken(user) {
-  return jwt.sign({ email: user.email, userId: user._id , role: user.position }, 'secret', {
-    expiresIn: '24h',
-  });
-} */
+
 
 function generateToken(user) {
-  const token = jwt.sign({ email: user.email, userId: user._id, role: user.position }, 'secret', { expiresIn: '24h' });
-  const refreshToken = jwt.sign({ userId: user._id }, 'refreshSecret', { expiresIn: '15m' });
+  const token = jwt.sign({ email: user.email, userId: user._id, role: user.position }, process.env.TOKEN_KEY, { expiresIn: process.env.TOKEN_EXPIRES });
+  const refreshToken = jwt.sign({ userId: user._id }, process.env.REFRESH_TOKEN_KEY, { expiresIn: process.env.REFRESH_EXPIRES });
   return { token, refreshToken };
 }
 
-
-// Middleware to verify JWT token
-/*
-function verifyToken(req, res, next) {
-  try {
-    const token = req.headers.authorization.split(' ')[1];
-    
-    if (!token) {
-      return res.status(401).json({ message: 'No token provided' });
-    }// Assuming token is sent in the "Authorization" header
-    const decoded = jwt.verify(token, 'secret');
-    req.userData = decoded;
-
-    next();
-  } catch (error) {
-    return res.status(401).json({ message: 'Authentication failed' });
-  }
-}*/
 
 function verifyToken(req, res, next) {
   try {
     const authHeader = req.headers.authorization;
     if (authHeader) {
-      const token = authHeader.split(' ')[1]; // Extracting token from the Authorization header
+      const token = authHeader.split(' ')[1]; 
       const decoded = jwt.verify(token, 'secret');
       req.userData = decoded;
       next();
@@ -50,21 +26,14 @@ function verifyToken(req, res, next) {
   }
 }
 
-/*
-function checkRole(req, res, next) {
-  if (req.userData && req.userData.role === 'Accountant') {
-    next(); // User is authorized, proceed to the next middleware
-  } else {
-    return res.status(403).json({ message: 'Forbidden' }); // User is not authorized
-  }
-} */
+
 
 function checkRole(req, res, next) {
-  const allowedRoles = ['Accountant', 'Manager']; // Define allowed roles
+  const allowedRoles = ['Accountant', 'Manager']; 
   if (req.userData && allowedRoles.includes(req.userData.role)) {
-    next(); // User is authorized, proceed to the next middleware
+    next(); 
   } else {
-    return res.status(403).json({ message: 'Forbidden' }); // User is not authorized
+    return res.status(403).json({ message: 'Forbidden' }); 
   }
 }
 

@@ -329,9 +329,13 @@ const paymentSup = async function (req, res) {
             customer_email: 'test@example.com', 
             billing_address_collection: 'required',
         });
-
-        const test = await invoicing.findOneAndUpdate({ _id: invoiceId }, { $set: { payment: 'Paid' } });
-        console.log('Hello:', test)
+        
+        const test = await invoicing.findOneAndUpdate({ _id: invoiceId }, { $set: { payment: 'Paid' } } , { new: true });
+        if (test) {
+            console.log('Invoice updated:', test);
+        } else {
+            console.log('Invoice not found or not updated.');
+        }
 
 
         res.json({ sessionId: session.id });

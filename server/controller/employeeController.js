@@ -45,7 +45,7 @@ const employeeLogin = async (req, res) => {
             return res.status(402).json({ message: 'Invalid Credentials' });
         }
 
-        // Compare the provided password with the hashed password in the database
+        
         const passwordMatch = await bcrypt.compare(password, employee.password);
 
         if (!passwordMatch) {
@@ -73,24 +73,24 @@ const employeeLogin = async (req, res) => {
 
 const refreshToken = async  (req , res) => {
 
- const refreshSecret = 'refreshSecret'; 
+ const refreshSecret = process.env.REFRESH_TOKEN_KEY ; 
 
    const { refreshToken } = req.body;
 
-   // Check if refresh token is provided
+
    if (!refreshToken) {
        return res.status(400).json({ message: 'Refresh token is required' });
    }
 
    try {
-       // Verify the refresh token
+      
        const decoded = jwt.verify(refreshToken, refreshSecret);
 
-       // Assuming the decoded token contains user ID
+     
        const user = await collectionemployee.findById(decoded.userId);
         
        console.log('Hello Users', user)
-       // Generate a new access token
+     
        const token = generateToken(user);
        console.log('Token' , token)
 
@@ -100,10 +100,6 @@ const refreshToken = async  (req , res) => {
        res.status(401).json({ message: 'Invalid refresh token' });
    }
 }
-
-
-
-
 
 
 
@@ -229,7 +225,7 @@ const loadProfileEmployee = async (req , res) => {
 const displayResetPasswordPage = async (req, res) => {
     try {
         const { token } = req.query;
-        // Check if the token is valid
+      
         const user = await collectionemployee.findOne({ token });
         if (!user) {
             return res.status(400).json({
