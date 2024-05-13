@@ -5,6 +5,7 @@ import { Quotation } from '../../../../model/sales-quotation.model';
 import { Subscription, firstValueFrom } from 'rxjs';
 import { SubmitStatus } from '../../../../enums/submit-status.enum';
 import { response } from 'express';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-quotation',
@@ -22,7 +23,7 @@ export class QuotationComponent implements OnInit, OnDestroy {
 
 
 
-  constructor(private salesService: QuotationService, private route: ActivatedRoute, private router: Router) { }
+  constructor(private salesService: QuotationService, private route: ActivatedRoute, private snackBar: MatSnackBar, private router: Router) { }
 
   ngOnInit() {
     this.getRFQDetails(); 
@@ -97,6 +98,7 @@ createRFQ() {
     next: (response) =>{
       console.log('RFQ created successfully');
       this.getRFQDetails();
+      this.openSnackBar('RFQ Created');
 
     },
     error: (error) =>{
@@ -153,6 +155,14 @@ trackByQuotation(index: number, quotation: Quotation): string {
       this.quotationSubscription.unsubscribe()
     }
     
+  }
+
+  openSnackBar(message: string) {
+    this.snackBar.open(message, 'Close', {
+      duration: 4000,
+      verticalPosition: 'top', 
+      horizontalPosition: 'center', 
+    });
   }
 
 

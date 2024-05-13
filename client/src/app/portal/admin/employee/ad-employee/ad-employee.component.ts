@@ -6,6 +6,7 @@ import { Observable, map, Subject, of } from 'rxjs';
 import { AppState } from '../../../../state/app.state';
 import { takeUntil } from 'rxjs/operators';
 import { environment } from '../../../../../environment/environment';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 @Component({
@@ -46,7 +47,7 @@ export class AdEmployeeComponent implements OnInit, OnDestroy {
 @ViewChild('my_modal_2') modal2!: ElementRef;
 @ViewChild('imageInput') imageInput!: ElementRef;
 
-constructor(private store: Store<AppState>) {
+constructor(private store: Store<AppState>, private snackBar: MatSnackBar) {
   this.employees$ = this.store.pipe(select(state => state.employee.employees));
 }
 
@@ -66,6 +67,20 @@ ngOnInit(): void {
 
   this.store.dispatch(AdEmployeeActions.loadEmployee());
   this.calculateTotalPages();
+
+  this.errorValidation()
+}
+
+errorValidation() {
+  this.store.pipe(
+   select(state => state.employee.error),
+   takeUntil(this.destroy$)
+ )
+ .subscribe(error => {
+   if (error) {
+     this.openSnackBar(error);
+   }
+ });
 }
 
 
@@ -273,6 +288,14 @@ trackByEmployee(index: number, employee: Employee): string {
 ngOnDestroy(): void {
   this.destroy$.next(); // Emit to trigger unsubscription
   this.destroy$.complete(); // Complete the Subject to ensure it's cleaned up
+}
+
+openSnackBar(message: string): void {
+  this.snackBar.open(message, 'Close', {
+    duration: 5000,
+    horizontalPosition: 'center',
+    verticalPosition: 'top', 
+  });
 }
 
 

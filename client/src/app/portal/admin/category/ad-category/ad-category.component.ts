@@ -8,6 +8,7 @@ import { Observable, map,  Subject  } from 'rxjs';
 import { AdCategoryService } from './ad-category.service';
 import { AdCategoryState } from './store/ad-category.state';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 
@@ -42,7 +43,7 @@ export class AdCategoryComponent implements OnInit, OnDestroy   {
   
   categoryToEdit: Partial<Category> = {};
 
-  constructor(private store: Store<AppState>, private formBuilder: FormBuilder) {
+  constructor(private store: Store<AppState>, private formBuilder: FormBuilder, private snackBar: MatSnackBar) {
    // this.categories$ = this.store.pipe(select(state => state.category.categories));
    this.categories$ = this.store.pipe(select(state => state.category.categories), takeUntil(this.destroy$));
     
@@ -55,6 +56,7 @@ export class AdCategoryComponent implements OnInit, OnDestroy   {
     this.store.dispatch(AdCategoryActions.loadCategory());
 
     this.calculateTotalPages();
+    this.errorValidation()
 
     
   }
@@ -62,30 +64,30 @@ export class AdCategoryComponent implements OnInit, OnDestroy   {
   
   onSubmit(): void {
    
-    const category = this.category.trim(); // Ensure category is trimmed
+    const category = this.category.trim(); 
     console.log('Dispatching addCategory action with category:', category);
-    this.store.dispatch(AdCategoryActions.addCategory({ category })); // Pass the trimmed category string
+    this.store.dispatch(AdCategoryActions.addCategory({ category })); 
     
-    this.category = ''; // Clear the input field
-    this.modal1.nativeElement.close(); // Close the modal
+    this.category = ''; 
+    this.modal1.nativeElement.close(); 
   }
 
 
   isWhitespaceOnly(text: string | undefined): boolean {
-    return !text || !text.trim(); // Checks if the text is empty or only whitespace
+    return !text || !text.trim(); 
   }
 
 checkWhitespace(event: any): void {
-  // This function can be used to trim input or alert when only whitespace is detected
-  this.category = event.trim(); // Automatically trim the input
+  
+  this.category = event.trim(); 
 }
 
 
 
-// Method to open the update modal and set the selected category
+
 
 editCategories(category: Partial<Category>) {
-  this.categoryToEdit = { ...category, category: category.category || '' }; // Copy the user details to the userToEdit object
+  this.categoryToEdit = { ...category, category: category.category || '' }; 
   this.modal2.nativeElement.showModal();
 }
 
@@ -111,6 +113,19 @@ editCategory(category: Partial<Category>) {
       console.error('Admin or its ID is undefined');
     }
   }
+
+
+  errorValidation() {
+    this.store.pipe(
+     select(state => state.category.error),
+     takeUntil(this.destroy$)
+   )
+   .subscribe(error => {
+     if (error) {
+       this.openSnackBar(error);
+     }
+   });
+ }
 
 
  
@@ -178,6 +193,14 @@ editCategory(category: Partial<Category>) {
   ngOnDestroy(): void {
     this.destroy$.next(); // Emit to trigger unsubscription
     this.destroy$.complete(); // Complete the Subject
+  }
+
+  openSnackBar(message: string): void {
+    this.snackBar.open(message, 'Close', {
+      duration: 5000,
+      horizontalPosition: 'center',
+      verticalPosition: 'top', 
+    });
   }
 
 

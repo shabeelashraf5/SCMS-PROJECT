@@ -6,6 +6,7 @@ import * as AdUserActions from '../ad-user/store/ad-user.action';
 import { Admin } from '../../../../model/ad-user.model'
 import { Observable,map, Subject  } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-ad-user',
@@ -37,7 +38,7 @@ export class AdUserComponent implements OnInit, OnDestroy  {
   @ViewChild('my_modal_2') modal2!: ElementRef;
   
 
-  constructor(private store: Store<AppState>,  private formBuilder: FormBuilder,) {
+  constructor(private store: Store<AppState>,  private formBuilder: FormBuilder, private snackBar: MatSnackBar) {
     //this.admins$ = this.store.pipe(select(state => state.admin.admins));
      this.admins$ = this.store.pipe(select(state => state.admin.admins), takeUntil(this.destroy$));
     
@@ -49,10 +50,22 @@ export class AdUserComponent implements OnInit, OnDestroy  {
     this.store.dispatch(AdUserActions.loadAdmin());
 
     this.calculateTotalPages();
+    this.errorValidation()
+  }
+
+  errorValidation() {
+     this.store.pipe(
+      select(state => state.admin.error),
+      takeUntil(this.destroy$)
+    )
+    .subscribe(error => {
+      if (error) {
+        this.openSnackBar(error);
+      }
+    });
   }
 
 
-  
 
   onSubmit(): void {
 
@@ -175,6 +188,14 @@ export class AdUserComponent implements OnInit, OnDestroy  {
   ngOnDestroy(): void {
     this.destroy$.next(); // Trigger unsubscription
     this.destroy$.complete(); // Complete the Subject
+  }
+
+  openSnackBar(message: string): void {
+    this.snackBar.open(message, 'Close', {
+      duration: 5000,
+      horizontalPosition: 'center',
+      verticalPosition: 'top', 
+    });
   }
 
   

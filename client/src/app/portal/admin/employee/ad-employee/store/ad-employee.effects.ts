@@ -54,7 +54,16 @@ this.actions$.pipe(
         console.log('User created successfully');
         return AdEmployeeActions.loadEmployee(); // Trigger a load after create
       }),
-      catchError((error) => of(AdEmployeeActions.loadEmployeeFailure({ error })))
+      catchError((error)  => { 
+
+           
+        let errorMessage = 'Server error'
+        if(error.status === 400){
+         errorMessage = 'Email Already Exist'
+        }
+        
+        return of(AdEmployeeActions.loadEmployeeFailure({ error: errorMessage }))
+  })
     );
   })
 )

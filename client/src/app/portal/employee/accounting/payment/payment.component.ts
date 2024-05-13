@@ -138,6 +138,7 @@ async payNow() {
       const response = await lastValueFrom(this.paymentService.createPaymentIntent(amountInCents, this.getCurrency(this.transDetail)) );
       this.openSnackBar('Payment process initiated. Please wait...');
       const stripe = await this.stripePromise;
+      this.updatePaymentStatus(invoiceId);
 
       if (!stripe) {
         // Handle the case where stripe could not be initialized

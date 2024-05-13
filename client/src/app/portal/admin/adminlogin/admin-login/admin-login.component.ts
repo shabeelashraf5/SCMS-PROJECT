@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Store , select } from '@ngrx/store';
 import { AppState } from '../../../../state/app.state';
@@ -15,7 +15,7 @@ import { Subscription } from 'rxjs';
 })
 
 
-export class AdminLoginComponent implements OnInit {
+export class AdminLoginComponent implements OnInit, OnDestroy {
   loginForm!: FormGroup;
   subscription!:  Subscription
 
@@ -54,15 +54,24 @@ export class AdminLoginComponent implements OnInit {
         this.openSnackBar(error);
       }
     });
-  
   }
   
 openSnackBar(message: string): void {
   this.snackBar.open(message, 'Close', {
-    duration: 3000,
+    duration: 5000,
     horizontalPosition: 'center',
     verticalPosition: 'top', 
   });
+}
+
+
+ngOnDestroy() {
+
+  if(this.subscription)
+    {
+      this.subscription.unsubscribe()
+    }
+  
 }
 
 }

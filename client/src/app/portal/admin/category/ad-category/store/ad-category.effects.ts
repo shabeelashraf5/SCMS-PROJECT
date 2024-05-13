@@ -34,11 +34,21 @@ export class AdCategoryEffects {
           console.log('User created successfully');
           return AdCategoryActions.loadCategory(); // Trigger a load after create
         }),
-        catchError((error) => of(AdCategoryActions.loadCategoryFailure({ error })))
+        catchError((error) => {
+
+          let errorMessage = 'Server error'
+          if(error.status === 400){
+           errorMessage = 'Category name already exist'
+          }
+
+        return of(AdCategoryActions.loadCategoryFailure({ error: errorMessage }))
+    })
       );
     })
   )
 );
+
+
 
 
 updateCategory$ = createEffect(() =>

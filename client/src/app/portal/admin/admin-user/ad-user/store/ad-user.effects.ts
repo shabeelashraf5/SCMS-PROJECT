@@ -33,7 +33,15 @@ export class AdUserEffects {
           console.log('User created successfully');
           return AdUserActions.loadAdmin(); // Trigger a load after create
         }),
-        catchError((error) => of(AdUserActions.loadAdminFailure({ error })))
+        catchError((error) =>{ 
+          
+         let errorMessage = 'Server error'
+         if(error.status === 400){
+          errorMessage = 'Email Already Exist'
+         }
+          
+          return of(AdUserActions.loadAdminFailure({ error: errorMessage }))
+    })
       );
     })
   )

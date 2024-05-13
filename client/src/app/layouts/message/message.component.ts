@@ -73,7 +73,7 @@ export class MessageComponent implements OnInit,  AfterViewChecked,  OnDestroy {
       const employee = this.employeeProfile.find(emp => emp._id === userId);
 
       if (employee) {
-        employee.is_online = status === 'online' ? OnlineStatus.ONLINE : OnlineStatus.OFFLINE;
+        employee.is_online = status === OnlineStatus.ONLINE ? OnlineStatus.ONLINE : OnlineStatus.OFFLINE;
       }
     });
 

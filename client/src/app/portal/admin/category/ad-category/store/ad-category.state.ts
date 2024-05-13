@@ -14,8 +14,10 @@ export interface AdCategoryState {
   */
   export interface AdCategoryState {
     categories: Category[];
+    error: string | null
   }
   
   export const initialAdCategoryState: AdCategoryState = {
     categories: [],
+    error: null
   };

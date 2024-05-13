@@ -45,6 +45,7 @@ const adminLogin = async (req, res) => {
             console.log('Admin not found in database');
             return res.status(402).json({ message: 'Invalid Credential' });
         }
+        
 
         // Compare the provided password with the hashed password from the database
         const passwordMatch = await bcrypt.compare(password, admin.password);
@@ -280,6 +281,17 @@ const addEmployee = async (req, res) => {
             });
         }
 
+        const existingEmployee = await collectionemployee.findOne({ email: req.body.email });
+
+        if(existingEmployee){
+            console.log('Email Alraedy exist', existingEmployee)
+
+            return res.status(400).json({
+                suceess: false,
+                message: 'Already exist'
+            })
+        }
+
       
 
         const randomString = randomstring.generate()
@@ -459,6 +471,48 @@ const loadCategory = async (req , res) => {
 
 
 // add Category 
+/*
+const addCategory = async (req, res) => {
+    console.log('Request received to add a new category');
+    console.log('Request body:', req.body);
+
+    const categoryData = {
+        category: req.body.category,
+    };
+
+    console.log('Category data:', categoryData);
+
+    try {
+
+        let existingCategory = await collectionadcategory.findOne({categoryData})
+       
+        if(existingCategory){
+            return res.status(400).json({
+                success: false,
+                message: 'Category already Exist'
+    
+            })
+        }
+
+
+
+        await collectionadcategory.create(categoryData);
+        console.log('Category added successfully');
+        
+        return res.json({
+            success: true,
+            message: 'Category added successfully'
+        });
+    } catch (error) {
+        console.error('Error adding category:', error);
+        return res.status(500).json({
+            success: false,
+            message: 'An error occurred while adding the category'
+        });
+      
+    }
+};*/
+
 
 const addCategory = async (req, res) => {
     console.log('Request received to add a new category');
@@ -471,6 +525,16 @@ const addCategory = async (req, res) => {
     console.log('Category data:', categoryData);
 
     try {
+        
+        let existingCategory = await collectionadcategory.findOne({ category: req.body.category });
+
+        if (existingCategory) {
+            return res.status(400).json({
+                success: false,
+                message: 'Category already exists'
+            });
+        }
+
         await collectionadcategory.create(categoryData);
         console.log('Category added successfully');
         
@@ -479,20 +543,11 @@ const addCategory = async (req, res) => {
             message: 'Category added successfully'
         });
     } catch (error) {
-        if (error.code === 11000 && error.keyPattern && error.keyPattern.category === 1) {
-            // Duplicate category error
-            console.error('Category already exists:', error.keyValue.category);
-            return res.status(400).json({
-                success: false,
-                message: 'Category already exists'
-            });
-        } else {
-            console.error('Error adding category:', error);
-            return res.status(500).json({
-                success: false,
-                message: 'An error occurred while adding the category'
-            });
-        }
+        console.error('Error adding category:', error);
+        return res.status(500).json({
+            success: false,
+            message: 'An error occurred while adding the category'
+        });
     }
 };
 
