@@ -32,7 +32,7 @@ const loadInv = async (req, res) => {
                 populate: {
                     path: 'quotation_id',
                     model: 'quotation',
-                    select: 'salesRFQ_id to attention clientrfq totalAmount products',
+                    select: 'salesRFQ_id clientname attention clientrfq totalAmount products',
                     populate: {
                         path: 'salesRFQ_id',
                         model: 'sales-rfq',
