@@ -12,6 +12,10 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { AddQuotation, Product } from '../../../../model/sales-addquo';
 import { DeliveryStatus } from '../../../../enums/delivery-status.enum';
 import { response } from 'express';
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
+import { TDocumentDefinitions } from 'pdfmake/interfaces';
+import { environment } from '../../../../../environment/environment';
 
 @Component({
   selector: 'app-invoice-details',
@@ -28,6 +32,7 @@ export class InvoiceDetailsComponent implements OnInit, OnDestroy {
   employee_id: string = ''
   invoice_id: string = '';
   confirmedInvoice: Set<string> = new Set();
+  invoice: string =''
 
   routeSubscription!: Subscription;
 
@@ -144,7 +149,7 @@ fetchInvoiceDetails(quotation_id: string){
 
 getClient(detail: Invoice): string {
   if (detail && detail.purchase_id && detail.purchase_id.po_id && detail.purchase_id.po_id.quotation_id ) {
-    return detail.purchase_id.po_id.quotation_id.to; 
+    return detail.purchase_id.po_id.quotation_id.clientname; 
   }
   return '';
 }
@@ -180,6 +185,102 @@ ngOnDestroy() {
   if (this.routeSubscription) {
     this.routeSubscription.unsubscribe();
   }
+}
+
+
+invoicePDF() {
+  pdfMake.vfs = pdfFonts.pdfMake.vfs;
+
+  const products = this.getProduct(this.invoiceDetail.purchase_id.po_id.quotation_id.products);
+
+  const productRows = products.map((product, index) => [
+    index + 1,
+    product.product,
+    product.qty,
+    product.uom,
+    product.unit,
+    product.total
+  ]);
+
+  const productTable = {
+    table: {
+      headerRows: 1,
+      widths: ['auto', '*', 'auto', 'auto', 'auto', 'auto'],
+      body: [
+        ['No.', 'Product', 'Quantity', 'UOM', 'Unit', 'Total'],
+        ...productRows
+      ]
+    }
+  };
+
+  const documentDefinition: TDocumentDefinitions = {
+
+    
+      content: [
+        {
+          image: environment.logo_base64,
+          width: 50,
+          height: 50
+        },
+        { text: 'Invoice Note', fontSize: 16, alignment: 'center', margin: [0, 0, 0, 10] },
+        { text: `Invoice no:${this.invoiceDetail.invoice}\n Bill To: ${this.getClient(this.invoiceDetail)}\nAttention: ${this.getAttention(this.invoiceDetail)} `, fontSize: 12 },
+        { text: 'Dear Sir,', fontSize: 12, margin: [0, 20, 0, 0] },
+        { text: 'Thank you very much for giving us an opportunity', fontSize: 12, margin: [0, 10, 0, 0] },
+      productTable,
+        { text: `Total Amount: ${this.getTotalamount(this.invoiceDetail)}`, fontSize: 12, alignment: 'right' },
+        { text: 'Make all payable to: 05shebz Limited LLC', fontSize: 12, margin: [0, 20, 0, 0] },
+        { text: 'Thank you for your business!', fontSize: 10, margin: [0, 20, 0, 0] },
+      ]
+  };
+
+  pdfMake.createPdf(documentDefinition).download('invoice-note.pdf');
+}
+
+
+deliveryPDF() {
+  pdfMake.vfs = pdfFonts.pdfMake.vfs;
+
+  const products = this.getProduct(this.invoiceDetail.purchase_id.po_id.quotation_id.products);
+
+  const productRows = products.map((product, index) => [
+    index + 1,
+    product.product,
+    product.qty,
+    product.uom,
+  
+  ]);
+
+  const productTable = {
+    table: {
+      headerRows: 1,
+      widths: ['auto', '*', 'auto', 'auto' ],
+      body: [
+        ['No.', 'Product', 'Quantity', 'UOM' ],
+        ...productRows
+      ]
+    }
+  };
+
+  const documentDefinition: TDocumentDefinitions = {
+
+    
+      content: [
+        {
+          image: environment.logo_base64,
+          width: 50,
+          height: 50
+        },
+        { text: 'Delivery Note', fontSize: 16, alignment: 'center', margin: [0, 0, 0, 10] },
+        { text: `Delivery no:${this.invoiceDetail.delivery}\nDeliver To: ${this.getClient(this.invoiceDetail)}\nAttention: ${this.getAttention(this.invoiceDetail)} `, fontSize: 12 },
+        { text: 'Dear Sir,', fontSize: 12, margin: [0, 20, 0, 0] },
+        { text: 'Thank you very much for giving us an opportunity', fontSize: 12, margin: [0, 10, 0, 0] },
+      productTable,
+        { text: 'Make all payable to: 05shebz Limited LLC', fontSize: 12, margin: [0, 20, 0, 0] },
+        { text: 'Thank you for your business!', fontSize: 10, margin: [0, 20, 0, 0] },
+      ]
+  };
+
+  pdfMake.createPdf(documentDefinition).download('delivery-note.pdf');
 }
 
 

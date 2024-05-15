@@ -148,15 +148,13 @@ editEmployees(employee: Partial<Employee>) {
 
 
 editEmployee(employee: Partial<Employee>) {
-  // Assuming `_id` is a property of `employee`
+ 
   const _id = employee._id;
 
-  // Ensure _id is defined before dispatching the action
   if (_id !== undefined) {
-    // Create a new FormData object
+    
     const formData = new FormData();
 
-    // Check and append each property if it's defined
     if (employee.fname) formData.append('fname', employee.fname);
     if (employee.lname) formData.append('lname', employee.lname);
     if (employee.email) formData.append('email', employee.email);
@@ -170,10 +168,10 @@ editEmployee(employee: Partial<Employee>) {
       formData.append('image', this.selectedFile);
     }
 
-    // Dispatch the action with updated details
+   
     this.store.dispatch(AdEmployeeActions.updateEmployee({ _id, formData }));
   } else {
-    // Handle the case where _id is undefined
+    
     console.error('Employee ID is undefined');
   }
 

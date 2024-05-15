@@ -5,17 +5,24 @@
 <main class="w-full sm:w-3/4 p-4 ml-0 sm:ml-80 bg-base-300 rounded-lg shadow-lg mt-10">
     
     <div class="flex justify-end">
+
+        <details class="dropdown  dropdown-end">
+            <summary class="btn btn-outline btn-sm ">Print</summary>
+            <ul class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52">
+              <li><a (click)="invoicePDF()">Invoice Note</a></li>
+              <li><a (click)="deliveryPDF()">Delivery Note</a></li>
+            </ul>
+          </details>
+
         <form (click)="createShipment(invoiceDetail._id)">
             <ul>
               <li>
                 <input type="hidden" name="invoice_id" [value]="invoiceDetail._id">
               </li>
-              <button class="btn btn-outline btn-sm " [disabled]="confirmedInvoice.has(invoiceDetail._id)" >Confirm</button>
+              <button class="btn btn-outline btn-sm ml-2 " [disabled]="confirmedInvoice.has(invoiceDetail._id)" >Confirm</button>
             </ul>
           </form>
-        
-        
-       
+         
     </div>
     <!-- Invoice Header -->
     <div class="flex justify-between items-center border-b pb-4 mt-4 ">

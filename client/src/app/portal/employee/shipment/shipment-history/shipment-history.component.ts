@@ -120,7 +120,7 @@ confirmDelivery(shipmentId: string) {
 
   getClient(detail: Shipment): string {
     if (detail && detail.invoice_id.purchase_id.po_id.quotation_id  ) {
-      return detail.invoice_id.purchase_id.po_id.quotation_id.to; 
+      return detail.invoice_id.purchase_id.po_id.quotation_id.clientname; 
     }
     return '';
   }

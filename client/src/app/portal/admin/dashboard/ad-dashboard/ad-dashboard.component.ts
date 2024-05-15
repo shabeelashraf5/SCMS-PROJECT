@@ -101,7 +101,7 @@ export class AdDashboardComponent implements OnInit, OnDestroy {
 
   calculateUniqueCustomers(details: AddQuotation[]): number {
     
-    const uniqueCustomers = new Set(details.map(detail => detail.to));
+    const uniqueCustomers = new Set(details.map(detail => detail.clientname));
     return uniqueCustomers.size;
 }
 

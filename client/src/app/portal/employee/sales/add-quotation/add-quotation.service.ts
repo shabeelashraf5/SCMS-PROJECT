@@ -32,6 +32,7 @@ export class AddQuotationService {
   getQuotationBySalesRFQId(salesRFQId: string): Observable<AddQuotation> {
     return this.http.get<AddQuotation>(`${this.apiUrl}/quotations/form-add/${salesRFQId}`);
   }
+  
 
 
 }

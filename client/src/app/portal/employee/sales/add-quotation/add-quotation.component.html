@@ -13,11 +13,11 @@
                     <button type="submit" class="btn btn-outline"  >
                         Submit
                     </button>
-<!--
+
                     <button type="button" class="btn btn-outline ml-2" (click)="generatePDF()">
                         Print
                       </button>
-                   -->
+                 
                 </div>
 
     
@@ -27,7 +27,7 @@
     
                         <ul>
                             <li>
-                                <input type="text" name="to" placeholder="To:" required [(ngModel)]="to" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
+                                <input type="text" name="clientname" placeholder="To:" required [(ngModel)]="clientname" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
                             </li>
                             <li>
                                 <input type="hidden" name="salesRFQ_id"  [value]="salesRFQ_id">

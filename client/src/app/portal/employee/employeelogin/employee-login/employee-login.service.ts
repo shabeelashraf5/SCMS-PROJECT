@@ -45,17 +45,6 @@ export class EmployeeLoginService {
 }
 
 
-/*
-logout(employeeId: string): void {
-
-  this.http.put(`${this.apiUrl}/logout`, { employeeId }).subscribe(
-    () => console.log('User status updated to offline'),
-    error => console.error('Error updating user status:', error)
-  );
-
-  localStorage.removeItem(this.tokenKey);
-  console.log('User logged out');
-} */
 
 logout(employeeId: string): Observable<any> {
   return this.http.put(`${this.apiUrl}/logout`, { employeeId }).pipe(
@@ -82,51 +71,10 @@ getRefreshToken(): string | null {
 
 
 
-
-/*
-getToken(): { accessToken: string | null, refreshToken: string | null } {
-  const accessToken = localStorage.getItem(this.tokenKey);
-  const refreshToken = localStorage.getItem(this.refreshTokenKey);
-  return { accessToken, refreshToken };
-} */
-
 getLoggedInEmployeeId(): string | null {
   return this.loggedInEmployee ? this.loggedInEmployee._id : null;
 }
 
-/*
-refreshToken(): Observable<string> {
-  const refreshToken = localStorage.getItem(this.refreshTokenKey);
-  return this.http.post<{ token: string }>(`${this.apiUrl}/refresh-tokens`, { refreshToken } )
-    .pipe(
-      map(response => {
-        const token = response.token;
-        console.log('Refreshed Token:', token);
-        return token;
-      })
-    );
-} */
-
-/*
-refreshToken(): Observable<string> {
-  const refreshToken = localStorage.getItem(this.refreshTokenKey);
-  if (!refreshToken) {
-    return throwError('No refresh token available');
-  }
-
-  return this.http.post<{ token: string }>(`${this.apiUrl}/refresh-token`, { refreshToken })
-    .pipe(
-      map(response => {
-        const newToken = response.token;
-        localStorage.setItem(this.tokenKey, newToken);
-        return newToken;
-      }),
-      catchError(error => {
-        // Handle refresh token failure here
-        return throwError('Failed to refresh token');
-      })
-    );
-} */
 
 
 refreshToken(): Observable<{ token: string }> {

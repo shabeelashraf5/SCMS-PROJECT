@@ -1,11 +1,10 @@
 const uuid = require('uuid');
 
 const prefixspo = "SPO/shebz/"
-let counter = 999; 
 
 function genereateCustomSPO(){
-    counter++
-    return prefixspo + counter
+    const randomNumber = Math.floor(1000 + Math.random() * 9000);
+    return prefixspo + randomNumber
 }
 
 

@@ -6,7 +6,7 @@ const SalesQuotationSchema = new mongoose.Schema({
     employee_id: { type: mongoose.Schema.Types.ObjectId, ref: 'employee', required: true },
     salesRFQ_id: { type: mongoose.Schema.Types.ObjectId, ref: 'sales-rfq', required: true },
     
-    to: {  type: String, required: true },
+    clientname: {  type: String, required: true },
     attention: {  type: String, required: true },
     email: {  type: String, required: true },
     phone: {  type: String, required: true },

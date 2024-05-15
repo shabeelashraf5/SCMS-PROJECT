@@ -4,6 +4,7 @@ import { OrderStatus } from '../enums/order-status.enum';
 
 
 export interface Product {
+   
     product: string;
     qty: Number;
     uom: string;

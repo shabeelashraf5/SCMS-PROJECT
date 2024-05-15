@@ -3,6 +3,7 @@ import { Quotation } from './sales-quotation.model';
 import { OrderStatus } from '../enums/order-status.enum';
 
 export interface Product {
+    
     product: string;
     qty: Number;
     uom: string;
@@ -15,7 +16,7 @@ export interface AddQuotation {
     _id: string;
     salesRFQ_id: Quotation;
     employee_id: mongoose.Types.ObjectId | string;
-    to: string;
+    clientname: string;
     attention: string;
     email: string;
     phone: string;

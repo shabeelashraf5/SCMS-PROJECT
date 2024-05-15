@@ -115,7 +115,7 @@ const addQuotation = async (req, res) => {
 
         employee_id: employeeId,
         salesRFQ_id: req.body.salesRFQ_id,
-        to: req.body.to,
+        clientname: req.body.clientname,
         attention: req.body.attention,
         email: req.body.email,
         phone: req.body.phone,

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AddQuotation } from '../../../../model/sales-addquo';
 import { CustomerService } from './customer.service';
 import { Subscription, firstValueFrom } from 'rxjs';
@@ -8,11 +8,13 @@ import { Subscription, firstValueFrom } from 'rxjs';
   templateUrl: './customer.component.html',
   styleUrl: './customer.component.css'
 })
-export class CustomerComponent implements OnInit {
+export class CustomerComponent implements OnInit, OnDestroy  {
 
 
   clientDetails: AddQuotation[] = [];
   customerSubscription!: Subscription
+  uniqueClientNames: Set<string> = new Set();
+
 
 
   constructor(private clientService: CustomerService ) { }
@@ -25,22 +27,12 @@ export class CustomerComponent implements OnInit {
   }
 
 
-/*
-  async getClientDetails() {
-    try {
-      const response = await firstValueFrom(this.clientService.getClient());
-      this.clientDetails = response;
-      console.log(this.clientDetails);
-    } catch (error) {
-      console.error('Error fetching client details:', error);
-    }
-  } */
-
   getClientDetails() {
 
     this.customerSubscription = this.clientService.getClient().subscribe({
       next: (response) =>{
         this.clientDetails = response;
+        this.extractUniqueClientNames();
         console.log(this.clientDetails);
 
       },error: (error) => {
@@ -50,11 +42,24 @@ export class CustomerComponent implements OnInit {
 
   }
 
+  
+  extractUniqueClientNames() {
+    this.clientDetails.forEach((quotation: AddQuotation) => {
+      this.uniqueClientNames.add(quotation.clientname);
+    });
+  }
 
 
   trackByCustomer(index: number, customer: AddQuotation): string {
     return customer._id; // Return a unique identifier for the product
   }
   
+  ngOnDestroy() {
+
+    if(this.customerSubscription){
+      this.customerSubscription.unsubscribe()
+    }
+    
+  }
 
 }

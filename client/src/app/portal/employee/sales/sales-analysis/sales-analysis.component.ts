@@ -66,7 +66,7 @@ export class SalesAnalysisComponent implements OnInit, OnDestroy {
 
   calculateUniqueCustomers(details: AddQuotation[]): number {
     
-    const employees = new Set(details.map(detail => detail.to));
+    const employees = new Set(details.map(detail => detail.clientname));
     return employees.size;
 }
 
