@@ -39,7 +39,7 @@ export class AdUserComponent implements OnInit, OnDestroy  {
   
 
   constructor(private store: Store<AppState>,  private formBuilder: FormBuilder, private snackBar: MatSnackBar) {
-    //this.admins$ = this.store.pipe(select(state => state.admin.admins));
+    
      this.admins$ = this.store.pipe(select(state => state.admin.admins), takeUntil(this.destroy$));
     
     
@@ -74,7 +74,7 @@ export class AdUserComponent implements OnInit, OnDestroy  {
     
     this.store.dispatch(AdUserActions.addAdmin(admin));
     
-    // Clearing input fields
+   
     this.fname = '';
     this.lname = '';
     this.email = '';
@@ -83,27 +83,27 @@ export class AdUserComponent implements OnInit, OnDestroy  {
   }
 
   isWhitespaceOnly(text: string | undefined): boolean {
-    return !text || !text.trim(); // Checks if the text is empty or only whitespace
+    return !text || !text.trim(); 
   }
   
   checkWhitespace(event: any): void {
-    // This function can be used to trim input or alert when only whitespace is detected
+    
     this.fname = event.trim();
     this.lname = event.trim();
     this.email = event.trim();
-    this.password = event.trim(); // Automatically trim the input
+    this.password = event.trim(); 
   }
   
 
 
   editAdmins(admin: Partial<Admin>) {
-    this.adminToEdit = { ...admin, // Ensure the object has default values
+    this.adminToEdit = { ...admin, 
       fname: admin.fname || '',
       lname: admin.lname || '',
       email: admin.email || '',
       password: admin.password || ''
     };
-    this.modal2.nativeElement.showModal(); // Open the modal
+    this.modal2.nativeElement.showModal(); 
   }
 
 
@@ -140,7 +140,7 @@ export class AdUserComponent implements OnInit, OnDestroy  {
     const searchTermLower = this.searchTerm.toLowerCase();
     return this.admins$.pipe(
       map(records => records.filter(record => 
-        record.fname.toLowerCase().includes(searchTermLower) || // Check if any of the fields match the search term
+        record.fname.toLowerCase().includes(searchTermLower) || 
         record.lname.toLowerCase().includes(searchTermLower) ||
         record.email.toLowerCase().includes(searchTermLower) ||
         record.password.toLowerCase().includes(searchTermLower)
@@ -173,7 +173,7 @@ export class AdUserComponent implements OnInit, OnDestroy  {
     }
   }
 
-  // Method to navigate to the next page
+ 
   nextPage(): void {
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
@@ -186,8 +186,8 @@ export class AdUserComponent implements OnInit, OnDestroy  {
 
 
   ngOnDestroy(): void {
-    this.destroy$.next(); // Trigger unsubscription
-    this.destroy$.complete(); // Complete the Subject
+    this.destroy$.next(); 
+    this.destroy$.complete(); 
   }
 
   openSnackBar(message: string): void {

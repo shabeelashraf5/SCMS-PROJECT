@@ -25,17 +25,6 @@ export class SupplierComponent implements OnInit, OnDestroy {
   }
 
  
-/*
-  async getClientDetails() {
-    try {
-      const response = await firstValueFrom(this.supplierService.getSupplier());
-      this.supplierDetails = response; // Store the fetched supplier details
-      console.log(this.supplierDetails);
-    } catch (error) {
-      console.error('Error fetching supplier details:', error);
-    }
-  }
-  */
 
   getClientDetails(){
 

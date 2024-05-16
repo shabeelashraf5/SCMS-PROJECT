@@ -11,8 +11,8 @@ import { Router } from '@angular/router';
 })
 export class AdminSbComponent  {
 
-  tokenBeforeLogout: string | null = null; // Initialize with null
-  tokenAfterLogout: string | null = null; // Initialize with null
+  tokenBeforeLogout: string | null = null; 
+  tokenAfterLogout: string | null = null; 
 
   constructor(private authService: AdminLoginService, private router: Router) {}
 

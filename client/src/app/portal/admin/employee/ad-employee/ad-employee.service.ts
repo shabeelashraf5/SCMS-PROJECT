@@ -23,20 +23,11 @@ export class AdEmployeeService {
     return this.http.post<any>(`${this.apiUrl}/employee/add`, formData);
   }
 
-  /*
-  updateEmployee(employee: Partial<Employee> ): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/employee/update/${employee._id}`, employee);
-  } */
-
-
 
   updateEmployee(id: string, formData: FormData): Observable<any> {
     return this.http.put<any>(`${this.apiUrl}/employee/update/${id}`, formData);
   }
   
-
-
-
 
   deleteEmployee(id: string): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/employee/delete/${id}`);

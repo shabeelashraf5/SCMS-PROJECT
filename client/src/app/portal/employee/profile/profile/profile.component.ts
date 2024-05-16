@@ -25,7 +25,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   employeeProfile!: Employee;
   isImageSelected: boolean = false;
 
-  //employees$: Observable<Employee[]>;
+  
 
   _id!: string; 
   image: string = ''
@@ -37,7 +37,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   constructor(private store: Store<AppState>, private employeeService: ProfileService ,  private emService: AdEmployeeService) { 
 
-  //this.employees$ = this.store.pipe(select(state => state.employee.employees));
 
 
   }
@@ -47,15 +46,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   
-/*
-  async loadProfile() {
-    try {
-      const profile = await firstValueFrom(this.employeeService.getProfile());
-      this.employeeProfile = profile;
-    } catch (error) {
-      console.error('Error fetching employee profile:', error);
-    }
-  } */
+
 
   loadProfile() {
 
@@ -69,37 +60,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
 
-
-
-
   getImageUrl(imageFileName: string): string {
     return environment.apiUrl + `/images/${imageFileName}`; 
   }
 
-/*
-async editProfileEmployee(employee: Partial<Employee>) {
-  const _id = employee._id;
 
-  if (_id !== undefined) {
-    const formData = new FormData();
-
-    if (this.selectedFile) {
-      formData.append('image', this.selectedFile);
-    }
-
-    try {
-      await firstValueFrom(this.emService.updateEmployee(_id, formData));
-      // Handle success if needed
-      this.loadProfile(); // Reload the profile after successful update
-    } catch (error) {
-      console.error('Error updating profile employee:', error);
-    } finally {
-      this.modal2.nativeElement.close(); // Close the modal in any case
-    }
-  }
-
-}
-*/
 
 editProfileEmployee(employee: Employee) {
 

@@ -63,10 +63,6 @@ export class MessageComponent implements OnInit,  AfterViewChecked,  OnDestroy {
       console.log('Connected to Socket.IO server');
     });
 
-/*
-    this.socket.on('disconnect', () => {
-      console.log('Disconnected from Socket.IO server');
-    }); */
 
     this.socket.on('userStatusChange', (data) => {
       const { userId, status } = data;
@@ -122,20 +118,6 @@ export class MessageComponent implements OnInit,  AfterViewChecked,  OnDestroy {
   }
   
 
-/*
-  async loadProfile() {
-    try {
-      const response = await firstValueFrom(this.employeeService.getProfile());
-      if (Array.isArray(response)) {
-        this.employeeProfile = response;
-      } else {
-        // If not an array, handle the error case
-        console.error('Expected an array of Employee, but got:', response);
-      }
-    } catch (error) {
-      console.error('Error fetching employee profile:', error);
-    }
-  } */
 
   loadProfile() {
 
@@ -144,7 +126,7 @@ export class MessageComponent implements OnInit,  AfterViewChecked,  OnDestroy {
         if (Array.isArray(response)) {
           this.employeeProfile = response;
         } else {
-          // If not an array, handle the error case
+         
           console.error('Expected an array of Employee, but got:', response);
         }
       },error: (error) => {
@@ -156,27 +138,7 @@ export class MessageComponent implements OnInit,  AfterViewChecked,  OnDestroy {
 
 
 
-/*
-async openChat(user: Employee) {
-  this.selectedUser = user;
 
-  try {
-    // Mark message as 'Seen' when chat is opened
-    const response = await firstValueFrom(
-      this.employeeService.markMessageAsSeen(user._id)
-    );
-    console.log('Message marked as Seen:', response);
-
-    // Clear chat arrays
-    this.chatMessages = [];
-    this.receiverChat = [];
-
-    // Request existing chat data for the user
-    this.requestExistingChat(user._id);
-  } catch (error) {
-    console.error('Error marking message as Seen:', error);
-  }
-} */
 
 openChat(user: Employee) {
 
@@ -199,43 +161,7 @@ openChat(user: Employee) {
 }
  
 
-/*
-  async createChat(receiverId: string) {
-    const senderId = this.authService.getLoggedInEmployeeId();
-    if (!senderId) {
-      console.error('Sender ID is null');
-      return;
-    }
 
-    const newChat: Chat = {
-      _id: '', 
-      sender_id: senderId,
-      receiver_id: receiverId, 
-      message: this.message,
-      createdAt: new Date(),
-      isRead: ChatStatus.DELIVERED,
-    };
-
-    console.log('Creating new chat:', newChat);
-
-    try {
-      const response = await firstValueFrom(this.employeeService.addChat(newChat));
-
-      console.log('Chat created:', response);
-
-      // Extract the receiver_id from the response and emit a socket event
-      this.receiver_id = response.data.receiver_id;
-      this.socket.emit('chatMessage', response.data);
-
-      // Clear the message input
-      this.message = '';
-
-      // You can call additional functions here if needed
-    } catch (error) {
-      console.error('Error creating chat:', error);
-    }
-  }
-*/
 
 createChat(receiverId: string){
 
@@ -260,11 +186,11 @@ createChat(receiverId: string){
       next: (response) => {
         console.log('Chat created:', response);
 
-      // Extract the receiver_id from the response and emit a socket event
+     
       this.receiver_id = response.data.receiver_id;
       this.socket.emit('chatMessage', response.data);
 
-      // Clear the message input
+     
       this.message = '';
 
       },error: (error) =>{
@@ -282,7 +208,7 @@ createChat(receiverId: string){
         return;
     }
     console.log('Requesting existing chat with receiverId:', receiverId);
-    // Emit event to request existing chat
+    
     this.socket.emit('existsChat', {
         sender_id: senderId,
         receiver_id: receiverId

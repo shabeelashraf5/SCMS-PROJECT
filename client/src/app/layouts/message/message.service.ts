@@ -21,7 +21,6 @@ export class MessageService {
 
   constructor( private http: HttpClient , private authService: EmployeeLoginService) { 
     this.socket = io(environment.apiUrl);
-    //this.currentUser = authService.getToken();
 
   }
 
@@ -43,14 +42,7 @@ export class MessageService {
   }
 
 
-/*
-  getChat(): Observable<Chat> {
-    const headers = new HttpHeaders().set('Cache-Control', 'no-cache');
-    return this.http.get<Chat>(`${this.apiUrl}/messages/:senderId/:receiverId`, { headers });
-  } */
 
-
-  
   markMessageAsSeen(senderId: string): Observable<any> {
 
     return this.http.put<any>(`${this.apiUrl}/mark-as-seen`, { sender_id: senderId });

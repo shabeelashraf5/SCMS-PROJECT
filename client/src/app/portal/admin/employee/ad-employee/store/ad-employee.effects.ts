@@ -24,23 +24,7 @@ export class AdEmployeeEffects {
     )
   ));
 
-  /*
-  addEmployee$ = createEffect(() =>
-  this.actions$.pipe(
-    ofType(AdEmployeeActions.addEmployee),
-    switchMap(({ fname, lname, email, password, area, position, department, image}) => {
-      console.log('Creating user...');
-      const employees: Partial<Employee> = { fname, lname, email, password, area, position, department, image }; // Use Partial<User> here
-      return this.adEmployeeService.addEmployee(employees as Employee).pipe( // Cast it back to User
-        map(() => {
-          console.log('User created successfully');
-          return AdEmployeeActions.loadEmployee(); // Trigger a load after create
-        }),
-        catchError((error) => of(AdEmployeeActions.loadEmployeeFailure({ error })))
-      );
-    })
-  )
-); */
+
 
 
 addEmployee$ = createEffect(() =>
@@ -49,10 +33,10 @@ this.actions$.pipe(
   switchMap(({ formData}) => {
     console.log('Creating user...');
    
-    return this.adEmployeeService.addEmployee(formData).pipe( // Cast it back to User
+    return this.adEmployeeService.addEmployee(formData).pipe( 
       map(() => {
         console.log('User created successfully');
-        return AdEmployeeActions.loadEmployee(); // Trigger a load after create
+        return AdEmployeeActions.loadEmployee(); 
       }),
       catchError((error)  => { 
 
@@ -69,22 +53,6 @@ this.actions$.pipe(
 )
 );
 
-/*
-updateEmployee$ = createEffect(() =>
-this.actions$.pipe(
-  ofType(AdEmployeeActions.updateEmployee),
-  switchMap(({ employee }) => {
-    console.log('Updating category...');
-    return this.adEmployeeService.updateEmployee(employee).pipe(
-      map((updatedEmployee: Employee) => {
-        console.log('Category updated successfully');
-        return AdEmployeeActions.updateEmployeeSuccess({ employee: updatedEmployee });
-      }),
-      catchError((error) => of(AdEmployeeActions.updateEmployeeFailure({ error })))
-    );
-  })
-)
-);*/
 
 updateEmployee$ = createEffect(() =>
   this.actions$.pipe(
@@ -94,7 +62,7 @@ updateEmployee$ = createEffect(() =>
       return this.adEmployeeService.updateEmployee(_id, formData).pipe(
         map(() => {
           console.log('Employee updated successfully');
-          return AdEmployeeActions.loadEmployee(); // Trigger a load after update
+          return AdEmployeeActions.loadEmployee(); 
         }),
         catchError((error) => of(AdEmployeeActions.updateEmployeeFailure({ error })))
       );

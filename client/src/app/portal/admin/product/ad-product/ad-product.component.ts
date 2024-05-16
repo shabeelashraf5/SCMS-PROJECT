@@ -16,7 +16,7 @@ import { ObjectId, Types } from 'mongoose';
 })
 
 export class AdProductComponent implements OnInit, OnDestroy {
-  // Component attributes
+  
   _id: string = '';
   category_id: string = '';
   product: string = '';
@@ -36,11 +36,11 @@ export class AdProductComponent implements OnInit, OnDestroy {
 
   categories: Category[] = [];
 
-  //categoryMap: { [key: string]: string } = {};
+
 
   productToEdit: Partial<Product> = {};
 
-  // Subject for managing unsubscription
+
   private destroy$ = new Subject<void>();
 
   @ViewChild('my_modal_1') modal!: ElementRef;
@@ -54,7 +54,7 @@ export class AdProductComponent implements OnInit, OnDestroy {
     this.store.dispatch(AdProductActions.loadProduct());
 
 
-    // Subscribe to categories and store the subscription to unsubscribe later
+   
     this.categories$ = this.adCategoryService.getCategory();
     this.categories$.pipe(takeUntil(this.destroy$)).subscribe(categories => {
       this.categories = categories;
@@ -76,7 +76,7 @@ export class AdProductComponent implements OnInit, OnDestroy {
 
     this.store.dispatch(AdProductActions.addProduct(product));
 
-    // Reset form fields
+    
     
 
     this.modal.nativeElement.close();
@@ -84,26 +84,26 @@ export class AdProductComponent implements OnInit, OnDestroy {
 
   isWhitespaceOnly(text: string | number | undefined): boolean {
     if (typeof text !== 'string') {
-      // If the value is not a string, consider it not whitespace-only
+      
       return false;
     }
-    return !text.trim(); // Checks if the text is empty or only whitespace
+    return !text.trim(); 
   }
   
   checkWhitespace(event: any): void {
-    // This function can be used to trim input or alert when only whitespace is detected
+ 
     this.product = event.trim();
     this.description = event.trim();
     this.uom = event.trim();
     this.price = event.trim();
     this.availability = event.trim(); 
-     // Automatically trim the input
+     
   }
 
  
 
   editProducts(product: Partial<Product>) {
-    // Ensure fields have default values
+ 
     this.productToEdit = {
       ...product,
       product: product.product || '',
@@ -112,7 +112,7 @@ export class AdProductComponent implements OnInit, OnDestroy {
       price: typeof product.price === 'number' ? product.price : undefined,
       availability: product.availability || '',
     };
-    this.modal2.nativeElement.showModal(); // Open the modal
+    this.modal2.nativeElement.showModal(); 
   }
 
   editProduct(product: Partial<Product>) {
@@ -156,7 +156,7 @@ export class AdProductComponent implements OnInit, OnDestroy {
     if (typeof categoryId === 'object' && 'category' in categoryId) {
       return categoryId.category;
     }
-    return 'Unknown Category'; // Provide a default value or fallback if it's not valid
+    return 'Unknown Category'; 
   }
 
   trackByCategory(index: number, category: Category): string {
@@ -195,7 +195,7 @@ export class AdProductComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.destroy$.next(); // Emit value to trigger unsubscription
-    this.destroy$.complete(); // Complete the subject
+    this.destroy$.next(); 
+    this.destroy$.complete(); 
   }
 }

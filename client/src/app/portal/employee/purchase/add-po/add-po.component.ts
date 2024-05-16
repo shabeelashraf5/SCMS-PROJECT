@@ -109,9 +109,9 @@ displayData(){
   calculateTotal(): number {
     let total = 0;
     for (const item of this.items) {
-      total += Number(item.total); // Ensure item.total is treated as a number
+      total += Number(item.total); 
     }
-    return parseFloat(total.toFixed(2)); // Ensure total has two decimal places
+    return parseFloat(total.toFixed(2)); 
   }
 
 
@@ -121,66 +121,7 @@ displayData(){
   }
 
   
-/*
-async submitPo() {
-  try {
-    const to = this.to.trim();
-    const attention = this.attention.trim();
-    const email = this.email.trim();
-    const phone = this.phone.trim();
-    const supplierrfq = this.supplierrfq.trim();
-    const subject = this.subject.trim();
-    const basis = this.basis.trim();
-    const payment = this.payment.trim();
-    const validity = this.validity.trim();
-    const availability = this.availability.trim();
 
-    const hasEmptyFields = [to, attention, email, phone, supplierrfq, subject, basis, payment, validity, availability].some(
-      (field) => field === ''
-    );
-
-    if (hasEmptyFields) {
-      this.openSnackBar('Please fill in all required fields with valid data');
-      return; 
-    }
-
-    const existingQuotation = await firstValueFrom(this.addPoService.getPoBypurchaePOId(this.po_id));
-
-    if (existingQuotation) {
-      console.log('A quotation already exists for this po_id:', existingQuotation);
-      await this.updatePo(existingQuotation);
-      this.openSnackBar('Purchase Order Updated');
-    } else {
-      const formData: AddPo = {
-        _id: '',
-        po_id: this.po_id as unknown as Po,
-        employee_id: this.employee_id,
-        to: to,
-        attention: attention,
-        email: email,
-        phone: phone,
-        supplierrfq: supplierrfq,
-        products: this.items,
-        subject: subject,
-        basis: basis,
-        payment: payment,
-        validity: validity,
-        availability: availability,
-        totalAmount: this.calculateTotal(),
-        status: OrderStatus.PENDING,
-        createdAt: new Date()
-      };
-
-      console.log('AddPo data:', formData);
-
-      const response = await firstValueFrom(this.addPoService.addPo(formData));
-      console.log('Quotation submitted successfully', response);
-      this.openSnackBar('Purchase Order submitted');
-    }
-  } catch (error) {
-    console.error('Error submitting quotation', error);
-  }
-} */
 
 submitPo() {
   const to = this.to.trim();
@@ -253,30 +194,7 @@ submitPo() {
 }
 
 
-/*
-async updatePo(existingQuotation: AddPo) {
-  try {
-    const totalAmount = this.calculateTotal();
 
-    existingQuotation.to = this.to;
-    existingQuotation.attention = this.attention;
-    existingQuotation.email = this.email;
-    existingQuotation.phone = this.phone;
-    existingQuotation.supplierrfq = this.supplierrfq;
-    existingQuotation.subject = this.subject;
-    existingQuotation.basis = this.basis;
-    existingQuotation.payment = this.payment;
-    existingQuotation.validity = this.validity;
-    existingQuotation.availability = this.availability;
-    existingQuotation.products = this.items;
-    existingQuotation.totalAmount = totalAmount;
-
-    const response = await firstValueFrom(this.addPoService.updatePo(existingQuotation._id, existingQuotation));
-    console.log('Quotation updated successfully', response);
-  } catch (error) {
-    console.error('Error updating quotation', error);
-  }
-} */
 
 updatePo(existingQuotation: AddPo) {
   const totalAmount = this.calculateTotal();
@@ -313,8 +231,8 @@ trackByAddPo(index: number, addpo: Product): string {
   openSnackBar(message: string) {
     this.snackBar.open(message, 'Close', {
       duration: 4000,
-      verticalPosition: 'top', // Set position to top
-      horizontalPosition: 'center', // Set position to center horizontally
+      verticalPosition: 'top', 
+      horizontalPosition: 'center', 
     });
   }
 

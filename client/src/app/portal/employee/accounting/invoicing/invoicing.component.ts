@@ -30,15 +30,6 @@ export class InvoicingComponent implements OnInit, OnDestroy  {
   }
 
 
-/*
-async getInvoiceDetail(_id: string) {
-  try {
-    await firstValueFrom(this.invoiceService.invSingle(_id));
-    this.router.navigate(['/portal/accounting/invoicing', _id]);
-  } catch (error) {
-    console.error('Error fetching quotation detail:', error);
-  }
-} */
 
 getInvoiceDetail(_id: string) {
 
@@ -53,34 +44,16 @@ getInvoiceDetail(_id: string) {
 
 }
 
-/*
-async getInvDetails() {
-  try {
-    const response = await firstValueFrom(
-      this.invoiceService.getInv()
-    );
-    this.invDetails = response; // Store the fetched RFQ details
-    console.log(this.invDetails);
-  } catch (error) {
-    console.error(error);
 
-    if (error instanceof HttpErrorResponse && error.status === 403) {
-      this.errorMessage = 'You are not authorized to access this page.';
-    } else {
-      this.errorMessage = 'An error occurred while fetching data.';
-    }
-  }
-}
-*/
 
 getInvDetails() {
   this.invoicingSubscription = this.invoiceService.getInv().subscribe({
     next: (response) => {
-      this.invDetails = response; // Store the fetched invoice details
+      this.invDetails = response; 
       console.log(this.invDetails);
     },
     error: (error) => {
-      console.error(error); // Log the error for debugging
+      console.error(error); 
 
       if (error instanceof HttpErrorResponse && error.status === 403) {
         this.errorMessage = 'You are not authorized to access this page.';

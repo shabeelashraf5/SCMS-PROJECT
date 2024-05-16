@@ -25,16 +25,7 @@ export class ShipmentHistoryComponent implements OnInit, OnDestroy {
 
   }
 
-  /*
-  async getShipDetails() {
-    try {
-      const response = await firstValueFrom(this.shipmentService.getShip());
-      this.shipmentDetails = response; // Store the fetched shipment details
-      console.log(this.shipmentDetails);
-    } catch (error) {
-      console.error('Error fetching shipment details:', error);
-    }
-  }*/
+ 
 
   getShipDetails() {
 
@@ -63,29 +54,7 @@ export class ShipmentHistoryComponent implements OnInit, OnDestroy {
   }
 
 
-/*
-async confirmDelivery(shipmentId: string) {
 
-  if (this.confirmedDelivery.has(shipmentId)) {
-    return; 
-  }
-
-  try {
-    await firstValueFrom(this.shipmentService.updateShipmentStatus(shipmentId));
-
-    console.log('Shipment status updated successfully');
-    this.openSnackBar('Shipment delivered successfully');
-
-    // After successfully updating, refresh shipment details
-    this.getShipDetails();
-    this.confirmedDelivery.add(shipmentId);  // Mark this quotation as confirmed
-    localStorage.setItem('confirmedDelivery', JSON.stringify([...this.confirmedDelivery]));
-
-  } catch (error) {
-    console.error('Error updating shipment status:', error);
-  }
-} 
-*/
 
 confirmDelivery(shipmentId: string) {
 
@@ -99,7 +68,7 @@ confirmDelivery(shipmentId: string) {
       console.log('Shipment status updated successfully');
       this.openSnackBar('Shipment delivered successfully');
       this.getShipDetails();
-       this.confirmedDelivery.add(shipmentId);  // Mark this quotation as confirmed
+       this.confirmedDelivery.add(shipmentId);  
        localStorage.setItem('confirmedDelivery', JSON.stringify([...this.confirmedDelivery]));
 
     },
@@ -152,20 +121,20 @@ confirmDelivery(shipmentId: string) {
 
   
   trackByShipment(index: number, shipment: Shipment): string {
-    return shipment._id; // Return a unique identifier for the product
+    return shipment._id; 
   }
 
 
   openSnackBar(message: string) {
     this.snackBar.open(message, 'Close', {
       duration: 4000,
-      verticalPosition: 'top', // Set position to top
-      horizontalPosition: 'center', // Set position to center horizontally
+      verticalPosition: 'top', 
+      horizontalPosition: 'center', 
     });
   }
 
   ngOnDestroy() {
-    // Unsubscribe to prevent memory leaks when component is destroyed
+   
     if (this.shipmentSubscription) {
       this.shipmentSubscription.unsubscribe();
     }

@@ -77,7 +77,7 @@ export class ResetPasswordComponent implements OnInit  {
 
       if (response.success) {
         this.resetSuccess = true;
-        this.router.navigate(['/employee-login']); // Navigate to employee login on success
+        this.router.navigate(['/employee-login']); 
         this.snackBar.open('Password reset successfully', 'Close', {
           duration: 5000,
           verticalPosition: 'top'
@@ -87,15 +87,15 @@ export class ResetPasswordComponent implements OnInit  {
       }
     } catch (error) {
       if (error instanceof HttpErrorResponse) {
-        // Check if the error status is 402
+        
         if (error.status === 402) {
-          // Display a specific Snackbar message
+         
           this.snackBar.open('Try another password.', 'Close', {
             duration: 5000,
             verticalPosition: 'top',
           });
         } else {
-          // General error handling
+        
           this.errorMessage = 'An error occurred while resetting the password';
         }
       } else {

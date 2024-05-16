@@ -31,16 +31,7 @@ export class PurchaseOrderComponent implements OnInit, OnDestroy {
 
   }
 
-/*
-async getPoDetails() {
-  try {
-    const response = await firstValueFrom(this.purchaseService.getPo());
-    this.poDetails = response; // Store the fetched PO details
-    console.log(this.poDetails);
-  } catch (error) {
-    console.error('Error fetching PO details:', error);
-  }
-} */
+
 
 getPoDetails() {
 
@@ -55,16 +46,7 @@ getPoDetails() {
   })
 }
 
-/*
-  async getPurchaseDetail(_id: string) {
-    try {
-      const data = await firstValueFrom(this.purchaseService.poSingle(_id));
-      // Navigate to AddQuotationComponent with the ID parameter
-      this.router.navigate(['/portal/purchase/purchase-order', _id]);
-    } catch (error) {
-      console.error('Error fetching quotation detail:', error);
-    }
-  } */
+
 
   getPurchaseDetail(_id: string) {
 

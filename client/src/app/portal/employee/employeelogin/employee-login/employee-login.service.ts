@@ -34,7 +34,7 @@ export class EmployeeLoginService {
     .pipe(
       tap(response => {
         this.loggedInEmployee = response.employee;
-        localStorage.setItem(this.loggedInEmployeeKey, JSON.stringify(response.employee)); // Store logged-in employee info in local storage
+        localStorage.setItem(this.loggedInEmployeeKey, JSON.stringify(response.employee)); 
         localStorage.setItem(this.tokenKey, response.token);
         localStorage.setItem(this.refreshTokenKey, response.refreshToken);
         console.log('Token stored in localStorage:', response.token);
@@ -65,7 +65,7 @@ getToken(): string | null {
 } 
 
 getRefreshToken(): string | null {
-  // Retrieve the refresh token from local storage or any other storage mechanism
+  
   return localStorage.getItem(this.refreshTokenKey);
 }
 
@@ -89,7 +89,7 @@ refreshToken(): Observable<{ token: string }> {
   return this.http.post<{ token: string }>(`${this.apiUrl}/refresh-token`, { refreshToken })
     .pipe(
       tap(response => {
-        localStorage.setItem(this.tokenKey, response.token); // Update access token in local storage
+        localStorage.setItem(this.tokenKey, response.token); 
         console.log('Result:', response.token)
       })
     );

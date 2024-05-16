@@ -53,19 +53,7 @@ export class PaymentComponent implements OnInit, OnDestroy {
   }
 
 
-/*
-async fetchTransDetails(quotation_id: string) {
-  try {
-    const transData = await firstValueFrom(this.transService.transSingle(quotation_id));
 
-    if (transData) {
-      this.transDetail = transData;
-      this.amount = this.getAmount(transData);
-    }
-  } catch (error) {
-    console.error('Error fetching transaction details', error);
-  }
-} */
 
 fetchTransDetails(quotation_id: string) {
 
@@ -141,7 +129,7 @@ async payNow() {
       this.updatePaymentStatus(invoiceId);
 
       if (!stripe) {
-        // Handle the case where stripe could not be initialized
+        
         this.openSnackBar('Stripe could not be initialized. Please try again later.');
         return;
       }
@@ -175,17 +163,7 @@ async payNow() {
   }
 }
 
-/*
-async updatePaymentStatus() {
-  try {
-    const invoiceId = this.transDetail._id;
-    await firstValueFrom(
-      this.http.put(environment.apiUrl + `/api/portal/accounting/${invoiceId}/pay`, {})
-    );
-  } catch (error) {
-    throw new Error('Error updating payment status');
-  }
-} */
+
 
 updatePaymentStatus(invoiceId: Invoice) {
   

@@ -34,16 +34,7 @@ export class SalesOrderComponent implements OnInit, OnDestroy {
 
   }
 
-/*
-  async getClientDetails() {
-    try {
-      const response = await firstValueFrom(this.salesOrderService.getSPO());
-      this.spoDetails = response; 
-      console.log('SPO Details:', this.spoDetails);
-    } catch (error) {
-      console.error('Error fetching SPO details:', error);
-    }
-  } */
+
 
   getClientDetails() {
 
@@ -75,37 +66,6 @@ getSrfq(quotation: Quotation): string {
 }
 
 
-/*
-  async createPO(quotationId: string) {
-    if (this.confirmedQuotations.has(quotationId)) {
-      return; 
-    }
-
-    const newPo: Po = {
-      _id: '',
-      employee_id: this.employee_id,
-      quotation_id: quotationId as unknown as AddQuotation,
-      po: '',
-      status: SubmitStatus.NOTSUBMIT,
-      createdAt: new Date(),
-    };
-
-    try {
-      const response = await firstValueFrom(
-        this.salesOrderService.addPo(newPo)
-      );
-      this.confirmedQuotations.add(quotationId); // Mark as confirmed
-      localStorage.setItem('confirmedQuotations', JSON.stringify([...this.confirmedQuotations])
-      ); // Update local storage
-
-      this.getClientDetails();
-      this.openSnackBar('Sales Order Confirmed');
-    } catch (error) {
-      console.error('Error creating sales order:', error);
-    }
-  }
-
-  */
 
   createPO(quotationId: string) {
 

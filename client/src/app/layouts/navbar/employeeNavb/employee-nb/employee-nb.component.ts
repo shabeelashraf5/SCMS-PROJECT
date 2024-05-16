@@ -43,15 +43,7 @@ export class EmployeeNbComponent implements OnInit, OnDestroy  {
   }
 
  
-  /*
-  async loadProfile() {
-    try {
-      const profile = await firstValueFrom(this.pService.getProfile());
-      this.employeeProfile = profile;
-    } catch (error) {
-      console.error('Error fetching employee profile:', error);
-    }
-  } */
+ 
 
   loadProfile() {
 

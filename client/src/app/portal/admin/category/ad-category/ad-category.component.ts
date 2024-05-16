@@ -44,7 +44,7 @@ export class AdCategoryComponent implements OnInit, OnDestroy   {
   categoryToEdit: Partial<Category> = {};
 
   constructor(private store: Store<AppState>, private formBuilder: FormBuilder, private snackBar: MatSnackBar) {
-   // this.categories$ = this.store.pipe(select(state => state.category.categories));
+   
    this.categories$ = this.store.pipe(select(state => state.category.categories), takeUntil(this.destroy$));
     
   }
@@ -150,12 +150,7 @@ editCategory(category: Partial<Category>) {
   }
 
 
-  /*
-  calculateTotalPages(): void {
-    this.categories$.subscribe(categories => {
-      this.totalPages = Math.ceil(categories.length / this.itemsPerPage);
-    });
-  } */
+ 
 
   calculateTotalPages(): void {
     this.categories$.pipe(takeUntil(this.destroy$)).subscribe(categories => {
@@ -179,7 +174,7 @@ editCategory(category: Partial<Category>) {
     }
   }
 
-  // Method to navigate to the next page
+ 
   nextPage(): void {
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
@@ -191,8 +186,8 @@ editCategory(category: Partial<Category>) {
   }
 
   ngOnDestroy(): void {
-    this.destroy$.next(); // Emit to trigger unsubscription
-    this.destroy$.complete(); // Complete the Subject
+    this.destroy$.next(); 
+    this.destroy$.complete(); 
   }
 
   openSnackBar(message: string): void {

@@ -7,49 +7,6 @@ const generateCustomShipment = require('../uuid/idshipment')
 const stripe = require('stripe')(process.env.PRIV_KEY);
 const stripeService = require('../payment/stripe.service')
 
-/*
-const loadInv = async (req, res) => {
-
-    try {
-
-        const employeeId = req.userData.userId;
-        console.log('Customer ID:', employeeId);
-        res.setHeader('Cache-Control', 'no-cache, no-store');
-        
-    
-        const invData = await invoicing.find({})
-    .populate({
-        path: 'purchase_id',
-        select: 'totalAmount po_id',
-        populate: {
-            path: 'po_id',
-            model: 'purchase-po',
-            select: 'po quotation_id',
-            populate: {
-                path: 'quotation_id',
-                model: 'quotation',
-                select: 'salesRFQ_id to totalAmount totalprice',
-                populate: {
-                    path: 'salesRFQ_id',
-                    model: 'sales-rfq',
-                    select: 'srfq'
-                }
-            }
-        }
-    }).exec();
-    
-        console.log('invData:', invData);
-
-        if (!invData || invData.length === 0) { 
-            return res.status(404).json({ error: 'No invData found' });
-        }
-
-        res.json(invData);
-    } catch (error) {
-        console.error('Error fetching invData:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
-} */
 
 
 const loadInv = async (req, res) => {
@@ -61,8 +18,8 @@ const loadInv = async (req, res) => {
         const invData = await invoicing.find({})
             .populate({
                 path: 'employee_id',
-                select: 'fname lname', // Specify the fields you want to populate
-                model: 'employee' // Assuming the model name is 'employee'
+                select: 'fname lname', 
+                model: 'employee' 
             })
             .populate({
                 path: 'purchase_id',
@@ -206,8 +163,8 @@ const loadTrans = async (req, res) => {
         const transData = await invoicing.find({})
     .populate({
                 path: 'employee_id',
-                select: 'fname lname', // Specify the fields you want to populate
-                model: 'employee' // Assuming the model name is 'employee'
+                select: 'fname lname', 
+                model: 'employee' 
             })
             .populate({
                 path: 'purchase_id',
@@ -282,27 +239,7 @@ const transSingle = async function (req, res) {
 };
 
 
-/*
-const paymentSup = async function (req, res) {
 
-    try {
-
-        const { amount , currency } = req.body;
-        const paymentIntent = await stripe.paymentIntents.create({
-
-          amount,
-          currency 
-
-        });
-
-        res.json({ sessionId: paymentIntent.id });
-      } catch (error) {
-        console.error('Error creating payment intent:', error);
-        res.status(500).json({ error: 'An error occurred while processing your request.' });
-      }
-
-}
-*/
 
 
 const paymentSup = async function (req, res) {
@@ -324,9 +261,7 @@ const paymentSup = async function (req, res) {
             mode: 'payment',
             success_url: `${process.env.URLs}/portal/accounting/financial-transaction?session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: `${process.env.URLs}/portal/accounting/financial-transaction`,
-           // success_url: "http://localhost:4200/portal/accounting/financial-transaction?session_id={CHECKOUT_SESSION_ID}",
-           // cancel_url: "http://localhost:4200/portal/accounting/financial-transaction",
-         
+           
             customer_email: 'test@example.com', 
             billing_address_collection: 'required',
         });
@@ -360,7 +295,7 @@ const confirmPayment = async function (req, res)  {
     try {
         const updatedInvoice = await invoicing.findOneAndUpdate(
             { _id: invoiceId },
-            { $set: { payment: 'Paid' } }, // Update both payment status and overall status
+            { $set: { payment: 'Paid' } }, 
             { new: true }
         );
         res.json(updatedInvoice);
@@ -383,12 +318,12 @@ const stripeWebHook = async (req,res) => {
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
-  // Handle the event
+ 
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object;
-    const invoiceId = session.client_reference_id; // Assuming you set invoiceId as client_reference_id during session creation
+    const invoiceId = session.client_reference_id; 
     try {
-      // Update payment status in your database
+     
       await invoicing.findOneAndUpdate({ _id: invoiceId }, { $set: { payment: 'Paid' } });
     } catch (error) {
       console.error('Error updating payment status:', error);

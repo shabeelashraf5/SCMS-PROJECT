@@ -23,7 +23,7 @@ export const adUserReducer = createReducer(
 
   on(AdUserActions.updateAdmin, (state, { admin }) => {
     const updatedAdmin = state.admins.map(adm => {
-      if (adm._id === admin._id) { // Assuming _id is the unique identifier
+      if (adm._id === admin._id) { 
         return { ...adm, ...admin };
       }
       return adm;

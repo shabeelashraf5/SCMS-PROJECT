@@ -33,18 +33,7 @@ export class SalesAnalysisComponent implements OnInit, OnDestroy {
   }
 
  
-  /*
-  async getClientDetails() {
-    try {
-      const response = await firstValueFrom(this.salesAnalysisService.getSPO());
-      this.spoDetails = response;
-      console.log('SPO Details:', this.spoDetails);
-
-      this.RenderChart(); // Render the chart after obtaining the data
-    } catch (error) {
-      console.error('Error fetching SPO details:', error);
-    }
-  } */
+  
 
   getClientDetails() {
 
@@ -89,7 +78,7 @@ RenderChart() {
   const monthWiseOrders = Array(12).fill(0);
    
 
-  // Calculate month-wise confirmed orders
+  
   this.spoDetails.forEach((detail: AddQuotation) => {
     const date = new Date(detail.createdAt);
     const monthIndex = date.getMonth();

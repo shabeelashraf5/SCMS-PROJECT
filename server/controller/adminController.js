@@ -47,7 +47,7 @@ const adminLogin = async (req, res) => {
         }
         
 
-        // Compare the provided password with the hashed password from the database
+       
         const passwordMatch = await bcrypt.compare(password, admin.password);
 
         if (!passwordMatch) {
@@ -104,7 +104,7 @@ const addAdmin = async (req, res) => {
     console.log('Admin data:', { fname, lname, email, password });
 
     try {
-        // Hash the password
+        
 
         const existingAdmin = await collectionadmin.findOne({ email });
 
@@ -117,13 +117,13 @@ const addAdmin = async (req, res) => {
             })
         }
 
-        const hashedPassword = await bcrypt.hash(password, 10); // 10 is the salt rounds
+        const hashedPassword = await bcrypt.hash(password, 10); 
 
         const admin = {
             fname,
             lname,
             email,
-            password: hashedPassword, // Save hashed password to the database
+            password: hashedPassword, 
         };
 
         await collectionadmin.insertMany([admin]);
@@ -266,7 +266,7 @@ const loadEmployee = async (req , res) => {
 const addEmployee = async (req, res) => {
     console.log('Request received to add a new employee');
     console.log('Request body:', req.body);
-    console.log('Uploaded file:', req.file); // Log uploaded file
+    console.log('Uploaded file:', req.file); 
    
     
 
@@ -470,48 +470,7 @@ const loadCategory = async (req , res) => {
 }
 
 
-// add Category 
-/*
-const addCategory = async (req, res) => {
-    console.log('Request received to add a new category');
-    console.log('Request body:', req.body);
 
-    const categoryData = {
-        category: req.body.category,
-    };
-
-    console.log('Category data:', categoryData);
-
-    try {
-
-        let existingCategory = await collectionadcategory.findOne({categoryData})
-       
-        if(existingCategory){
-            return res.status(400).json({
-                success: false,
-                message: 'Category already Exist'
-    
-            })
-        }
-
-
-
-        await collectionadcategory.create(categoryData);
-        console.log('Category added successfully');
-        
-        return res.json({
-            success: true,
-            message: 'Category added successfully'
-        });
-    } catch (error) {
-        console.error('Error adding category:', error);
-        return res.status(500).json({
-            success: false,
-            message: 'An error occurred while adding the category'
-        });
-      
-    }
-};*/
 
 
 const addCategory = async (req, res) => {
@@ -668,7 +627,7 @@ const addProduct = async (req, res) => {
     console.log('Product data:', productData);
 
     try {
-        // Insert the product into the database
+        
         await collectionproduct.create(productData);
 
         console.log('Product added successfully');

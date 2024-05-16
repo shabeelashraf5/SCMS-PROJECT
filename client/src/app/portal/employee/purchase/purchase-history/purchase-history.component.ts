@@ -35,16 +35,7 @@ export class PurchaseHistoryComponent implements OnInit, OnDestroy {
 
   }
 
-/*
-async getClientDetails() {
-  try {
-    const response = await firstValueFrom(this.purchaseHistoryService.getpurchase());
-    this.purchaseDetails = response;
-    console.log(this.purchaseDetails);
-  } catch (error) {
-    console.error('Error fetching client purchase details:', error);
-  }
-} */
+
 
 getClientDetails(){
 
@@ -69,41 +60,7 @@ loadConfirmedPurchase() {
   }
 }
 
-/*
-  async createInv(purchaseId: string) {
 
-    if (this.confirmedPurchase.has(purchaseId)) {
-      return; 
-    }
-  
-    console.log('purchaseId:', purchaseId);
-
-    const newInv: Invoice = {
-      _id: '',
-      employee_id: this.employee_id,
-      purchase_id: purchaseId as unknown as AddPo,
-      invoice: '',
-      delivery: '',
-      transaction: '',
-      payment: PayStatus.NOTPAID,
-      status: OrderStatus.PENDING
-    };
-
-    console.log(newInv);
-
-    try {
-      const response = await firstValueFrom(this.purchaseHistoryService.addInv(newInv));
-      console.log(response);
-
-      await this.getClientDetails(); // Await this function to ensure completion before proceeding
-      this.confirmedPurchase.add(purchaseId);  // Mark this quotation as confirmed
-      localStorage.setItem('confirmedQuotations', JSON.stringify([...this.confirmedPurchase]));
-      this.openSnackBar('Purchase Confirmed');
-    } catch (error) {
-      console.error('Error creating invoice:', error);
-    }
-  }
-*/
 
 createInv(purchaseId: string) {
 
@@ -166,8 +123,8 @@ createInv(purchaseId: string) {
   openSnackBar(message: string) {
     this.snackBar.open(message, 'Close', {
       duration: 4000,
-      verticalPosition: 'top', // Set position to top
-      horizontalPosition: 'center', // Set position to center horizontally
+      verticalPosition: 'top', 
+      horizontalPosition: 'center', 
     });
   }
 

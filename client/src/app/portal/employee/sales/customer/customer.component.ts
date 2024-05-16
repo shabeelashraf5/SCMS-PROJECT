@@ -51,7 +51,7 @@ export class CustomerComponent implements OnInit, OnDestroy  {
 
 
   trackByCustomer(index: number, customer: AddQuotation): string {
-    return customer._id; // Return a unique identifier for the product
+    return customer._id; 
   }
   
   ngOnDestroy() {

@@ -47,16 +47,16 @@ export class InventoryListComponent implements OnInit, OnDestroy {
     if (typeof categoryId === 'object' && 'category' in categoryId) {
       return categoryId.category;
     }
-    return 'Unknown Category'; // Provide a default value or fallback if it's not valid
+    return 'Unknown Category'; 
   }
 
   trackByProductId(index: number, product: Product): string {
-    return product._id; // Return a unique identifier for the product
+    return product._id;
   }
 
   ngOnDestroy(): void {
-    this.destroy$.next(); // Emit a value to trigger unsubscription
-    this.destroy$.complete(); // Complete the subject to ensure it's cleaned up
+    this.destroy$.next(); 
+    this.destroy$.complete(); 
   }
 
 }

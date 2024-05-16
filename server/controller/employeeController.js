@@ -267,7 +267,7 @@ const resetPassword = async (req, res) => {
 
         console.log('Token:', token);
         console.log('Password:', password);
-        // Find the user by the token
+        
         const user = await collectionemployee.findOne({ token });
         if (!user) {
             return res.status(400).json({
@@ -403,7 +403,7 @@ const loadChat = async (req , res) => {
             { sender_id: senderId, receiver_id: receiverId },
             { sender_id: receiverId, receiver_id: senderId }
           ]
-        }).sort({ createdAt: 1 }); // Assuming createdAt field for timestamps
+        }).sort({ createdAt: 1 }); 
         res.json(messages);
       } catch (error) {
         console.error(error);
@@ -418,7 +418,7 @@ const EmployeeLogOut = async (req, res) => {
     try {
         const { employeeId } = req.body;
 
-        // Update the user's online status to "offline" in the database
+        
         await collectionemployee.findByIdAndUpdate(employeeId, { $set: { is_online: 'offline' } });
 
         res.status(200).json({ message: 'Logout successful' });
@@ -436,7 +436,7 @@ const markMessageAsSeen = async (req, res) => {
     const senderId = req.body.sender_id;
 
     try {
-        // Update the message status to 'Seen'
+        
         await chatMessage.updateMany(
             { sender_id: senderId, receiver_id: receiverId, isRead: 'Delivered' },
             { $set: { isRead: 'Seen' } }

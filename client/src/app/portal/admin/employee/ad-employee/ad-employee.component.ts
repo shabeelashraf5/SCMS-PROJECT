@@ -51,13 +51,7 @@ constructor(private store: Store<AppState>, private snackBar: MatSnackBar) {
   this.employees$ = this.store.pipe(select(state => state.employee.employees));
 }
 
-/*
-ngOnInit(): void {
-  this.store.dispatch(AdEmployeeActions.loadEmployee());
 
-  this.calculateTotalPages();
-}
-*/
 
 ngOnInit(): void {
 
@@ -117,25 +111,25 @@ onSubmit(): void {
 } 
 
 isWhitespaceOnly(text: string | undefined): boolean {
-  return !text || !text.trim(); // Checks if the text is empty or only whitespace
+  return !text || !text.trim(); 
 }
 
 checkWhitespace(event: any): void {
-  // This function can be used to trim input or alert when only whitespace is detected
+  
   this.fname = event.trim();
   this.lname = event.trim();
   this.email = event.trim();
   this.password = event.trim();
   this.position = event.trim(); 
   this.area = event.trim(); 
-  this.department = event.trim();  // Automatically trim the input
+  this.department = event.trim();  
 }
 
 
 editEmployees(employee: Partial<Employee>) {
   this.employeeToEdit = {
     ...employee,
-    fname: employee.fname || '', // Ensure default empty string
+    fname: employee.fname || '', 
     lname: employee.lname || '',
     email: employee.email || '',
     password: employee.password || '',
@@ -143,7 +137,7 @@ editEmployees(employee: Partial<Employee>) {
     department: employee.department || '',
     area: employee.area || '',
   };
-  this.modal2.nativeElement.showModal(); // Open the modal
+  this.modal2.nativeElement.showModal(); 
 }
 
 
@@ -163,7 +157,7 @@ editEmployee(employee: Partial<Employee>) {
     if (employee.area) formData.append('area', employee.area);
     if (employee.department) formData.append('department', employee.department);
 
-    // Check if a new image is selected
+   
     if (this.selectedFile) {
       formData.append('image', this.selectedFile);
     }
@@ -175,7 +169,7 @@ editEmployee(employee: Partial<Employee>) {
     console.error('Employee ID is undefined');
   }
 
-  // Close the modal
+  
   this.modal2.nativeElement.close();
 }
 
@@ -219,7 +213,7 @@ get filteredRecords() {
   const searchTermLower = this.searchTerm.toLowerCase();
   return this.employees$.pipe(
     map(records => records.filter(record => 
-      record.fname.toLowerCase().includes(searchTermLower) || // Check if any of the fields match the search term
+      record.fname.toLowerCase().includes(searchTermLower) || 
       record.lname.toLowerCase().includes(searchTermLower) ||
       record.email.toLowerCase().includes(searchTermLower) ||
       record.password.toLowerCase().includes(searchTermLower) ||
@@ -231,15 +225,10 @@ get filteredRecords() {
 }
 
 getImageUrl(imageFileName: string): string {
-  return environment.apiUrl + `/images/${imageFileName}`; // Adjust the URL based on your backend server configuration
+  return environment.apiUrl + `/images/${imageFileName}`; 
 }
 
-/*
-calculateTotalPages(): void {
-  this.employees$.subscribe(employees => {
-    this.totalPages = Math.ceil(employees.length / this.itemsPerPage);
-  });
-}*/
+
 
 calculateTotalPages(): void {
   this.employees$.pipe(takeUntil(this.destroy$)).subscribe(employees => {
@@ -263,7 +252,7 @@ previousPage(): void {
   }
 }
 
-// Method to navigate to the next page
+
 nextPage(): void {
   if (this.currentPage < this.totalPages) {
     this.currentPage++;
@@ -284,8 +273,8 @@ trackByEmployee(index: number, employee: Employee): string {
 
 
 ngOnDestroy(): void {
-  this.destroy$.next(); // Emit to trigger unsubscription
-  this.destroy$.complete(); // Complete the Subject to ensure it's cleaned up
+  this.destroy$.next(); 
+  this.destroy$.complete(); 
 }
 
 openSnackBar(message: string): void {

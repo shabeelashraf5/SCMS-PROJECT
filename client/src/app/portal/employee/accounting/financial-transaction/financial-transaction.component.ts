@@ -30,15 +30,7 @@ export class FinancialTransactionComponent implements OnInit, OnDestroy {
 
   }
 
-  /*
-  async getTransDetail(_id: string) {
-    try {
-      await firstValueFrom( this.transactionService.transSingle(_id));
-      this.router.navigate(['/portal/accounting/financial-transaction', _id]);
-    } catch (error) {
-      console.error('Error fetching transaction detail:', error);
-    }
-  } */
+  
 
   getTransDetail(_id: string) {
 
@@ -53,30 +45,13 @@ export class FinancialTransactionComponent implements OnInit, OnDestroy {
   }
 
   
-/*
-async  getTransactionDetails() {
-  try {
-    const response = await firstValueFrom(
-      this.transactionService.getTrans()
-    );
-    this.invDetails = response; // Store the fetched RFQ details
-    console.log(this.invDetails);
-  } catch (error) {
-    console.error(error);
 
-    if (error instanceof HttpErrorResponse && error.status === 403) {
-      this.errorMessage = 'You are not authorized to access this page.';
-    } else {
-      this.errorMessage = 'An error occurred while fetching data.';
-    }
-  }
-} */
 
   getTransactionDetails(){
 
     this.ftSubscription = this.transactionService.getTrans().subscribe({
       next: (response) => {
-        this.invDetails = response; // Store the fetched RFQ details
+        this.invDetails = response;
         console.log(this.invDetails);
       },error: (error) => {
         console.error(error);

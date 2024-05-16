@@ -28,11 +28,11 @@ export class EmDashboardEffects {
     ofType(EmMessagingActions.addMessage),
     switchMap(({ employee_id,  message, date }) => {
       console.log('Creating user...');
-      const messages: Partial<Messaging> = { employee_id , message, date }; // Use Partial<User> here
-      return this.emDashboardService.addMessage(messages as Messaging).pipe( // Cast it back to User
+      const messages: Partial<Messaging> = { employee_id , message, date }; 
+      return this.emDashboardService.addMessage(messages as Messaging).pipe( 
         map(() => {
           console.log('User created successfully');
-          return EmMessagingActions.loadMessage(); // Trigger a load after create
+          return EmMessagingActions.loadMessage(); 
         }),
         catchError((error) => of(EmMessagingActions.loadMessageFailure({ error })))
       );

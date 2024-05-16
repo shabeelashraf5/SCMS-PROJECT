@@ -26,7 +26,7 @@ export const adCategoryReducer = createReducer(
 
   on(AdCategoryActions.updateCategory, (state, { category }) => {
     const updatedCategories = state.categories.map(cat => {
-      if (cat._id === category._id) { // Assuming _id is the unique identifier
+      if (cat._id === category._id) { 
         return { ...cat, ...category };
       }
       return cat;

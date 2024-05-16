@@ -57,18 +57,7 @@ export class InvoiceDetailsComponent implements OnInit, OnDestroy {
   }
   
   
-/*
-  async fetchInvoiceDetails(quotation_id: string) {
-    try {
-      const poData = await firstValueFrom(this.invoiceService.invSingle(quotation_id));
-      if (poData) {
-        this.invoiceDetail = poData;
-      }
-    } catch (error) {
-      console.error('Error fetching PO details', error);
-    }
-  }
-*/
+
 
 fetchInvoiceDetails(quotation_id: string){
   this.routeSubscription = this.invoiceService.invSingle(quotation_id).subscribe({
@@ -80,35 +69,7 @@ fetchInvoiceDetails(quotation_id: string){
   })
 }
 
-/*
-  async createShipment(invoiceId: string) {
 
-    if (this.confirmedInvoice.has(invoiceId)) {
-      return; 
-    }
-    console.log('purchaseId:', invoiceId);
-
-    const newShip: Shipment = {
-      _id: '',
-      employee_id: this.employee_id,
-      invoice_id: invoiceId as unknown as Invoice,
-      shipment: '',
-      status: DeliveryStatus.PENDING
-    };
-
-    console.log(newShip);
-
-    try {
-      const response = await firstValueFrom(this.invoicedetailsService.addShip(newShip));
-      this.openSnackBar('Invoice Confirmed');
-      this.confirmedInvoice.add(invoiceId);  // Mark this quotation as confirmed
-      localStorage.setItem('confirmedInvoice', JSON.stringify([...this.confirmedInvoice]));
-      this.router.navigate(['/portal/accounting/invoicing']);
-      console.log(response);
-    } catch (error) {
-      console.error(error);
-    }
-  }*/
 
   createShipment(invoiceId: string) {
 
@@ -130,7 +91,7 @@ fetchInvoiceDetails(quotation_id: string){
     this.routeSubscription = this.invoicedetailsService.addShip(newShip).subscribe({
       next: (response) => {
         this.openSnackBar('Invoice Confirmed');
-        this.confirmedInvoice.add(invoiceId);  // Mark this quotation as confirmed
+        this.confirmedInvoice.add(invoiceId);  
         localStorage.setItem('confirmedInvoice', JSON.stringify([...this.confirmedInvoice]));
         this.router.navigate(['/portal/accounting/invoicing']);
         console.log(response);
@@ -169,15 +130,15 @@ getTotalamount(detail: Invoice): number {
 }
 
 trackByProductId(index: number, product: Product): string {
-  return product.product; // Use unique identifier
+  return product.product; 
 }
 
 
 openSnackBar(message: string) {
   this.snackBar.open(message, 'Close', {
     duration: 4000,
-    verticalPosition: 'top', // Set position to top
-    horizontalPosition: 'center', // Set position to center horizontally
+    verticalPosition: 'top', 
+    horizontalPosition: 'center', 
   });
 }
 

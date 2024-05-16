@@ -19,8 +19,8 @@ Chart.register(...registerables)
 export class AdDashboardComponent implements OnInit, OnDestroy {
 
   myChart!: Chart 
-  currentData: number[] = []; // Default data for month
-  currentTimePeriod: string = 'month'; // Default time period
+  currentData: number[] = []; 
+  currentTimePeriod: string = 'month'; 
   employeeDetails: Employee[] =[]
   currentDate: Date = new Date();
 
@@ -51,29 +51,7 @@ export class AdDashboardComponent implements OnInit, OnDestroy {
   }
 
 
-/*
-  async getClientDetails() {
-    try {
-      const response = await firstValueFrom( this.dashboardService.getSPO());
-      this.spoDetails = response; 
-      console.log('SPO Details:', this.spoDetails);
-    } catch (error) {
-      console.error('Error fetching SPO details:', error);
-    }
-  }
-*/
 
- 
-  /*
-  async  loadEmployee() {
-    try {
-      const response = await firstValueFrom( this.emService.getEmployees());
-      this.employeeDetails = response; 
-      console.log('Employee Details:', this.employeeDetails);
-    } catch (error) {
-      console.error('Error fetching Employee details:', error);
-    }
-  } */
 
   loadEmployee() {
 
@@ -163,13 +141,13 @@ calculateTotalOrders(details: AddQuotation[]): number {
 
     switch (this.currentTimePeriod) {
       case 'week':
-        this.currentData = weekWiseOrders; // Sample data for a week
+        this.currentData = weekWiseOrders; 
         break;
       case 'month':
-        this.currentData = dayWiseOrders ; // Sample data for a month
+        this.currentData = dayWiseOrders ; 
         break;
       case 'year':
-        this.currentData = monthWiseOrders; // Sample data for a year
+        this.currentData = monthWiseOrders; 
         break;
     }
     this.myChart.data.labels = this.getLabelArray(this.currentTimePeriod);
@@ -179,11 +157,11 @@ calculateTotalOrders(details: AddQuotation[]): number {
 
 
   getWeekIndex(date: Date): number {
-    // Calculate which week of the month the given date falls into
+    
     const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
-    const dayOfWeek = firstDayOfMonth.getDay(); // 0 for Sunday, 1 for Monday, etc.
+    const dayOfWeek = firstDayOfMonth.getDay(); 
     const dayOfMonth = date.getDate();
-    const weekIndex = Math.ceil((dayOfMonth + dayOfWeek) / 7) - 1; // Zero-based index
+    const weekIndex = Math.ceil((dayOfMonth + dayOfWeek) / 7) - 1; 
     return weekIndex;
 }
 
@@ -193,11 +171,10 @@ calculateTotalOrders(details: AddQuotation[]): number {
   getLabelArray(period: string): string[] {
     switch (period) {
       case 'week':
-        return ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5','Day 6','Day 7']; // Sample labels for a week
-      case 'month':
-        return ['Week 1', 'Week 2', 'Week 3', 'Week 4']; // Sample labels for a month
+        return ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5','Day 6','Day 7']; 
+        return ['Week 1', 'Week 2', 'Week 3', 'Week 4']; 
       case 'year':
-        return ['Jan', 'Feb', 'March', 'April', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']; // Sample labels for a year
+        return ['Jan', 'Feb', 'March', 'April', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']; 
       default:
         return [];
     }

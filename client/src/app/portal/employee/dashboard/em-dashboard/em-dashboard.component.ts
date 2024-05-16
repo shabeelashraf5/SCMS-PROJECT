@@ -54,7 +54,7 @@ export class EmDashboardComponent implements OnInit {
       employee_id: this.employee_id,
       date: this.date  
     };
-     // Assuming this.category is a string
+    
     console.log('Dispatching addCategory action with category:', message);
     this.store.dispatch(EmMessagingActions.addMessage( message )); 
     

@@ -31,18 +31,6 @@ export class QuotationComponent implements OnInit, OnDestroy {
   }
 
  
-/*
-  async getRFQDetails() {
-    try {
-      const response = await firstValueFrom(this.salesService.getRFQ());
-      this.rfqDetails = response; // Store the fetched RFQ details
-      console.log(this.rfqDetails);
-    } catch (error) {
-      console.error('Error fetching RFQ details:', error);
-    }
-  }
-
-  */
 
   getRFQDetails(){
 
@@ -58,29 +46,6 @@ export class QuotationComponent implements OnInit, OnDestroy {
   }
 
 
-  /*
-async createRFQ() {
-  const newRFQ: Quotation = {
-    _id: '',
-    employee_id: this.employee_id,
-    srfq: '',
-    status: SubmitStatus.NOTSUBMIT,
-    createdAt: new Date()
-  };
-
-  console.log('Creating new RFQ:', newRFQ);
-
-  try {
-    await firstValueFrom(this.salesService.addRFQ(newRFQ));
-    console.log('RFQ created successfully');
-
-    // After creating the RFQ, refresh the RFQ details
-    await this.getRFQDetails(); // This could also be asynchronous
-  } catch (error) {
-    console.error('Error creating RFQ:', error);
-    // You can also add further error handling here, like showing a snackbar or alert
-  }
-} */
 
 createRFQ() {
 
@@ -109,17 +74,6 @@ createRFQ() {
 }
 
 
-/*
-async getQuotationDetail(_id: string) {
-  try {
-    await firstValueFrom(this.salesService.qsingle(_id));
-    this.router.navigate(['/portal/sales/quotations', _id]);
-    console.log('Navigated to quotation detail for ID:', _id);
-  } catch (error) {
-    console.error('Error fetching quotation detail:', error);
-  }
-}
-*/
 
 getQuotationDetail(_id: string) {
 
@@ -138,7 +92,7 @@ getQuotationDetail(_id: string) {
 
 
 trackByQuotation(index: number, quotation: Quotation): string {
-  return quotation._id; // Return a unique identifier for the product
+  return quotation._id; 
 }
 
   

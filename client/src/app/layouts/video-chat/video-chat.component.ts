@@ -49,15 +49,7 @@ export class VideoChatComponent implements OnInit, OnDestroy {
     this.loadProfile();
   }
 
-/*
-  async loadProfile() {
-    try {
-      const profile = await firstValueFrom(this.employeeService.getProfile());
-      this.employeeProfile = profile;
-    } catch (error) {
-      console.error('Error fetching employee profile:', error);
-    }
-  } */
+
 
   loadProfile() {
 
@@ -73,12 +65,12 @@ export class VideoChatComponent implements OnInit, OnDestroy {
   ngAfterViewInit() {
       const roomID = getUrlParams().get('roomID') || randomID(5);
 
-     // generate Kit Token
+     
       const appID = 792852619 ;
       const serverSecret = environment.secret_key ;
       const kitToken =  ZegoUIKitPrebuilt.generateKitTokenForTest(appID, serverSecret, roomID,  randomID(5),  randomID(5));
 
-      // Create instance object from Kit Token.
+      
       const zp = ZegoUIKitPrebuilt.create(kitToken);
       
    
@@ -97,7 +89,7 @@ export class VideoChatComponent implements OnInit, OnDestroy {
           },
         ],
         scenario: {
-          mode: ZegoUIKitPrebuilt.GroupCall, // To implement 1-on-1 calls, modify the parameter here to [ZegoUIKitPrebuilt.OneONoneCall].
+          mode: ZegoUIKitPrebuilt.GroupCall, 
         },
 
     

@@ -42,7 +42,7 @@ onSubmit(): void {
   
   
   const { email, password } = this.loginForm.value;
-  // Dispatch login action
+  
   this.store.dispatch(loginEmployee({ email, password }))
 }
 

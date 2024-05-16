@@ -51,7 +51,7 @@ export class AddQuotationComponent implements OnInit, OnDestroy  {
   items: Product[] = [{ product: '', qty: 1 , uom: '', unit: 0 , uplift: 0 ,  total: 0 }];
 
   constructor(private route: ActivatedRoute, private addQuotationService: AddQuotationService, private quotationService: QuotationService, private snackBar: MatSnackBar  ) {
-    //pdfMake.vfs = pdfFonts.pdfMake.vfs;
+    
   }
 
 
@@ -152,77 +152,7 @@ displayDatas(){
   }
 
 
-/*
-async submitQuotation() {
-  const totalAmount = this.calculateTotal();
-  const totalPrice = this.calculateTotalprice();
 
-  try {
-
-    const to = this.to.trim();
-    const attention = this.attention.trim();
-    const email = this.email.trim();
-    const phone= this.phone.trim();
-    const clientrfq = this.clientrfq.trim();
-    const subject = this.subject.trim();
-    const basis = this.basis.trim();
-    const payment = this.payment.trim();
-    const validity = this.validity.trim();
-    const availability = this.availability.trim();
-
-    const hasEmptyFields = [to, attention, email, phone, clientrfq, subject, basis, payment, validity, availability].some(
-      (field) => field === ''
-    );
-
-    const existingQuotation = await firstValueFrom(
-      this.addQuotationService.getQuotationBySalesRFQId(this.salesRFQ_id)
-    );
-
-    if (hasEmptyFields) {
-      this.openSnackBar('Please fill in all required fields with valid data');
-      return; 
-    }
-
-    if (existingQuotation) {
-      console.log('A quotation already exists for this salesRFQ_id:', existingQuotation);
-      await this.updateQuotation(existingQuotation);
-      this.openSnackBar('Quotation updated');
-    } else {
-      const formData: AddQuotation = {
-        _id: '',
-        salesRFQ_id: this.salesRFQ_id as unknown as Quotation ,
-        employee_id: this.employee_id,
-        to: to,
-        spo: '',
-        attention: attention,
-        email: email,
-        phone: phone,
-        clientrfq: clientrfq,
-        products: this.items,
-        subject: subject,
-        basis: this.basis,
-        payment: payment,
-        validity: validity,
-        availability: availability,
-        status: OrderStatus.PENDING,
-        totalAmount: totalAmount,
-        discount: this.discount,
-        clientPo: this.clientPo,
-        date: this.date,
-        totalprice: totalPrice,
-        createdAt: new Date()
-      };
-
-      console.log('AddQuotation data:', formData);
-
-      await firstValueFrom(this.addQuotationService.addQuotation(formData));
-      this.openSnackBar('Quotation submitted');
-      console.log('Quotation submitted successfully');
-    }
-  } catch (error) {
-    console.error('Error during quotation submission:', error);
-  }
-} */
 
 submitQuotation() {
   const totalAmount = this.calculateTotal();
@@ -302,35 +232,7 @@ submitQuotation() {
     });
 }
 
-/*
-async updateQuotation(existingQuotation: AddQuotation) {
-  const totalPrice = this.calculateTotalprice();
-  const totalAmount = this.calculateTotal();
 
-  existingQuotation.to = this.to;
-  existingQuotation.attention = this.attention;
-  existingQuotation.email = this.email;
-  existingQuotation.phone = this.phone;
-  existingQuotation.clientrfq = this.clientrfq;
-  existingQuotation.subject = this.subject;
-  existingQuotation.basis = this.basis;
-  existingQuotation.payment = this.payment;
-  existingQuotation.validity = this.validity;
-  existingQuotation.availability = this.availability;
-  existingQuotation.products = this.items;
-  existingQuotation.clientPo = this.clientPo;
-  existingQuotation.date = this.date;
-  existingQuotation.discount = this.discount;
-  existingQuotation.totalprice = totalPrice;
-  existingQuotation.totalAmount = totalAmount;
-
-  try {
-    await firstValueFrom(this.addQuotationService.updateQuotation(existingQuotation._id, existingQuotation));
-    console.log('Quotation updated successfully');
-  } catch (error) {
-    console.error('Error updating quotation:', error);
-  }
-} */
 
 updateQuotation(existingQuotation: AddQuotation) {
   const totalPrice = this.calculateTotalprice();
@@ -366,7 +268,7 @@ updateQuotation(existingQuotation: AddQuotation) {
 
 
 trackByAddQuotation(index: number, addquotation: Product): string {
-  return addquotation.uom// Return a unique identifier for the product
+  return addquotation.uom
 }
 
 

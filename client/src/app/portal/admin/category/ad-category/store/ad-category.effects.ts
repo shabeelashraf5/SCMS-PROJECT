@@ -28,11 +28,11 @@ export class AdCategoryEffects {
     ofType(AdCategoryActions.addCategory),
     switchMap(({ category }) => {
       console.log('Creating user...');
-      const categories: Partial<Category> = { category }; // Use Partial<User> here
-      return this.adCategoryService.addCategory(categories as Category).pipe( // Cast it back to User
+      const categories: Partial<Category> = { category }; 
+      return this.adCategoryService.addCategory(categories as Category).pipe( 
         map(() => {
           console.log('User created successfully');
-          return AdCategoryActions.loadCategory(); // Trigger a load after create
+          return AdCategoryActions.loadCategory(); 
         }),
         catchError((error) => {
 

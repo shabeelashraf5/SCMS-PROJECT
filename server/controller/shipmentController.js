@@ -15,8 +15,8 @@ const loadInv = async (req, res) => {
         const shipData = await collectionshipment.find({})
         .populate({
             path: 'employee_id',
-            select: 'fname lname', // Specify the fields you want to populate
-            model: 'employee' // Assuming the model name is 'employee'
+            select: 'fname lname', 
+            model: 'employee' 
         })
         .populate({
             path: 'invoice_id',
@@ -66,7 +66,7 @@ const changeStatus = async (req , res) => {
         const shipmentId = req.params.id;
     
         console.log(`Request received to update shipmentId with ID: ${shipmentId}`);
-        // Update the shipment status to 'Delivered'
+       
         await collectionshipment.findByIdAndUpdate(shipmentId, { status: 'Delivered' });
         res.json({ message: 'Shipment status updated successfully' });
       } catch (error) {

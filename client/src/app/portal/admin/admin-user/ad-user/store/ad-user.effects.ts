@@ -27,11 +27,11 @@ export class AdUserEffects {
     ofType(AdUserActions.addAdmin),
     switchMap(({ fname, lname, email, password}) => {
       console.log('Creating user...');
-      const admins: Partial<Admin> = { fname, lname, email, password }; // Use Partial<User> here
-      return this.adUserService.addAdmin(admins as Admin).pipe( // Cast it back to User
+      const admins: Partial<Admin> = { fname, lname, email, password }; 
+      return this.adUserService.addAdmin(admins as Admin).pipe( 
         map(() => {
           console.log('User created successfully');
-          return AdUserActions.loadAdmin(); // Trigger a load after create
+          return AdUserActions.loadAdmin();
         }),
         catchError((error) =>{ 
           

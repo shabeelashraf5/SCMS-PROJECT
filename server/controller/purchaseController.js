@@ -16,7 +16,7 @@ const loadPo = async (req, res) => {
         console.log('Customer ID:', employeeId);
         res.setHeader('Cache-Control', 'no-cache, no-store');
         
-        // Find RFQs based on customerId
+    
         const supplierPO = await purchasePO.find({  employee_id: employeeId }).populate({
             path: 'employee_id',
             select: 'fname lname', 
