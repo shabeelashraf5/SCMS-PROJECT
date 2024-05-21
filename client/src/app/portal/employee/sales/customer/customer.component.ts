@@ -8,12 +8,18 @@ import { Subscription, firstValueFrom } from 'rxjs';
   templateUrl: './customer.component.html',
   styleUrl: './customer.component.css'
 })
+
 export class CustomerComponent implements OnInit, OnDestroy  {
 
 
   clientDetails: AddQuotation[] = [];
   customerSubscription!: Subscription
   uniqueClientNames: Set<string> = new Set();
+  filteredEmployees: AddQuotation[] = [];
+  searchQuery: string = '';
+
+  currentPage: number = 1;
+  itemsPerPage: number = 10;
 
 
 
@@ -32,6 +38,7 @@ export class CustomerComponent implements OnInit, OnDestroy  {
     this.customerSubscription = this.clientService.getClient().subscribe({
       next: (response) =>{
         this.clientDetails = response;
+        this.filteredEmployees = response
         this.extractUniqueClientNames();
         console.log(this.clientDetails);
 
@@ -60,6 +67,15 @@ export class CustomerComponent implements OnInit, OnDestroy  {
       this.customerSubscription.unsubscribe()
     }
     
+  }
+
+  filterEmployees() {
+    const query = this.searchQuery.toLowerCase();
+    this.filteredEmployees = this.clientDetails.filter(emp => 
+      emp.clientname.toLowerCase().includes(query) || 
+      emp.email.toLowerCase().includes(query) 
+    );
+    this.currentPage = 1;
   }
 
 }

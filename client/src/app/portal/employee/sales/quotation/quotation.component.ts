@@ -20,6 +20,10 @@ export class QuotationComponent implements OnInit, OnDestroy {
   _id!: string; 
   employee_id: string = ''
   quotationSubscription!: Subscription
+  filteredEmployees: Quotation[] = [];
+  searchQuery: string = '';
+  currentPage: number = 1;
+  itemsPerPage: number = 10;
 
 
 
@@ -37,6 +41,7 @@ export class QuotationComponent implements OnInit, OnDestroy {
     this.quotationSubscription = this.salesService.getRFQ().subscribe({
       next: (response) =>{
         this.rfqDetails = response; 
+        this.filteredEmployees = response
         console.log(this.rfqDetails);
       },
       error: (error) =>{
@@ -109,6 +114,15 @@ trackByQuotation(index: number, quotation: Quotation): string {
       this.quotationSubscription.unsubscribe()
     }
     
+  }
+
+  filterEmployees() {
+    const query = this.searchQuery.toLowerCase();
+    this.filteredEmployees = this.rfqDetails.filter(emp => 
+      emp.srfq.toLowerCase().includes(query) 
+   
+    );
+    this.currentPage = 1;
   }
 
   openSnackBar(message: string) {

@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { environment } from '../../../../../environment/environment';
 
 @Injectable({
@@ -6,5 +8,12 @@ import { environment } from '../../../../../environment/environment';
 })
 export class FinancialReportService {
 
-  constructor() { }
+  private apiUrl = environment.apiUrl + '/api/portal/accounting';
+
+  constructor(private http: HttpClient) { }
+
+  getInv() {
+    return this.http.get<any>(`${this.apiUrl}/financial-reports`);
+  }
+
 }

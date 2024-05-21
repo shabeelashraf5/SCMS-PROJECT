@@ -36,6 +36,8 @@ export class MessageComponent implements OnInit,  AfterViewChecked,  OnDestroy {
   showToastr: boolean = false;
   onlineUsers = new Map<string, boolean>();
   messageSubscription!: Subscription
+  filteredEmployees: Employee[] = [];
+  searchQuery: string = '';
   
 
   constructor(  private employeeService: MessageService, private authService:  EmployeeLoginService , private toastr: ToastrService  ) {}
@@ -125,6 +127,7 @@ export class MessageComponent implements OnInit,  AfterViewChecked,  OnDestroy {
       next: (response) => {
         if (Array.isArray(response)) {
           this.employeeProfile = response;
+          this.filteredEmployees = response;
         } else {
          
           console.error('Expected an array of Employee, but got:', response);
@@ -244,6 +247,15 @@ ngOnDestroy()  {
     this.messageSubscription.unsubscribe()
   }
   
+}
+
+filterEmployees() {
+  const query = this.searchQuery.toLowerCase();
+  this.filteredEmployees = this.employeeProfile.filter(emp => 
+    emp.fname.toLowerCase().includes(query) || 
+    emp.lname.toLowerCase().includes(query) || 
+    emp.position.toLowerCase().includes(query)
+  );
 }
 
 

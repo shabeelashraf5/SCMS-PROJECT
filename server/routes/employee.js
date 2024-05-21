@@ -33,4 +33,6 @@ router.put('/logout',  employeeController.EmployeeLogOut)
 router.put('/mark-as-seen', verifyToken, employeeController.markMessageAsSeen);
 
 
+
+
 module.exports = router;

@@ -74,6 +74,14 @@ import { AdmDashboardComponent } from './portal/admin/adm-dashboard/adm-dashboar
 
 import { AdminLoginService } from './portal/admin/adminlogin/admin-login/admin-login.service';
 import { EmployeeLoginService } from './portal/employee/employeelogin/employee-login/employee-login.service';
+import { SuccessPaymentComponent } from './portal/employee/accounting/success-payment/success-payment.component';
+import { NotFoundComponent } from './layouts/not-found/not-found.component';
+import { ExcelComponent } from './layouts/excel/excel.component';
+import { NgxPaginationModule } from 'ngx-pagination';
+
+
+
+
 
 
 @NgModule({
@@ -120,6 +128,11 @@ import { EmployeeLoginService } from './portal/employee/employeelogin/employee-l
     ChatComponent,
     MessageComponent,
     AdmDashboardComponent,
+    SuccessPaymentComponent,
+    NotFoundComponent,
+    ExcelComponent,
+    
+    
     
 
     
@@ -134,7 +147,7 @@ import { EmployeeLoginService } from './portal/employee/employeelogin/employee-l
     HttpClientModule,
     PlotlyViaCDNModule,
     ToastrModule.forRoot(),
-    
+    NgxPaginationModule,
     StoreModule.forRoot(appReducer),
     EffectsModule.forRoot([AdUserEffects, AdminLoginEffects, AdEmployeeEffects, EmployeeLoginEffects,
     AdCategoryEffects, AdProductEffects, EmDashboardEffects,  ProfileEffects, InventoryEffects]),

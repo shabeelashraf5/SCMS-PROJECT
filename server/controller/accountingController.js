@@ -259,7 +259,7 @@ const paymentSup = async function (req, res) {
                 quantity: 1,
             }],
             mode: 'payment',
-            success_url: `${process.env.URLs}/portal/accounting/financial-transaction?session_id={CHECKOUT_SESSION_ID}`,
+            success_url: `${process.env.URLs}/portal/success?session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: `${process.env.URLs}/portal/accounting/financial-transaction`,
            
             customer_email: 'test@example.com', 
@@ -335,6 +335,54 @@ const stripeWebHook = async (req,res) => {
 }
 
 
+const loadReport = async (req, res) => {
+    try {
+        const employeeId = req.userData.userId;
+        console.log('Customer ID:', employeeId);
+        res.setHeader('Cache-Control', 'no-cache, no-store');
+        
+        const invData = await invoicing.find({})
+            .populate({
+                path: 'employee_id',
+                select: 'fname lname', 
+                model: 'employee' 
+            })
+            .populate({
+                path: 'purchase_id',
+                select: 'totalAmount to payment po_id',
+                populate: {
+                    path: 'po_id',
+                    model: 'purchase-po',
+                    select: 'po quotation_id',
+                    populate: {
+                        path: 'quotation_id',
+                        model: 'quotation',
+                        select: 'salesRFQ_id clientname totalAmount totalprice clientPo subject payment',
+                        populate: {
+                            path: 'salesRFQ_id',
+                            model: 'sales-rfq',
+                            select: 'srfq'
+                        }
+                    }
+                }
+            })
+            .exec();
+        
+        console.log('invData:', invData);
+
+        if (!invData || invData.length === 0) { 
+            return res.status(404).json({ error: 'No invData found' });
+        }
+
+        res.json(invData);
+    } catch (error) {
+        console.error('Error fetching invData:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
+
+
 
 module.exports = {
 
@@ -346,7 +394,8 @@ module.exports = {
     paymentSup,
     createPaymentSession,
     confirmPayment,
-    stripeWebHook 
+    stripeWebHook,
+    loadReport
 
 
 }

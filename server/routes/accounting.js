@@ -23,6 +23,8 @@ router.put('/:id/pay', verifyToken , accountingController.confirmPayment)
 
 router.post('/webhook/stripe', accountingController.stripeWebHook)
 
+router.get('/financial-reports', verifyToken , checkRole , accountingController.loadReport)
+
 
 
 module.exports = router;

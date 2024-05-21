@@ -10,6 +10,7 @@ const chatMessage = require('../model/chatDB')
 
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
+const IEX_CLOUD_TOKEN = 'sk_3502d53928e54236acd1790fdb07ed76';
 
 
 
@@ -452,6 +453,9 @@ const markMessageAsSeen = async (req, res) => {
 
 
 
+
+
+
 module.exports = {
 
     employeeLogin,
@@ -467,6 +471,7 @@ module.exports = {
     loadChat,
     EmployeeLogOut,
     refreshToken,
-    markMessageAsSeen
+    markMessageAsSeen,
+    
 
 }

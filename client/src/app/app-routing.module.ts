@@ -37,6 +37,11 @@ import { ClientPoComponent } from './portal/employee/sales/client-po/client-po.c
 import { VideoChatComponent } from './layouts/video-chat/video-chat.component';
 import { ChatComponent } from './layouts/chat/chat.component';
 import { MessageComponent } from './layouts/message/message.component';
+import { SuccessPaymentComponent } from './portal/employee/accounting/success-payment/success-payment.component';
+import { NotFoundComponent } from './layouts/not-found/not-found.component';
+import { ExcelComponent } from './layouts/excel/excel.component';
+
+
 
 
 const routes: Routes = [
@@ -85,7 +90,7 @@ const routes: Routes = [
   { path: 'portal/accounting/invoicing' , loadChildren: () => import('./portal/employee/accounting/invoicing/invoicing.module').then( m => m.InvoicingModule)},
   { path: 'portal/accounting/invoicing/:id' , loadChildren: () => import('./portal/employee/accounting/invoice-details/invoice-details.module').then( m => m.InvoiceDetailsModule) },
   { path: 'portal/accounting/financial-transaction' , loadChildren: () => import('./portal/employee/accounting/financial-transaction/financial-transaction.module').then( m => m.FinancialTransactionModule)  },
-  //{ path: 'portal/accounting/financial-reports' , component: FinancialReportComponent, canActivate: [CanEmployeeLogged] },
+  { path: 'portal/accounting/financial-reports' , component: FinancialReportComponent, canActivate: [CanEmployeeLogged] },
   { path: 'portal/accounting/financial-transaction/:id' , loadChildren: () => import('./portal/employee/accounting/payment/payment.module').then( m => m.PaymentModule) },
   
   //{ path: 'success' , component: SuccessComponent,  canActivate:  [CanEmployeeLogged] },
@@ -98,7 +103,13 @@ const routes: Routes = [
 
   { path: 'portal/messenger', loadChildren: () => import('./layouts/message/message.module').then( m => m.MessageModule) },
 
- // { path: 'chat', component: ChatComponent,  canActivate:  [CanEmployeeLogged] }
+  { path: 'portal/success' , component: SuccessPaymentComponent, canActivate: [CanEmployeeLogged] },
+
+  { path: '**', component: NotFoundComponent, canActivate: [CanEmployeeLogged] },
+
+
+
+
 
 ];
 

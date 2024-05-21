@@ -21,6 +21,11 @@ export class FinancialTransactionComponent implements OnInit, OnDestroy {
   purchase_id: string =''
   errorMessage: string = '';
   ftSubscription!:  Subscription
+  filteredEmployees: Invoice[] = [];
+  searchQuery: string = '';
+
+  currentPage: number = 1;
+  itemsPerPage: number = 10;
 
 
   constructor(private transactionService: FinancialTransactionService, private router: Router) { }
@@ -52,6 +57,7 @@ export class FinancialTransactionComponent implements OnInit, OnDestroy {
     this.ftSubscription = this.transactionService.getTrans().subscribe({
       next: (response) => {
         this.invDetails = response;
+        this.filteredEmployees = response
         console.log(this.invDetails);
       },error: (error) => {
         console.error(error);
@@ -113,6 +119,18 @@ export class FinancialTransactionComponent implements OnInit, OnDestroy {
     if(this.ftSubscription){
       this.ftSubscription.unsubscribe()
     }
+  }
+
+  filterEmployees() {
+    const query = this.searchQuery.toLowerCase();
+    this.filteredEmployees = this.invDetails.filter(emp => 
+      emp.invoice.toLowerCase().includes(query) || 
+      emp.transaction.toLowerCase().includes(query) || 
+      this.getResponsible(emp).toLowerCase().includes(query) || 
+      emp.purchase_id.po_id.po.toLowerCase().includes(query) ||
+      emp.purchase_id.po_id.quotation_id.salesRFQ_id.srfq.toLowerCase().includes(query) 
+    );
+    this.currentPage = 1;
   }
 
 }

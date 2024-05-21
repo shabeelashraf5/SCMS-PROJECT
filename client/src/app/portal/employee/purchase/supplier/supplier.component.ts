@@ -13,6 +13,11 @@ export class SupplierComponent implements OnInit, OnDestroy {
 
   supplierDetails: AddPo[] =[]
   supplierSubscription!: Subscription
+  filteredEmployees: AddPo[] = [];
+  searchQuery: string = '';
+
+  currentPage: number = 1;
+  itemsPerPage: number = 10;
 
 
   constructor(private supplierService: SupplierService ) { }
@@ -31,6 +36,7 @@ export class SupplierComponent implements OnInit, OnDestroy {
     this.supplierSubscription = this.supplierService.getSupplier().subscribe({
       next: (response) =>{
         this.supplierDetails = response; 
+        this.filteredEmployees = response
         console.log(this.supplierDetails);
       },
       error: (error) =>{
@@ -51,6 +57,15 @@ export class SupplierComponent implements OnInit, OnDestroy {
     if(this.supplierSubscription){
       this.supplierSubscription.unsubscribe()
     }
+  }
+
+  filterEmployees() {
+    const query = this.searchQuery.toLowerCase();
+    this.filteredEmployees = this.supplierDetails.filter(emp => 
+      emp.to.toLowerCase().includes(query) || 
+      emp.email.toLowerCase().includes(query) 
+    );
+    this.currentPage = 1;
   }
 
 }

@@ -55,9 +55,9 @@ export class EmployeeSbComponent implements OnInit {
       case '/portal/accounting':
         case '/portal/accounting/invoicing':
           case '/portal/accounting/financial-transaction':
-           // case '/portal/accounting/financial-reports':
+            case '/portal/accounting/financial-reports':
          
-        this.sidebarItems = ['Invoicing', 'Financial Transaction' ];
+        this.sidebarItems = ['Invoicing', 'Financial Transaction', 'Sales Reports' ];
         break;
       default:
         this.sidebarItems = [];
@@ -92,7 +92,7 @@ export class EmployeeSbComponent implements OnInit {
         return '/portal/accounting/invoicing';
       case 'Financial Transaction':
         return '/portal/accounting/financial-transaction';
-      case 'Financial Reports':
+      case 'Sales Reports':
         return '/portal/accounting/financial-reports';
       default:
         return '/';

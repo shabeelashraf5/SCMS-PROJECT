@@ -19,6 +19,11 @@ export class InvoicingComponent implements OnInit, OnDestroy  {
   purchase_id: string =''
   errorMessage: string = '';
   invoicingSubscription! : Subscription
+  filteredEmployees: Invoice[] = [];
+  searchQuery: string = '';
+
+  currentPage: number = 1;
+  itemsPerPage: number = 10;
 
 
 
@@ -50,6 +55,7 @@ getInvDetails() {
   this.invoicingSubscription = this.invoiceService.getInv().subscribe({
     next: (response) => {
       this.invDetails = response; 
+      this.filteredEmployees = response
       console.log(this.invDetails);
     },
     error: (error) => {
@@ -105,6 +111,17 @@ getInvDetails() {
       this.invoicingSubscription.unsubscribe()
     }
     
+  }
+
+  filterEmployees() {
+    const query = this.searchQuery.toLowerCase();
+    this.filteredEmployees = this.invDetails.filter(emp => 
+      emp.invoice.toLowerCase().includes(query) || 
+      this.getResponsible(emp).toLowerCase().includes(query) || 
+      emp.purchase_id.po_id.po.toLowerCase().includes(query) ||
+      emp.purchase_id.po_id.quotation_id.salesRFQ_id.srfq.toLowerCase().includes(query) 
+    );
+    this.currentPage = 1;
   }
   
 

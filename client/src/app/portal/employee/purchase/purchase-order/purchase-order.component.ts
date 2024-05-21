@@ -22,6 +22,12 @@ export class PurchaseOrderComponent implements OnInit, OnDestroy {
   _id!: string; 
   employee_id: string = ''
   purchaseOrderSubscription!: Subscription
+  filteredEmployees: Po[] = [];
+  searchQuery: string = '';
+
+  
+  currentPage: number = 1;
+  itemsPerPage: number = 10;
 
 
   constructor(private purchaseService:PurchaseOrderService, private router: Router) { }
@@ -38,6 +44,7 @@ getPoDetails() {
   this.purchaseOrderSubscription = this.purchaseService.getPo().subscribe({
     next: (response) =>{
       this.poDetails = response; 
+      this.filteredEmployees = response
       console.log(this.poDetails);
     },
     error: (error) =>{
@@ -87,5 +94,17 @@ ngOnDestroy() {
     this.purchaseOrderSubscription.unsubscribe()
   } 
 }
+
+filterEmployees() {
+  const query = this.searchQuery.toLowerCase();
+  this.filteredEmployees = this.poDetails.filter(emp => 
+    emp.po.toLowerCase().includes(query) 
+  );
+  this.currentPage = 1;
+}
+
+
+
+
 
 }

@@ -23,6 +23,10 @@ export class SalesOrderComponent implements OnInit, OnDestroy {
   quotation_id: string =''
   confirmedQuotations: Set<string> = new Set();
   salesOrderSubscription!: Subscription
+  filteredEmployees: AddQuotation[] = [];
+  searchQuery: string = '';
+  currentPage: number = 1;
+  itemsPerPage: number = 10;
   
 
   constructor(private salesOrderService :  SalesOrderService,  private snackBar: MatSnackBar, private router: Router  ) { }
@@ -41,6 +45,7 @@ export class SalesOrderComponent implements OnInit, OnDestroy {
    this.salesOrderSubscription =  this.salesOrderService.getSPO().subscribe({
       next: (response) =>{
         this.spoDetails = response; 
+        this.filteredEmployees = response
         console.log('SPO Details:', this.spoDetails);
       },
       error: (error) => {
@@ -124,6 +129,18 @@ getSrfq(quotation: Quotation): string {
       this.salesOrderSubscription.unsubscribe()
     }
     
+  }
+
+  filterEmployees() {
+    const query = this.searchQuery.toLowerCase();
+    this.filteredEmployees = this.spoDetails.filter(emp => 
+      emp.clientname.toLowerCase().includes(query) || 
+      emp.email.toLowerCase().includes(query) ||
+      emp.spo.toLowerCase().includes(query) ||
+      emp.clientname.toLowerCase().includes(query) ||
+      emp.clientPo.toLowerCase().includes(query)
+    );
+    this.currentPage = 1;
   }
 
 }

@@ -16,6 +16,11 @@ export class ShipmentHistoryComponent implements OnInit, OnDestroy {
   shipmentDetails: Shipment[] = []
   confirmedDelivery: Set<string> = new Set();
   shipmentSubscription!: Subscription
+  filteredEmployees: Shipment[]  = [];
+  searchQuery: string = '';
+  currentPage: number = 1;
+  itemsPerPage: number = 10;
+ 
 
   constructor(private shipmentService: ShipmentHistoryService, private snackBar: MatSnackBar, ) { }
 
@@ -32,6 +37,7 @@ export class ShipmentHistoryComponent implements OnInit, OnDestroy {
     this.shipmentSubscription = this.shipmentService.getShip().subscribe({
       next: (response) => {
         this.shipmentDetails = response
+        this.filteredEmployees = response
         console.log(this.shipmentDetails)
       },
       error: (error) =>{
@@ -138,6 +144,18 @@ confirmDelivery(shipmentId: string) {
     if (this.shipmentSubscription) {
       this.shipmentSubscription.unsubscribe();
     }
+  }
+
+  filterEmployees() {
+    const query = this.searchQuery.toLowerCase();
+    this.filteredEmployees = this.shipmentDetails.filter(emp => 
+      emp.shipment.toLowerCase().includes(query) ||
+      emp.invoice_id.invoice.toLowerCase().includes(query) ||
+      emp.invoice_id.delivery.toLowerCase().includes(query) ||
+      emp.invoice_id.delivery.toLowerCase().includes(query) ||
+      this.getResponsible(emp).toLowerCase().includes(query)
+    );
+    this.currentPage = 1;
   }
 
 }

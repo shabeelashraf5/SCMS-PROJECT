@@ -4,10 +4,8 @@
 <main class="w-full sm:w-3/4 p-4 ml-0 sm:ml-80 ">
 
      
-    <div class="card card-side bg-base-100 shadow-xl mt-20 ">
-
         
-            <div class="card w-96 bg-base-100 shadow-xl">
+            <div class="card w-96 bg-base-300 shadow-xl mt-16 ml-60">
               <figure class="px-10 pt-10">
                 <img [src]="getImageUrl(employeeProfile.image)" alt="Shoes" class="rounded-full w-48 h-48 mx-auto"  onclick="my_modal_3.showModal()" style="cursor: pointer;" />
               </figure>
@@ -64,6 +62,7 @@
               <div class="card-body items-center text-center">
                 <h2 class="card-title">{{ employeeProfile.fname }} {{ employeeProfile.lname }} </h2>
                 <p>{{ employeeProfile.position  }}</p>
+                <p class="mt-5">{{ employeeProfile.email  }}</p>
                 <div class="card-actions">
     
                 </div>
@@ -72,14 +71,8 @@
           </div>
           
        
-    
-            <div class="card-body ">
-                <h2 class="card-title ">Professional Details</h2>
-                <p>Area: <span class="font-semibold mt-5">{{ employeeProfile.area  }}</span></p>
-                <p>Department: <span class="font-semibold">{{ employeeProfile.department }}</span></p>
-                <p>Email: <span class="font-semibold">{{ employeeProfile.email }}</span></p>
-              </div>
-      </div>
+       
+         
 
 </main>
 

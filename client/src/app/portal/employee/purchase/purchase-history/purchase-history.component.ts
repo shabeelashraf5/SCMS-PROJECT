@@ -24,6 +24,11 @@ export class PurchaseHistoryComponent implements OnInit, OnDestroy {
   employee_id: string = ''
   confirmedPurchase: Set<string> = new Set();
   purchaseHistorySubscription!: Subscription
+  filteredEmployees: AddPo[] = [];
+  searchQuery: string = '';
+
+  currentPage: number = 1;
+  itemsPerPage: number = 10;
  
   
   constructor(private purchaseHistoryService :  PurchaseHistoryService, private snackBar: MatSnackBar, private router: Router  ) { }
@@ -42,6 +47,7 @@ getClientDetails(){
   this.purchaseHistorySubscription = this.purchaseHistoryService.getpurchase().subscribe({
     next: (response) =>{
       this.purchaseDetails = response;
+      this.filteredEmployees = response
        console.log(this.purchaseDetails);
     },
     error: (error) =>{
@@ -133,6 +139,19 @@ createInv(purchaseId: string) {
       this.purchaseHistorySubscription.unsubscribe()
     }
   }
+
+
+  filterEmployees() {
+    const query = this.searchQuery.toLowerCase();
+    this.filteredEmployees = this.purchaseDetails.filter(emp => 
+      emp.to.toLowerCase().includes(query) || 
+      emp.po_id.po.toLowerCase().includes(query) || 
+      emp.po_id.quotation_id.salesRFQ_id.srfq.toLowerCase().includes(query)
+    );
+    this.currentPage = 1;
+  }
+
+  
 
 
 }
