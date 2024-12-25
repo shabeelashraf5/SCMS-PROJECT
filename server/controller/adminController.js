@@ -60,6 +60,7 @@ const adminLogin = async (req, res) => {
         console.log('Generated JWT Token:', admin, token);
 
         res.status(200).json({ message: 'Authentication successful', admin, token });
+        
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Server error' });
