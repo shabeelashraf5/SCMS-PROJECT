@@ -1,9 +1,9 @@
 <app-employee-nb></app-employee-nb> 
 
-<div class="flex flex-col items-center bg-base-300 justify-center min-h-screen">
+<div class="flex flex-col items-center bg-base-300 min-h-screen">
   <!-- <main class="sm:w-3/4 p-4"> -->
-    <main class="sm:w-3/4 p-4">
-  <form (submit)="onSubmit()" #messageForm="ngForm" class="max-w-full max-w-xl relative">
+    <main class="sm:w-3/4 p-4 md:ml-96 ">
+  <form (submit)="onSubmit()" #messageForm="ngForm" class="max-w-full max-w-xl mt-20 md:mt-24">
     <div class="relative ">
         <input type="text" name="message" id="message" [(ngModel)]="message"  placeholder="Start a post ..." class="input input-bordered w-full" style="height: 100px;">
         <button class="btn btn-outline btn-sm absolute top-12 right-0 mt-2 sm:mt-0 sm:ml-2" type="submit" [disabled]="!message.trim()">Submit</button>
@@ -49,6 +49,8 @@
 
   
 </div>
+
+
   
     
    
