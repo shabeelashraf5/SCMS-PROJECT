@@ -10,10 +10,12 @@ import { environment } from '../../../../../environment/environment';
   templateUrl: './employee-sb.component.html',
   styleUrl: './employee-sb.component.css'
 })
+
 export class EmployeeSbComponent implements OnInit {
 
   sidebarItems : string[] = [];
   socket!: Socket;
+  isSidebarVisible: boolean = false;
 
   constructor(private authService: EmployeeLoginService, private router: Router ) { }
 
@@ -101,6 +103,11 @@ export class EmployeeSbComponent implements OnInit {
 
   trackBysideBar(index: number, sidebar: string): string {
     return sidebar;
+  }
+
+
+  toggleSidebar(): void {
+    this.isSidebarVisible = !this.isSidebarVisible;
   }
 
 

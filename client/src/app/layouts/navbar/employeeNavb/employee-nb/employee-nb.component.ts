@@ -26,6 +26,7 @@ export class EmployeeNbComponent implements OnInit, OnDestroy  {
   isImageSelected: boolean = false;
   socket!: Socket;
   emSubscription!: Subscription
+  isNavbarOpen: boolean = false;
 
 
   constructor(private pService: ProfileService, private authService: EmployeeLoginService, private router: Router ) {}
