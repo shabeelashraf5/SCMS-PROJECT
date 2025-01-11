@@ -111,21 +111,21 @@ export class EmployeeSbComponent implements OnInit {
   }
 
 
-  logout(): void {
+//   logout(): void {
     
-    let employeeId =  this.authService.getLoggedInEmployeeId()
+//     let employeeId =  this.authService.getLoggedInEmployeeId()
     
-    if (employeeId) {
-      this.authService.logout(employeeId);
-    } else {
-      console.error('EmployeeId is null or undefined');
-    }
+//     if (employeeId) {
+//       this.authService.logout(employeeId);
+//     } else {
+//       console.error('EmployeeId is null or undefined');
+//     }
 
-    this.socket.disconnect();
-    this.router.navigate(['/employee-login']);
+//     this.socket.disconnect();
+//     this.router.navigate(['/employee-login']);
 
   
-}
+// }
 
 
 

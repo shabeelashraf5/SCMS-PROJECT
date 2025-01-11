@@ -26,7 +26,11 @@ export class EmployeeNbComponent implements OnInit, OnDestroy  {
   isImageSelected: boolean = false;
   socket!: Socket;
   emSubscription!: Subscription
-  isNavbarOpen: boolean = false;
+  isNavbarOpen: boolean = false
+  sidebarItems : string[] = [];
+  isSidebarVisible: boolean = false;
+
+  isSidebarOpen: boolean = false
 
 
   constructor(private pService: ProfileService, private authService: EmployeeLoginService, private router: Router ) {}
@@ -34,6 +38,7 @@ export class EmployeeNbComponent implements OnInit, OnDestroy  {
 
   ngOnInit(): void {
     this.loadProfile();
+    this.updateSidebarItems();
 
     this.socket = io( environment.apiUrl + '/user-namespace');
     this.socket.on('disconnect', () => {
@@ -42,9 +47,6 @@ export class EmployeeNbComponent implements OnInit, OnDestroy  {
    
    
   }
-
- 
- 
 
   loadProfile() {
 
@@ -85,6 +87,87 @@ logout() {
   } else {
     console.error('Employee ID is null');
   }
+}
+
+updateSidebarItems() {
+  const currentRoute = this.router.url;
+  switch(currentRoute) {
+    case '/portal/sales':
+      case '/portal/sales/customer':
+        case '/portal/sales/quotations':
+          case '/portal/sales/sales-order':
+            case '/portal/sales/sales-analysis':
+      this.sidebarItems = ['Customer', 'Quotations', 'Sales Order', 'Sales Analysis'];
+      break;
+    case '/portal/purchase':
+      case '/portal/purchase/supplier':
+        case '/portal/purchase/purchase-order':
+          case '/portal/purchase/vendor-evaluation':
+            case '/portal/purchase/purchase-history':
+      this.sidebarItems = ['Supplier', 'Purchase Order', 'Purchase History'];
+      break;
+    case '/portal/warehouse':
+      case '/portal/warehouse/inventory-list':
+      this.sidebarItems = ['Inventory List'];
+      break;
+    case '/portal/shipment':
+      case '/portal/shipment/shipment-history':
+      this.sidebarItems = ['Shipment History'];
+      break;
+    case '/portal/accounting':
+      case '/portal/accounting/invoicing':
+        case '/portal/accounting/financial-transaction':
+          case '/portal/accounting/financial-reports':
+       
+      this.sidebarItems = ['Invoicing', 'Financial Transaction', 'Sales Reports' ];
+      break;
+    default:
+      this.sidebarItems = [];
+  }
+}
+
+
+
+getRoute(item: string): string {
+  switch (item) {
+    case 'Customer':
+      return '/portal/sales/customer';
+    case 'Quotations':
+      return '/portal/sales/quotations';
+    case 'Sales Order':
+      return '/portal/sales/sales-order';
+    case 'Sales Analysis':
+      return '/portal/sales/sales-analysis';
+    case 'Supplier':
+      return '/portal/purchase/supplier';
+    case 'Purchase Order':
+      return '/portal/purchase/purchase-order';
+    case 'Purchase History':
+      return '/portal/purchase/purchase-history';
+    case 'Vendor Evaluation':
+      return '/portal/purchase/vendor-evaluation';
+    case 'Inventory List':
+      return '/portal/warehouse/inventory-list';
+    case 'Shipment History':
+      return '/portal/shipment/shipment-history';
+    case 'Invoicing':
+      return '/portal/accounting/invoicing';
+    case 'Financial Transaction':
+      return '/portal/accounting/financial-transaction';
+    case 'Sales Reports':
+      return '/portal/accounting/financial-reports';
+    default:
+      return '/';
+  }
+}
+
+trackBysideBar(index: number, sidebar: string): string {
+  return sidebar;
+}
+
+
+toggleSidebar(): void {
+  this.isSidebarVisible = !this.isSidebarVisible;
 }
 
 
