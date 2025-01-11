@@ -1,10 +1,10 @@
 <app-employee-nb></app-employee-nb> 
 <app-employee-sb></app-employee-sb>
 
-<!-- <main class="w-full sm:w-3/4 p-4 ml-[450px] mt-10">
+<main class="w-full sm:w-3/4 p-4 md:ml-[450px] mt-10">
 
 
-  <form (submit)="onSubmit()" #messageForm="ngForm"  class="max-w-full sm:max-w-2xl relative">
+  <form (submit)="onSubmit()" #messageForm="ngForm"  class="max-w-full md:max-w-2xl relative">
     <div class="relative ">
         <input type="text"  name="message" id="message" [(ngModel)]="message"  placeholder="Start a post ..." class="input input-bordered w-full" style="height: 100px;">
         <button class="btn btn-outline btn-sm absolute top-12 right-0 mt-2 sm:mt-0 sm:ml-2" type="submit" [disabled]="!message.trim()">Submit</button>
@@ -12,7 +12,7 @@
 </form>
 
 
-<div *ngFor="let message of messages$ | async; trackBy: trackByDashboard" class="flex flex-col max-w-lg p-6 space-y-6 overflow-hidden rounded-lg shadow-md bg-base-300 text-white-800 relative mt-4 ml-20 ">
+<div *ngFor="let message of messages$ | async; trackBy: trackByDashboard" class="flex flex-col md:max-w-2xl p-6 space-y-6 overflow-hidden rounded-lg shadow-md bg-base-300 text-white-800 relative mt-4 ">
   
 	<div class="flex space-x-4">
 		<img alt=""  [src]="getImageUrl(getImage(message.employee_id))" class="object-cover w-12 h-12 rounded-full shadow bg-gray-500">
@@ -55,4 +55,4 @@
 
   
     
-    -->
+   
