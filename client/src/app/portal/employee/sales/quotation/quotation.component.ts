@@ -23,7 +23,7 @@ export class QuotationComponent implements OnInit, OnDestroy {
   filteredEmployees: Quotation[] = [];
   searchQuery: string = '';
   currentPage: number = 1;
-  itemsPerPage: number = 10;
+  itemsPerPage: number = 5;
 
 
 
