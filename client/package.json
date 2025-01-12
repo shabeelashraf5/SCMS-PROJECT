@@ -31,6 +31,7 @@
     "angular-plotly.js": "^5.2.2",
     "buffer": "^6.0.3",
     "chart.js": "^4.4.2",
+    "flowbite": "^2.5.2",
     "highcharts": "^11.4.0",
     "html2pdf.js": "^0.10.1",
     "jspdf": "^2.5.1",
