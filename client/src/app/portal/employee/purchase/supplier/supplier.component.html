@@ -2,14 +2,13 @@
 <app-employee-sb></app-employee-sb>
 
 
-<main class="w-full sm:w-3/4 p-4 ml-0 sm:ml-80 ">
+<!-- <main class="w-full sm:w-3/4 p-4 ml-0 sm:ml-80 ">
 
 
       <p class="mt-10 text-lg font-bold">Supplier Directory</p>
 
       <div class="divider"></div> 
     
-      <!-- Open the modal using ID.showModal() method -->
       
       <label class="input input-bordered flex items-center gap-2 mt-5">
         <input type="text" class="grow" placeholder="Search" [(ngModel)]="searchQuery" (input)="filterEmployees()"   />
@@ -19,7 +18,7 @@
      
       <div class="overflow-x-auto">
         <table class="table">
-          <!-- head -->
+     
           <thead>
             <tr >
               <th>
@@ -36,7 +35,7 @@
             </tr>
           </thead>
           <tbody *ngIf="supplierDetails.length > 0">
-            <!-- row 1 -->
+          
             <tr  *ngFor="let detail of filteredEmployees | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage }; trackBy: trackBySupplier" >
               <th>
                 
@@ -68,7 +67,7 @@
               </td>
             </tr>
           </tbody>
-          <!-- foot -->
+         
           <tfoot>
             <tr>
               <th></th>
@@ -87,4 +86,68 @@
 
       <pagination-controls  (pageChange)="currentPage = $event"></pagination-controls>
     
-    </main>
+    </main> -->
+
+    <div class="p-4 sm:ml-64 bg-slate-900 min-h-screen">
+      <div class="p-4 mt-14 relative">
+    
+        <p class="mt-10 text-lg font-bold">Supplier Directory</p>
+        <div class="divider"></div> 
+    
+        <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+        <div class="relative">
+            <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                </svg>
+            </div>
+            <input [(ngModel)]="searchQuery" (input)="filterEmployees()" type="search" id="default-search" class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search ..." required />
+            <button type="submit" class="text-white absolute end-2.5 bottom-2.5 bg-slate-900 border border-slate-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 hover:bg-slate-800 dark:focus:ring-blue-800">Search</button>
+        </div>
+    
+    <div class="relative overflow-x-auto shadow-md border border-slate-600 sm:rounded-lg mt-5">
+      <table class="w-full text-sm text-left rtl:text-right text-gray-200 ">
+          <thead class="text-xs text-center text-gray-4 00 sm:rounded-lg uppercase bg-slate-900 border border-slate-600">
+              <tr >
+                  <th scope="col" class="px-6 py-3">
+                      Supplier
+                  </th>
+                  <th scope="col" class="px-6 py-3">
+                      Email
+                  </th>
+                  <th scope="col" class="px-6 py-3">
+                      Contact
+                  </th>
+                  <th scope="col" class="px-6 py-3">
+                      Payment Method
+                  </th>
+              </tr>
+          </thead>
+          <tbody *ngIf="supplierDetails.length > 0">
+              <tr *ngFor="let detail of filteredEmployees | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage }; trackBy: trackBySupplier"  class="text-center odd:bg-slate-800 even:bg-slate-900 border-b border-slate-600">
+                  <th scope="row" class="px-6 py-4 font-medium text-gray-400 text-semibold whitespace-nowrap ">
+                    {{detail.to}}
+                  </th>
+                  <td class="px-6 py-4 text-gray-400">
+                    {{detail.email}}
+                  </td>
+                  <td class="px-6 py-4 text-gray-400">
+                    {{ detail.phone }}
+                  </td>
+                  <td class="px-6 py-4 text-gray-400">
+                    {{ detail.payment }}  
+                  </td>
+              </tr>
+          </tbody>
+          <tbody *ngIf="supplierDetails.length === 0">
+            <tr>
+              <td colspan="5" class="text-3xl text-center font-bold text-gray-600 h-20">
+                No Data
+              </td>
+            </tr>
+          </tbody>
+      </table>
+    </div>
+    </div>
+    <pagination-controls (pageChange)="currentPage = $event"></pagination-controls>
+    </div>
