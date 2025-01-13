@@ -28,5 +28,10 @@ export class ProfileService {
   }
 
 
+  topHeading():Observable<any> { 
+    return this.http.get(`${this.apiUrl}/news`);
+  }
+
+
 } 
 

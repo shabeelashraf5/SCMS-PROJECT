@@ -32,6 +32,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   selectedFile!: File; 
   profileSubscription!: Subscription
 
+
   @ViewChild('my_modal_2') modal2!: ElementRef;
 
 

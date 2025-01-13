@@ -12,6 +12,8 @@ const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 const IEX_CLOUD_TOKEN = 'sk_3502d53928e54236acd1790fdb07ed76';
 
+const axios = require('axios');
+
 
 
 //EmployeeLogin
@@ -451,6 +453,24 @@ const markMessageAsSeen = async (req, res) => {
 };
 
 
+const getNews = async (req, res) => {
+
+    const API_URL = "https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=f3a22c5477ad4773bc040e8631bd004d";
+  
+    try {
+      const response = await axios.get(API_URL);
+    
+      res.status(200).json(response.data.articles);
+    } catch (error) {
+      res
+        .status(500)
+        .json({
+          message: 'News not found or error fetching News data',
+          error: error.message,
+        });
+    }
+  };
+
 
 
 
@@ -472,6 +492,6 @@ module.exports = {
     EmployeeLogOut,
     refreshToken,
     markMessageAsSeen,
-    
+    getNews
 
 }

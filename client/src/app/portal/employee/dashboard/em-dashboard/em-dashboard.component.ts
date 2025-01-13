@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnInit, AfterViewInit } from '@angular/core';
 import { Store, select  } from '@ngrx/store';
 import { AppState } from '../../../../state/app.state';
 import * as EmMessagingActions from '../em-dashboard/store/em-dashboard.action';
@@ -8,6 +8,8 @@ import { Employee } from '../../../../model/ad-employee.model';
 import { EmployeeLoginService } from '../../employeelogin/employee-login/employee-login.service';
 import mongoose from 'mongoose';
 import { environment } from '../../../../../environment/environment';
+import { ProfileService } from '../../profile/profile/profile.service';
+import { SalesAnalysisComponent } from '../../sales/sales-analysis/sales-analysis.component';
 
 
 
@@ -17,13 +19,18 @@ import { environment } from '../../../../../environment/environment';
   styleUrl: './em-dashboard.component.css'
 })
 
-export class EmDashboardComponent implements OnInit {
+export class EmDashboardComponent implements OnInit, AfterViewInit {
+
+  @ViewChild(SalesAnalysisComponent,  { static: false }) child!: SalesAnalysisComponent
 
   _id: string = ''
   message: string = '';
   employee_id: string = '';
   date!: Date
   loggedInEmployeeId: string | undefined;
+  employeeProfile!: Employee;
+  articles: any[] = []
+  displayedArticles: any[] = []
 
   canDelete: boolean = false; 
 
@@ -32,7 +39,7 @@ export class EmDashboardComponent implements OnInit {
 
   messages$: Observable<Messaging[]>; 
 
-  constructor(private store: Store<AppState> , private authService: EmployeeLoginService) {
+  constructor(private store: Store<AppState> , private authService: EmployeeLoginService, private employeeService: ProfileService) {
     this.messages$ = this.store.pipe(select(state => state.message.messages));
     
   }
@@ -41,8 +48,20 @@ export class EmDashboardComponent implements OnInit {
   ngOnInit(): void {
     
     this.store.dispatch(EmMessagingActions.loadMessage());
-
+    this.loadProfile()
+    this.loadNews()
   
+  }
+
+  ngAfterViewInit() {
+
+    if (this.child) {
+      this.child.getClientDetails()
+      console.log('Working')
+    } else {
+      console.error('SalesAnalysisComponent not found');
+    }
+    
   }
 
 
@@ -60,6 +79,29 @@ export class EmDashboardComponent implements OnInit {
     
     this.message = '';
    
+}
+
+loadProfile() {
+
+   this.employeeService.getProfile().subscribe({
+    next: (response) => {
+      this.employeeProfile = response;
+    },error: (error) =>{
+      console.error('Error fetching employee profile:', error);
+    }
+  })
+}
+
+
+loadNews() {
+
+  this.employeeService.topHeading().subscribe({
+    next: (response) => {
+      this.articles = response
+      this.displayedArticles = this.articles.slice(7, 11)
+      console.log('News:', this.articles)
+    }
+  })
 }
 
 
@@ -134,6 +176,9 @@ getImage(employeeId: string | Employee): string  {
 getImageUrl(imageFileName: string): string {
   return environment.apiUrl + `/images/${imageFileName}`; 
 }
+
+
+
 
 
 

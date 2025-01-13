@@ -78,23 +78,23 @@ getLoggedInEmployeeId(): string | null {
 
 
 
-refreshToken(): Observable<{ token: string }> {
+// refreshToken(): Observable<{ token: string }> {
 
-  const refreshToken = localStorage.getItem(this.refreshTokenKey);
-  if (!refreshToken) {
-    return throwError('No refresh token available');
-  }
+//   const refreshToken = localStorage.getItem(this.refreshTokenKey);
+//   if (!refreshToken) {
+//     return throwError('No refresh token available');
+//   }
 
-  console.log('Refresh token available:', refreshToken); 
+//   console.log('Refresh token available:', refreshToken); 
   
-  return this.http.post<{ token: string }>(`${this.apiUrl}/refresh-token`, { refreshToken })
-    .pipe(
-      tap(response => {
-        localStorage.setItem(this.tokenKey, response.token); 
-        console.log('Result:', response.token)
-      })
-    );
-}
+//   return this.http.post<{ token: string }>(`${this.apiUrl}/refresh-token`, { refreshToken })
+//     .pipe(
+//       tap(response => {
+//         localStorage.setItem(this.tokenKey, response.token); 
+//         console.log('Result:', response.token)
+//       })
+//     );
+// }
 
 
 

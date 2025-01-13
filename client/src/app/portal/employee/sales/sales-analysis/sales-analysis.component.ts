@@ -41,7 +41,7 @@ export class SalesAnalysisComponent implements OnInit, OnDestroy {
       next: (response) => {
         this.spoDetails = response;
         console.log('SPO Details:', this.spoDetails);
-        this.RenderChart()
+        this.RenderChart("linechart");
       },
       error: (error) => {
         console.error('Error fetching SPO details:', error);
@@ -73,7 +73,7 @@ calculateTotalOrders(details: AddQuotation[]): number {
 
 
 
-RenderChart() {
+RenderChart(canvasId: string) {
   const months = ['Jan', 'Feb', 'March', 'April', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
   const monthWiseOrders = Array(12).fill(0);
    
@@ -87,7 +87,7 @@ RenderChart() {
     }
   });
 
-  const myChart = new Chart("linechart", {
+  const myChart = new Chart(canvasId, {
     type: 'line',
     data: {
       labels: months,

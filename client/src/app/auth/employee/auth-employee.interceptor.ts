@@ -28,32 +28,32 @@ intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<an
 
   }
 
-  return next.handle(request).pipe(
-    catchError((error: HttpErrorResponse) => {
-      if (error.status === 401) { 
-        // Attempt to refresh token
-        return this.authService.refreshToken().pipe(
-          switchMap(newToken => {
+  return next.handle(request)
+    // catchError((error: HttpErrorResponse) => {
+    //   if (error.status === 401) { 
+    //     // Attempt to refresh token
+    //     return this.authService.refreshToken().pipe(
+    //       switchMap(newToken => {
           
-            const authRequest = request.clone({
-              setHeaders: {
-                Authorization: `Bearer ${newToken}`
-              }
-            });
-            return next.handle(authRequest);
-          }),
-          catchError((refreshError: HttpErrorResponse) => {
-            console.error('Refresh token failed:', refreshError);
+    //         const authRequest = request.clone({
+    //           setHeaders: {
+    //             Authorization: `Bearer ${newToken}`
+    //           }
+    //         });
+    //         return next.handle(authRequest);
+    //       }),
+    //       catchError((refreshError: HttpErrorResponse) => {
+    //         console.error('Refresh token failed:', refreshError);
           
-            return throwError(error);
-          })
-        );
-      }
+    //         return throwError(error);
+    //       })
+    //     );
+    //   }
       
-      console.error('HTTP error occurred:', error);
-      return throwError(error);
-    })
-  );
+    //   console.error('HTTP error occurred:', error);
+    //   return throwError(error);
+    // })
+  
 }
 
 
