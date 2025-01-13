@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Output , OnInit, Input, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router  } from '@angular/router';
+import { ActivatedRoute, Router, NavigationEnd  } from '@angular/router';
 import { Employee } from '../../../../model/ad-employee.model';
 import { ProfileService } from '../../../../portal/employee/profile/profile/profile.service';
 import { environment } from '../../../../../environment/environment';
@@ -28,14 +28,28 @@ export class EmployeeNbComponent implements OnInit, OnDestroy  {
   emSubscription!: Subscription
   isNavbarOpen: boolean = false
   sidebarItems : string[] = [];
-  isSidebarVisible: boolean = false;
+  isSidebarVisible: boolean = true;
 
   isSidebarOpen: boolean = false
 
   closeDrawer : boolean = false
+  showFooter: boolean = true;
 
 
-  constructor(private pService: ProfileService, private authService: EmployeeLoginService, private router: Router ) {}
+  constructor(private pService: ProfileService, private authService: EmployeeLoginService, private router: Router ) {
+
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        const hiddenRoutes= [
+          '/portal/dashboard',
+          '/portal/messenger'
+        ];
+
+        this.isSidebarVisible = !hiddenRoutes.includes(event.urlAfterRedirects);
+      }
+    });
+    
+  }
 
 
   ngOnInit(): void {
@@ -46,8 +60,7 @@ export class EmployeeNbComponent implements OnInit, OnDestroy  {
     this.socket.on('disconnect', () => {
       console.log('Disconnected from Socket.IO server');
     });
-   
-   
+      
   }
 
   loadProfile() {
@@ -168,10 +181,10 @@ trackBysideBar(index: number, sidebar: string): string {
 }
 
 
-// toggleSidebar(): void {
-//   this.isSidebarVisible = !this.isSidebarVisible;
+viewSidebar(): void {
+  this.isNavbarOpen = !this.isNavbarOpen;
 
-// }
+}
 
 toggleSidebar(): void {
   this.isSidebarOpen = !this.isSidebarOpen;

@@ -53,7 +53,7 @@
       </div>
       
       <button
-  (click)="isNavbarOpen = !isNavbarOpen"
+  (click)= viewSidebar()
   type="button"
   class="inline-flex mr-2 items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
   aria-controls="navbar-default"
@@ -130,7 +130,7 @@
 </nav>
 
 
-<!-- <aside id="logo-sidebar" [class.translate-x-0]="isSidebarOpen" [class.-translate-x-full]="!isSidebarOpen" class="fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full bg-white border-gray-200 sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700" aria-label="Sidebar">
+<aside *ngIf="isSidebarVisible" id="logo-sidebar" class="fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full bg-white border-gray-200 sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700 hidden sm:block" aria-label="Sidebar">
   <div class="h-full px-3 pb-4 overflow-y-auto bg-slate-900">
      <ul class="space-y-2 font-medium">
         <li>
@@ -144,13 +144,13 @@
          </li>
      </ul>
   </div>
-</aside> -->
+</aside>
 
 <!-- Drawer Component -->
 <div id="drawer-navigation" 
      [class.translate-x-0]="isSidebarOpen" 
      [class.-translate-x-full]="!isSidebarOpen" 
-     class="fixed top-0 left-0 z-40 h-screen p-4 mt-24 border border-slate-600 transition-transform bg-slate-900 w-64 dark:bg-gray-800" 
+     class="fixed top-0 left-0 z-40 h-screen p-4 mt-24 border border-slate-600 transition-transform bg-slate-900 w-64 dark:bg-gray-800 sm:hidden lg:hidden" 
      tabindex="-1" 
      aria-labelledby="drawer-navigation-label">
     
