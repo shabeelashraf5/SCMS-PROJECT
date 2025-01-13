@@ -1,7 +1,9 @@
 <app-employee-nb></app-employee-nb> 
 <app-employee-sb></app-employee-sb>
 
-<main class="w-full sm:w-3/4 p-4 ml-0 sm:ml-80 ">
+<div class="p-4 sm:ml-64 bg-slate-900 min-h-screen">
+    <div class="p-4 mt-24 relative">
+
 
 <form (submit)="submitPo()" >
     <div class="grid grid-cols-1 gap-1">
@@ -18,7 +20,7 @@
              
             </div>
 
-            <div class="card lg:card-side bg-base-300 shadow-xl mt-4" >
+            <div class="card lg:card-side bg-slate-900 border border-slate-600 shadow-xl mt-4" >
                 <div class="card-body" >
                     <h2 class="card-title">Purchase Order No: {{ poDetail?.po }}   </h2>
 
@@ -52,7 +54,7 @@
             <div class="mt-2">
     
     
-                <div class="card lg:card-side bg-base-300 shadow-xl">
+                <div class="card lg:card-side bg-slate-900 border border-slate-600 shadow-xl">
                     <div class="card-body">
                         <div class="overflow-x-auto">
                             <table class="table">
@@ -117,7 +119,7 @@
             <div class="mt-2">
 
 
-                <div class="card lg:card-side bg-base-300 shadow-xl">
+                <div class="card lg:card-side bg-slate-900 border border-slate-600 shadow-xl">
                     <div class="card-body">
     
                         <input type="text" name="subject" required placeholder="Subject:" [(ngModel)]="subject"  class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800" >
@@ -150,4 +152,6 @@
     </div>
 </form>
 
-</main>
+
+</div>
+</div>
