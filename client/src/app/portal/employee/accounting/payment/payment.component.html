@@ -1,9 +1,9 @@
 <app-employee-nb></app-employee-nb> 
 <app-employee-sb></app-employee-sb>
-
+<!-- 
 <main class="w-full sm:w-3/4 p-4 ml-0 sm:ml-80 bg-base-300 rounded-lg shadow-lg mt-5">
     
-    <!-- Invoice Header -->
+  
     <div class="flex justify-between items-center border-b pb-4 mt-4 ">
         <div>
             <h1 class="text-xl font-bold">Financial Transaction</h1>
@@ -12,15 +12,15 @@
             
         </div>
         <div>
-            <!-- Company Logo -->
-            <img src="assets/05.jpg" alt="Company Logo" class="w-20">
+           
+            <img src="assets/22.png" alt="Company Logo" class="w-20">
         </div>
     </div>
 
-    <!-- Client Information -->
+  
     <div class="mt-4">
         <h2 class="text-lg font-semibold">Supplier Payment:</h2>
-        <ng-container *ngIf="transDetail"> <!-- Add ng-container with *ngIf -->
+        <ng-container *ngIf="transDetail"> 
             <p class="mt-2">Your Rfq: <span class="font-bold">{{ getSRFQ(transDetail) }}</span></p>
             <p>Supplier Ref no: <span class="font-bold">{{ getSupplierRFQ(transDetail) }}</span></p>
             <p>PO no: <span class="font-bold">{{ getPO(transDetail) }}</span></p>
@@ -47,7 +47,7 @@
 
         <div id="card-element"></div>
     
-        <!-- Pay Button -->
+      
         <div class="mt-4">
             <button (click)="payNow()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                 Pay Now
@@ -59,4 +59,68 @@
     <div id="payment-element"></div>
     
 
-</main>
+</main> -->
+
+
+
+<div class="p-4 sm:ml-64 bg-slate-900 min-h-screen">
+    <div class="p-4 mt-14 border border-white mt-24 relative">
+
+
+        <div class="flex justify-between items-center border-b pb-4 mt-4 ">
+            <div>
+                <h1 class="text-xl font-bold">Financial Transaction</h1>
+                <p class="text-gray-600">Date: March 15, 2024</p>
+                <p> {{transDetail.transaction}} </p>
+                
+            </div>
+            <div>
+               
+                <img src="assets/22.png" alt="Company Logo" class="w-20">
+            </div>
+        </div>
+    
+      
+        <div class="mt-4">
+            <h2 class="text-lg font-semibold">Supplier Payment:</h2>
+            <ng-container *ngIf="transDetail"> 
+                <p class="mt-2">Your Rfq: <span class="font-bold">{{ getSRFQ(transDetail) }}</span></p>
+                <p>Supplier Ref no: <span class="font-bold">{{ getSupplierRFQ(transDetail) }}</span></p>
+                <p>PO no: <span class="font-bold">{{ getPO(transDetail) }}</span></p>
+                <p>Supplier Name: <span class="font-bold">{{ getSupplier(transDetail) }}</span></p>
+                <p>Total Amount: <span class="font-bold">{{getCurrency(transDetail)}} {{ getAmount(transDetail) }}</span></p>
+            </ng-container>
+        </div>
+    
+    
+        
+        <div class="mt-8 border-t pt-4 ">
+        
+            <div class="mt-4">
+                <h2 class="text-lg font-semibold">Payment Method:</h2>
+                <label class="inline-flex items-center mt-2">
+                    <input type="radio" class="form-radio h-5 w-5 text-blue-600" name="paymentMethod" value="cash"  [(ngModel)]="selectedPaymentMethod">
+                    <span class="ml-2">Cash/CDC</span>
+                </label>
+                <label class="inline-flex items-center mt-2 ml-2">
+                    <input type="radio" class="form-radio h-5 w-5 text-blue-600" name="paymentMethod" value="online" [(ngModel)]="selectedPaymentMethod">
+                    <span class="ml-2">Online Payment</span>
+                </label>
+            </div>
+    
+            <div id="card-element"></div>
+        
+          
+            <div class="mt-4">
+                <button (click)="payNow()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    Pay Now
+                </button>
+            </div>
+            <p class="text-gray-600 mt-2 ">Thank you for your business!</p>
+        </div>
+        
+        <div id="payment-element"></div>
+
+
+    </div>
+</div>
