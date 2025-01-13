@@ -32,6 +32,8 @@ export class EmployeeNbComponent implements OnInit, OnDestroy  {
 
   isSidebarOpen: boolean = false
 
+  closeDrawer : boolean = false
+
 
   constructor(private pService: ProfileService, private authService: EmployeeLoginService, private router: Router ) {}
 
@@ -166,8 +168,14 @@ trackBysideBar(index: number, sidebar: string): string {
 }
 
 
+// toggleSidebar(): void {
+//   this.isSidebarVisible = !this.isSidebarVisible;
+
+// }
+
 toggleSidebar(): void {
-  this.isSidebarVisible = !this.isSidebarVisible;
+  this.isSidebarOpen = !this.isSidebarOpen;
+
 }
 
 
