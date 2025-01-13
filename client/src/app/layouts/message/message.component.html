@@ -113,20 +113,10 @@
 
       <!-- <div class="container mx-auto shadow-lg rounded-lg mt-5   "> -->
   
-        <div  class="flex flex-row justify-between bg-slate-900 border border-slate-600 rounded-lg ">
-          
-          <div class="flex flex-col w-1/3 border border-slate-600 overflow-y-auto  ">
-           
-        
+        <!-- <div  class="flex flex-row justify-between bg-slate-900 border border-slate-600 rounded-lg h-[650px] ">
+          <div class="flex flex-col w-1/3 border border-slate-600 overflow-y-auto ">
             <div class=" py-4 px-2 sticky top-0 bg-slate-900 z-10 h-20 mt-2 ">
          
-            
-            <!-- <label class="input input-bordered flex items-center gap-2">
-              <input type="text" class="grow" placeholder="Search" [(ngModel)]="searchQuery" (input)="filterEmployees()"   />
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4 opacity-70"><path fill-rule="evenodd" d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z" clip-rule="evenodd" /></svg>
-            </label> -->
-
- 
   <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
   <div class="relative">
       <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
@@ -136,7 +126,6 @@
       </div>
       <input type="search" id="default-search" [(ngModel)]="searchQuery" (input)="filterEmployees()" class="block w-full p-4 ps-10 text-sm text-gray-900 border border-slate-600 rounded-lg bg-slate-800 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search ..." required />
   </div>
-
 
         
             </div>
@@ -218,7 +207,91 @@
           </div>
         
          
+          </div> -->
+
+
+          <div class="flex flex-col md:flex-row justify-between bg-slate-900 border border-slate-600 rounded-lg h-[650px]">
+            <!-- Chat List -->
+            <div class="flex flex-col w-full md:w-1/3 border border-slate-600 overflow-y-auto"
+                 [ngClass]="{'hidden': isMobile && selectedUser, 'block': isMobile && !selectedUser, 'md:block': true}">
+              <div class="py-4 px-2 sticky top-0 bg-slate-900 z-10 h-20 mt-2">
+                <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+                <div class="relative">
+                  <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                    </svg>
+                  </div>
+                  <input type="search" id="default-search" [(ngModel)]="searchQuery" (input)="filterEmployees()"
+                         class="block w-full p-4 ps-10 text-sm text-gray-900 border border-slate-600 rounded-lg bg-slate-800 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                         placeholder="Search ..." required />
+                </div>
+              </div>
+          
+              <div *ngFor="let detail of filteredEmployees; trackBy: trackByEmployee"
+                   class="flex flex-row py-4 px-2 justify-center items-center border border-slate-600 cursor-pointer bg-slate-800"
+                   (click)="openChat(detail)">
+                <div class="w-1/4 avatar" [ngClass]="getEmployeeProfileClass(detail)">
+                  <img [src]="getImageUrl(detail.image)"
+                       class="object-cover h-12 w-12 rounded-full"
+                       alt="" />
+                </div>
+                <div class="w-full">
+                  <div class="text-lg font-semibold text-gray-400">{{detail.fname}} {{detail.lname}}</div>
+                  <span class="text-gray-400">{{detail.position}}</span>
+                </div>
+              </div>
+            </div>
+          
+            <!-- Chat Panel -->
+
+
+          <div *ngIf="!selectedUser" class="w-full px-5 flex items-center justify-center border border-slate-600 bg-slate-900 rounded-lg hidden md:flex">
+            <p class="text-4xl text-gray-500">Your Chat starts here !</p>
+        </div>
+
+            <div *ngIf="selectedUser"
+                 class="w-full md:flex md:flex-col justify-between bg-slate-900 rounded-lg"
+                 [ngClass]="{'hidden': isMobile && !selectedUser, 'block': isMobile && selectedUser, 'md:block': !isMobile}">
+              <div class="flex flex-col mt-5">
+                <div>
+                  <img [src]="getImageUrl(selectedUser.image)" class="object-cover h-12 w-12 rounded-full" alt="" />
+                  <div class="text-lg font-semibold rounded-lg h-20">{{selectedUser.fname}} {{selectedUser.lname}}</div>
+                </div>
+                <div class="overflow-auto mt-2" #chatContainer style="max-height: 300px;">
+                  <div *ngFor="let chatMessage of chatMessages; trackBy: trackByChat"
+                       class="flex mb-4 justify-{{ chatMessage.sender_id === sender_id ? 'end' : 'start' }}">
+                    <div *ngIf="chatMessage.sender_id === sender_id">
+                      <time class="text-xs opacity-50">{{ chatMessage.createdAt | date: 'medium' }}</time>
+                      <div class="mr-2 py-3 px-4 bg-blue-400 rounded-bl-3xl rounded-tl-3xl rounded-tr-xl text-white">
+                        <div>{{ chatMessage.message }}</div>
+                      </div>
+                      <div class="chat-footer opacity-50">
+                        {{ chatMessage.isRead }}
+                      </div>
+                    </div>
+                    <div *ngIf="chatMessage.sender_id !== sender_id">
+                      <time class="text-xs opacity-50">{{ chatMessage.createdAt | date: 'medium' }}</time>
+                      <div class="flex items-center">
+                        <img [src]="getImageUrl(selectedUser.image)" class="object-cover h-8 w-8 rounded-full" alt="" />
+                        <div class="ml-2 py-3 px-4 bg-gray-300 rounded-br-3xl rounded-tr-3xl rounded-tl-xl text-black">
+                          <div>{{ chatMessage.message }}</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          
+              <div class="py-5 sticky bg-slate-900 bottom-0">
+                <form (submit)="createChat(selectedUser._id)">
+                  <input class="w-full bg-gray-800 py-5 px-3 rounded-xl" type="text" name="message" required [(ngModel)]="message" id="message" placeholder="Type your message here..." />
+                  <button type="submit" class="mt-3 py-2 px-4 bg-slate-900 border border-slate-600 text-white rounded-lg shadow-md hover:bg-slate-800">Submit</button>
+                </form>
+              </div>
+            </div>
           </div>
+          
         <!-- </div> -->
 
     </div>

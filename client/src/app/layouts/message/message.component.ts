@@ -30,6 +30,7 @@ export class MessageComponent implements OnInit,  AfterViewChecked,  OnDestroy {
   receiver_id: string | null = null;
   message: string = '';
   selectedUser: Employee | null = null; 
+  isMobile: Employee | null = null; 
   chatMessages: Chat[] = [];
   receiverChat: Chat[] = [];
   mergedMessages: Chat[] = [];
@@ -146,6 +147,7 @@ export class MessageComponent implements OnInit,  AfterViewChecked,  OnDestroy {
 openChat(user: Employee) {
 
   this.selectedUser = user;
+  this.isMobile = user
 
   this.messageSubscription = this.employeeService.markMessageAsSeen(user._id).subscribe({
     next: (response) => {
