@@ -34,7 +34,9 @@ export class EmployeeNbComponent implements OnInit, OnDestroy  {
 
   closeDrawer : boolean = false
   showFooter: boolean = true;
-
+  isSalesDropdownOpen = false;
+  isPurchaseDropdownOpen = false;
+  isAccountingDropdownOpen = false;
 
   constructor(private pService: ProfileService, private authService: EmployeeLoginService, private router: Router ) {
 
@@ -181,14 +183,30 @@ trackBysideBar(index: number, sidebar: string): string {
 }
 
 
-viewSidebar(): void {
-  this.isNavbarOpen = !this.isNavbarOpen;
+// viewSidebar(): void {
+//   this.isNavbarOpen = !this.isNavbarOpen;
 
+// }
+
+// toggleSidebar(): void {
+//   this.isSidebarOpen = !this.isSidebarOpen;
+
+// }
+
+toggleNavbar(): void {
+  this.isNavbarOpen = !this.isNavbarOpen;
 }
 
-toggleSidebar(): void {
-  this.isSidebarOpen = !this.isSidebarOpen;
+toggleSalesDropdown() {
+  this.isSalesDropdownOpen = !this.isSalesDropdownOpen;
+}
 
+togglePurchaseDropdown() {
+  this.isPurchaseDropdownOpen = !this.isPurchaseDropdownOpen;
+}
+
+toggleAccountingDropdown() {
+  this.isAccountingDropdownOpen = !this.isAccountingDropdownOpen;
 }
 
 

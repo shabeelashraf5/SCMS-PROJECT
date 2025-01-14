@@ -19,9 +19,7 @@ import { SalesAnalysisComponent } from '../../sales/sales-analysis/sales-analysi
   styleUrl: './em-dashboard.component.css'
 })
 
-export class EmDashboardComponent implements OnInit, AfterViewInit {
-
-  @ViewChild(SalesAnalysisComponent,  { static: false }) child!: SalesAnalysisComponent
+export class EmDashboardComponent implements OnInit {
 
   _id: string = ''
   message: string = '';
@@ -51,17 +49,6 @@ export class EmDashboardComponent implements OnInit, AfterViewInit {
     this.loadProfile()
     this.loadNews()
   
-  }
-
-  ngAfterViewInit() {
-
-    if (this.child) {
-      this.child.getClientDetails()
-      console.log('Working')
-    } else {
-      console.error('SalesAnalysisComponent not found');
-    }
-    
   }
 
 

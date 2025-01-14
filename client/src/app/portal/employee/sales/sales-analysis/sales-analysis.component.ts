@@ -28,6 +28,7 @@ export class SalesAnalysisComponent implements OnInit, OnDestroy {
   ngOnInit() {
 
     this.getClientDetails(); 
+    
 
   
   }
@@ -42,6 +43,7 @@ export class SalesAnalysisComponent implements OnInit, OnDestroy {
         this.spoDetails = response;
         console.log('SPO Details:', this.spoDetails);
         this.RenderChart("linechart");
+       
       },
       error: (error) => {
         console.error('Error fetching SPO details:', error);
