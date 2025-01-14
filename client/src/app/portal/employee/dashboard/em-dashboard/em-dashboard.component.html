@@ -66,18 +66,18 @@
 
 
   
-    
+      
    
-<div class="flex-col flex items-center bg-slate-900 min-h-screen ">
-<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-24">
+<div class="flex-col flex bg-slate-900 min-h-screen ">
+<div class="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-3 gap-12 mt-24">
 
-  <div>
-<a  class="block border border-slate-600 md:w-[250px] md:ml-6 p-6 bg-transparent rounded-lg shadow ">
+  <div class="flex flex-col items-center">
+<a  class="block border border-slate-600 p-6 bg-slate-800 rounded-lg shadow ">
   <figure>
     <img [src]="getImageUrl(employeeProfile.image)" alt="Shoes" class="rounded-full w-16 h-16 mx-auto"  onclick="my_modal_3.showModal()" style="cursor: pointer;" />
   </figure>
   <div class="card-body items-center text-center">
-    <h2 class="card-title text-xl">{{ employeeProfile.fname }} {{ employeeProfile.lname }} </h2>
+    <h2 class="card-title text-gray-100 text-xl">{{ employeeProfile.fname }} {{ employeeProfile.lname }} </h2>
     <p class="text-sm">{{ employeeProfile.position  }}</p>
     <p class="text-sm">{{ employeeProfile.email  }}</p>
 
@@ -92,7 +92,7 @@
 
   <!-- grid 2 -->
 
-  <div>
+  <div class="flex flex-col">
 
     <form (submit)="onSubmit()" #messageForm="ngForm" >
       <div class="max-w-xl mb-4 border border-slate-700 rounded-lg bg-gray-50 dark:bg-gray-700 ">
@@ -100,7 +100,7 @@
                 <label for="comment" class="sr-only">Your comment</label>
                 <input type="text" name="message" id="message" [(ngModel)]="message"  placeholder="Start a post ..." rows="4" class="w-full px-0 text-sm text-gray-900 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400" placeholder="Write a comment..." required >
             </div>
-          <div class="flex items-center bg-slate-900 rounded-md justify-between px-3 py-2 ">
+          <div class="flex items-center bg-slate-800 rounded-md justify-between px-3 py-2 ">
               <button type="submit" class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-slate-900 border border-slate-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-slate-800" [disabled]="!message.trim()">
                   Post comment
               </button>       
@@ -110,14 +110,14 @@
 
     <div class="divider"></div>
 
-    <div *ngFor="let message of messages$ | async; trackBy: trackByDashboard" class="block max-w-xl p-6 bg-slate-900 border border-slate-700 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 relative mt-4">
+    <div *ngFor="let message of messages$ | async; trackBy: trackByDashboard" class="block max-w-xl p-6 bg-slate-800 border border-slate-700 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 relative mt-4">
 
       <div class="flex space-x-4">
         <img alt=""  [src]="getImageUrl(getImage(message.employee_id))" class="object-cover w-12 h-12 rounded-full shadow bg-gray-500">
         <div class="flex flex-col space-y-1">
           
           <a rel="noopener noreferrer" class="text-sm font-semibold">{{ getEmployee(message.employee_id) }} <span class="text-xs text-gray-600 ml-1"> {{message.date | date: 'dd-MM-yyyy'}} </span> </a>
-          <span class="text-xs text-gray-600">{{getPosition(message.employee_id)}}</span>
+          <span class="text-xs text-gray-500">{{getPosition(message.employee_id)}}</span>
         </div>
         
       </div>
@@ -144,9 +144,9 @@
 
   <div>
       
-    <div class="md:ml-10">
+    <div class="flex flex-col items-center">
       
-      <a  class="block border border-slate-600 md:w-[350px] p-6 bg-transparent rounded-lg shadow ">
+      <a  class="block border border-slate-600 md:w-[350px] p-6 bg-slate-800 rounded-lg shadow ">
 
         <div class="container-fluid">
           <p class="text-xl">Trending News</p>

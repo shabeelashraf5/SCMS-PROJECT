@@ -1,134 +1,3 @@
-<!-- 
-<nav class="fixed top-0 left-0 w-full border-b border-slate-800 bg-slate-900 z-50">
-  <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-  <a routerLink="/portal/dashboard" class="flex items-center space-x-3 rtl:space-x-reverse">
-      <img src="assets/22.png" class="h-12" alt="Flowbite Logo" />
-
-  </a>
-  <div class="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-    
-
-      <div class="flex-none gap-2">
-        <div class="dropdown dropdown-end">
-          <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
-            <div class="w-10 rounded-full">
-              <img
-                alt="Tailwind CSS Navbar component" class="w-10 h-10"
-                [src]="employeeProfile ? getImageUrl(employeeProfile.image) : 'assets/dp.jpg'"
-              />
-            </div>
-          </div>
-          <ul
-            tabindex="0"
-            class="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52"
-          >
-            <li>
-              <a class="justify-between" routerLink="/portal/profile">
-                Profile
-                <span class="badge">New</span>
-              </a>
-            </li>
-            <li class="text-[#FFFFFF]">
-              <a
-                rel="noopener noreferrer"
-                (click)="logout()"
-                class="flex items-center p-2 space-x-3 rounded-md hover:bg-base-100"
-                style="cursor: pointer;"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 512 512"
-                  class="w-5 h-5 fill-current text-gray-600"
-                >
-                  <path
-                    d="M440,424V88H352V13.005L88,58.522V424H16v32h86.9L352,490.358V120h56V456h88V424ZM320,453.642,120,426.056V85.478L320,51Z"
-                  ></path>
-                  <rect width="32" height="64" x="256" y="232"></rect>
-                </svg>
-                <span>Logout</span>
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
-      
-      <button
-  (click)= viewSidebar()
-  type="button"
-  class="inline-flex mr-2 items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-  aria-controls="navbar-default"
-  [attr.aria-expanded]="isNavbarOpen"
->
-  <span class="sr-only">Open main menu</span>
-  <svg
-    class="w-5 h-5"
-    aria-hidden="true"
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 17 14"
-  >
-    <path
-      stroke="currentColor"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      stroke-width="2"
-      d="M1 1h15M1 7h15M1 13h15"
-    />
-  </svg>
-</button>
-
-  </div>
-
-  <div
-      [class.hidden]="!isNavbarOpen"
-      class="w-full md:block md:w-auto"
-      id="navbar-default"
-    >
-    <ul
-    (click)="isSidebarOpen = !isSidebarOpen"
-    class="font-medium mr-10 flex flex-col p-4 md:p-0 mt-4 md:mt-0 md:flex-row md:space-x-8 rtl:space-x-reverse bg-customPurple border border-customRed rounded-lg md:border-0 dark:border-gray-700"
-  >
-    <li>
-      <a
-        routerLink="/portal/sales"
-        (click)="updateSidebar('Sales')"
-        class="block text-md py-2 px-3 rounded md:bg-transparent text-white md:p-0 hover:text-customRed bangers-regular hover:underline"
-        aria-current="page"
-      >Sales</a>
-    </li>
-    <li>
-      <a
-        routerLink="/portal/purchase"
-        (click)="updateSidebar('Purchase')"
-        class="block text-md py-2 px-3 text-white rounded md:hover:bg-transparent md:border-0 md:p-0 dark:text-white hover:text-customRed md:dark:hover:bg-transparent bangers-regular hover:underline"
-      >Purchase</a>
-    </li>
-    <li>
-      <a
-        routerLink="/portal/warehouse"
-        (click)="updateSidebar('Warehouse')"
-        class="block text-md py-2 px-3 text-white rounded md:hover:bg-transparent md:border-0 md:p-0 dark:text-white hover:text-customRed md:dark:hover:bg-transparent bangers-regular hover:underline"
-      >Warehouse</a>
-    </li>
-    <li>
-      <a
-        routerLink="/portal/shipment"
-        (click)="updateSidebar('Shipment')"
-        class="block text-md py-2 px-3 text-white rounded md:hover:bg-transparent md:border-0 md:p-0 dark:text-white hover:text-customRed md:dark:hover:bg-transparent bangers-regular hover:underline"
-      >Shipment</a>
-    </li>
-    <li>
-      <a
-        routerLink="/portal/accounting"
-        (click)="updateSidebar('Accounting')"
-        class="block text-md py-2 px-3 text-white rounded md:hover:bg-transparent md:border-0 md:p-0 dark:text-white hover:text-customRed md:dark:hover:bg-transparent bangers-regular hover:underline"
-      >Accounting</a>
-    </li>
-  </ul>
-    </div>
-  </div>
-</nav> -->
-
 
 <nav class="fixed top-0 left-0 w-full bg-slate-900 border-b border-slate-600 dark:bg-gray-900 z-50">
   <div class="flex flex-wrap items-center justify-between max-w-screen-xl mx-auto p-4">
@@ -196,41 +65,23 @@
 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
 </svg>
               </button>
-              <div [ngClass]="{ 'hidden': !isSalesDropdownOpen }" id="mega-menu-dropdown" class="absolute z-10 grid hidden w-auto grid-cols-2 text-sm border rounded-lg shadow-md border-slate-600 md:grid-cols-3 bg-slate-900">
-                  <div class="p-4 pb-0 text-gray-900 md:pb-4 dark:text-white">
-                      <ul class="space-y-4" aria-labelledby="mega-menu-dropdown-button">
-                          <li>
-                              <a routerLink="/portal/sales/customer" class="text-gray-300 dark:text-gray-400 hover:text-slate-500 dark:hover:text-slate-500">
-                                  Customer
-                              </a>
-                          </li>  
-                          <li>
-                            <a routerLink="/portal/sales/sales-analysis"  class="text-gray-300 dark:text-gray-400 hover:text-slate-500 dark:hover:text-slate-500 ">
-                                Sales Analysis
-                            </a>
-                        </li> 
-                      </ul>
-                  </div>
-                  <div class="p-4 pb-0 text-gray-900 md:pb-4 dark:text-white">
-                      <ul class="space-y-4">
-                          <li>
-                              <a routerLink="/portal/sales/quotations" class="text-gray-300 dark:text-gray-400 hover:text-slate-500 dark:hover:text-slate-500">
-                                  Quotation
-                              </a>
-                          </li>
-                       
-                      </ul>
-                  </div>
-                  <div class="p-4">
-                      <ul class="space-y-4">
-                          <li>
-                              <a routerLink="/portal/sales/sales-order" class="text-gray-300 dark:text-gray-400 hover:text-slate-500 dark:hover:text-slate-500">
-                                  Sales Order
-                              </a>
-                          </li>
-                      </ul>
-                  </div>
-              </div>
+             
+              <div [ngClass]="{ 'hidden': !isSalesDropdownOpen }" id="dropdownNavbar" class="z-10 hidden absolute bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600 mt-1">
+                <ul class="py-2 text-sm bg-slate-900 border border-slate-600 rounded-lg text-gray-300 dark:text-gray-400" aria-labelledby="dropdownLargeButton">
+                    <li>
+                        <a routerLink="/portal/sales/customer" class="block px-4 py-2 hover:bg-slate-600 dark:hover:bg-gray-600 dark:hover:text-white">Customer</a>
+                    </li>
+                    <li>
+                        <a routerLink="/portal/sales/quotations" class="block px-4 py-2 hover:bg-slate-600 dark:hover:bg-gray-600 dark:hover:text-white">Quotation</a>
+                    </li>
+                    <li>
+                        <a routerLink="/portal/sales/sales-order" class="block px-4 py-2 hover:bg-slate-6000 dark:hover:bg-gray-600 dark:hover:text-white">Sales Order</a>
+                    </li>
+                    <li>
+                      <a routerLink="/portal/sales/sales-analysis" class="block px-4 py-2 hover:bg-slate-600 dark:hover:bg-gray-600 dark:hover:text-white">Sales Analysis</a>
+                  </li>
+                </ul>
+            </div>
           </li>
               <li>
                   <button (click)="togglePurchaseDropdown()"  id="mega-menu-dropdown-button" class="flex items-center justify-between w-full py-2 px-3 font-medium text-gray-300 border-b border-gray-100 md:w-auto hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-slate-500 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-blue-500 md:dark:hover:bg-transparent dark:border-gray-700">
@@ -238,32 +89,20 @@
   <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
 </svg>
                   </button>
-                  <div [ngClass]="{ 'hidden': !isPurchaseDropdownOpen }" id="mega-menu-dropdown" class="absolute z-10 grid hidden w-auto grid-cols-2 text-sm bg-slate-900 border border-slate-600 h rounded-lg shadow-md dark:border-gray-700 md:grid-cols-3 dark:bg-gray-700">
-                      <div   class="p-4 pb-0 text-gray-900 md:pb-4 dark:text-white">
-                          <ul class="space-y-4" aria-labelledby="mega-menu-dropdown-button">
-                              <li>
-                                  <a routerLink="/portal/purchase/supplier" class="text-gray-300 dark:text-gray-400 hover:text-slate-500 dark:hover:text-blue-500">Supplier
-                                  </a>
-                              </li>
-                          </ul>
-                      </div>
-                      <div class="p-4 pb-0 text-gray-900 md:pb-4 dark:text-white">
-                          <ul class="space-y-4">
-                              <li>
-                                  <a routerLink="/portal/purchase/purchase-order" class="text-gray-300 dark:text-gray-400 hover:text-slate-500 dark:hover:text-blue-500">Purchase Order
-                                  </a>
-                                </li>
-                          </ul>
-                      </div>
-                      <div class="p-4">
-                          <ul class="space-y-4">
-                              <li>
-                                  <a routerLink="/portal/purchase/purchase-history" class="text-gray-300 dark:text-gray-400 hover:text-slate-500 dark:hover:text-blue-500">Purchase History
-                                  </a>
-                              </li>
-                          </ul>
-                      </div>
-                  </div>
+             
+                  <div [ngClass]="{ 'hidden': !isPurchaseDropdownOpen }" id="dropdownNavbar" class="z-10 hidden absolute bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600 mt-1">
+                    <ul class="py-2 text-sm bg-slate-900 border border-slate-600 rounded-lg text-gray-300 dark:text-gray-400" aria-labelledby="dropdownLargeButton">
+                        <li>
+                            <a routerLink="/portal/purchase/supplier" class="block px-4 py-2 hover:bg-slate-600 dark:hover:bg-gray-600 dark:hover:text-white">Supplier</a>
+                        </li>
+                        <li>
+                            <a routerLink="/portal/purchase/purchase-order" class="block px-4 py-2 hover:bg-slate-600 dark:hover:bg-gray-600 dark:hover:text-white">Purchase Order</a>
+                        </li>
+                        <li>
+                            <a routerLink="/portal/purchase/purchase-history" class="block px-4 py-2 hover:bg-slate-6000 dark:hover:bg-gray-600 dark:hover:text-white">Purchase History</a>
+                        </li>
+                    </ul>
+                </div>
               </li>
               <li>
                   <a routerLink="/portal/warehouse/inventory-list" class="block py-2 px-3 text-gray-300 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-slate-500 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-blue-500 md:dark:hover:bg-transparent dark:border-gray-700">Warehouse</a>
@@ -277,92 +116,24 @@
 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
 </svg>
                 </button>
-                <div [ngClass]="{ 'hidden': !isAccountingDropdownOpen }" id="mega-menu-dropdown" class="absolute z-10 grid hidden w-auto grid-cols-2 text-sm bg-slate-900 border border-slate-600 rounded-lg shadow-md dark:border-gray-700 md:grid-cols-3 dark:bg-gray-700">
-                    <div class="p-4 pb-0 text-gray-900 md:pb-4 dark:text-white">
-                        <ul class="space-y-4" aria-labelledby="mega-menu-dropdown-button">
-                            <li>
-                                <a routerLink="/portal/accounting/invoicing" class="text-gray-300 dark:text-gray-400 hover:text-slate-500 dark:hover:text-blue-500">
-                                    Invoicing
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="p-4 pb-0 text-gray-900 md:pb-4 dark:text-white">
-                        <ul class="space-y-4">
-                            <li>
-                                <a routerLink="/portal/accounting/financial-transaction" class="text-gray-300 dark:text-gray-400 hover:text-slate-500 dark:hover:text-blue-500">Financial Transaction
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="p-4">
-                        <ul class="space-y-4">
-                            <li>
-                                <a routerLink="/portal/accounting/financial-reports" class="text-gray-300 dark:text-gray-400 hover:text-slate-500 dark:hover:text-blue-500">
-                                    Sales Report
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+                
+                <div [ngClass]="{ 'hidden': !isAccountingDropdownOpen }" id="dropdownNavbar" class="z-10 hidden absolute bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600 mt-1">
+                  <ul class="py-2 text-sm bg-slate-900 border border-slate-600 rounded-lg text-gray-300 dark:text-gray-400" aria-labelledby="dropdownLargeButton">
+                      <li>
+                          <a routerLink="/portal/accounting/invoicing" class="block px-4 py-2 hover:bg-slate-600 dark:hover:bg-gray-600 dark:hover:text-white">Invoicing</a>
+                      </li>
+                      <li>
+                          <a routerLink="/portal/accounting/financial-transaction" class="block px-4 py-2 hover:bg-slate-600 dark:hover:bg-gray-600 dark:hover:text-white">Financial Transaction</a>
+                      </li>
+                      <li>
+                          <a routerLink="/portal/accounting/financial-reports" class="block px-4 py-2 hover:bg-slate-6000 dark:hover:bg-gray-600 dark:hover:text-white">Sales Report</a>
+                      </li>
+                  </ul>
+              </div>
             </li>
           </ul>
       </div>
   </div>
 </nav>
-
-
-<!-- 
-<aside *ngIf="isSidebarVisible" id="logo-sidebar" class="fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full bg-white border-gray-200 sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700 hidden sm:block" aria-label="Sidebar">
-  <div class="h-full px-3 pb-4 overflow-y-auto bg-slate-900">
-     <ul class="space-y-2 font-medium">
-        <li>
-         <li *ngFor="let item of sidebarItems; trackBy: trackBysideBar" class=" text-[#FFFFFF]">
-             <a rel="noopener noreferrer" [routerLink]="getRoute(item)"  class="flex items-center p-2 space-x-3 rounded-md hover:bg-slate-800">
-                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="w-5 h-5 fill-current text-gray-600">
-                     <path d="M68.983,382.642l171.35,98.928a32.082,32.082,0,0,0,32,0l171.352-98.929a32.093,32.093,0,0,0,16-27.713V157.071a32.092,32.092,0,0,0-16-27.713L272.334,30.429a32.086,32.086,0,0,0-32,0L68.983,129.358a32.09,32.09,0,0,0-16,27.713V354.929A32.09,32.09,0,0,0,68.983,382.642ZM272.333,67.38l155.351,89.691V334.449L272.333,246.642ZM256.282,274.327l157.155,88.828-157.1,90.7L99.179,363.125ZM84.983,157.071,240.333,67.38v179.2L84.983,334.39Z"></path>
-                 </svg>
-                 <span >{{ item }}</span>
-             </a>
-         </li>
-     </ul>
-  </div>
-</aside> -->
-
-<!-- Drawer Component -->
-<!-- <div id="drawer-navigation" 
-     [class.translate-x-0]="isSidebarOpen" 
-     [class.-translate-x-full]="!isSidebarOpen" 
-     class="fixed top-0 left-0 z-40 h-screen p-4 mt-24 border border-slate-600 transition-transform bg-slate-900 w-64 dark:bg-gray-800 sm:hidden lg:hidden" 
-     tabindex="-1" 
-     aria-labelledby="drawer-navigation-label">
-    
-    <h5 id="drawer-navigation-label" class="text-base font-semibold text-gray-500 uppercase dark:text-gray-400">Menu</h5>
-    
-    <button type="button" 
-            (click)="toggleSidebar()" 
-            aria-controls="drawer-navigation" 
-            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 absolute top-2.5 end-2.5 inline-flex items-center justify-center dark:hover:bg-gray-600 dark:hover:text-white">
-      <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-      </svg>
-      <span class="sr-only">Close menu</span>
-    </button>
-  
-    <div class="py-4 overflow-y-auto">
-      <ul class="space-y-2 font-medium">
-        <li *ngFor="let item of sidebarItems; trackBy: trackBysideBar">
-          <a [routerLink]="getRoute(item)" 
-             class="flex items-center p-2 text-white rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-            <svg class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" 
-                 aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 21">
-           
-            </svg>
-            <span class="ms-3">{{ item }}</span>
-          </a>
-        </li>
-      </ul>
-    </div>
-</div> -->
 
 
