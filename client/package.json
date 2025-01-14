@@ -29,6 +29,7 @@
     "@zegocloud/zego-uikit-prebuilt": "^1.11.0",
     "angular-highcharts": "^17.0.1",
     "angular-plotly.js": "^5.2.2",
+    "apexcharts": "^4.3.0",
     "buffer": "^6.0.3",
     "chart.js": "^4.4.2",
     "flowbite": "^2.5.2",

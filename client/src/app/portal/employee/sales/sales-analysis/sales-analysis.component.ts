@@ -29,13 +29,9 @@ export class SalesAnalysisComponent implements OnInit, OnDestroy {
 
     this.getClientDetails(); 
     
-
-  
   }
 
  
-  
-
   getClientDetails() {
 
     this.salesAnalysisSubscription = this.salesAnalysisService.getSPO().subscribe({
