@@ -87,7 +87,7 @@
 </main> -->
 
 
-<div class="p-4 bg-slate-900 min-h-screen">
+<!-- <div class="p-4 bg-slate-900 min-h-screen">
     <div class="p-4 mt-14 border border-white mt-24 relative">
 
         <div class="flex justify-end">
@@ -170,5 +170,180 @@
             <p class="text-gray-600">Thank you for your business!</p>
         </div>
     
+    </div>
+</div> -->
+
+
+<!-- New Invoice  -->
+
+<div class="p-4 bg-slate-900 min-h-screen">
+    <div class="p-4 border border-slate-600 mt-20 ">
+
+
+        <div class="flex justify-between items-center border-b border-slate-600 pb-4 mt-4 ">
+
+            <div>
+             
+                <img src="assets/22.png" alt="Company Logo" class="w-20">
+            </div>
+
+            <div class="flex justify-end">
+                    
+                <button (click)="togglePrintDropdown()" id="dropdownDefaultButton" class="btn btn-outline btn-sm ml-2" type="button">
+                    Print
+                    <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4" />
+                    </svg>
+                  </button>
+                  
+                  <!-- Dropdown menu -->
+                  <div [ngClass]="{ 'hidden': !isPrintDropdownOpen }" id="dropdown"
+                       class="z-10 absolute right-0 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
+                      <li>
+                        <a (click)="invoicePDF()" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer">Invoice</a>
+                      </li>
+                      <li>
+                        <a (click)="deliveryPDF()" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer">Delivery</a>
+                      </li>
+                    </ul>
+                  </div>
+                  
+            <form (click)="createShipment(invoiceDetail._id)">
+                <ul>
+                  <li>
+                    <input type="hidden" name="invoice_id" [value]="invoiceDetail._id">
+                  </li>
+                  <button class="btn btn-outline btn-sm ml-2 " [disabled]="confirmedInvoice.has(invoiceDetail._id)" >Confirm</button>
+                </ul>
+              </form>
+                
+            </div>
+              
+        </div>
+              
+        <div class="flex justify-between items-center border-b border-slate-600 pb-4 mt-4 ">
+
+            <div >
+
+                <p class="text-lg font-bold">Invoice:<span> #{{invoiceDetail.invoice }}</span></p>
+               
+                
+            </div>
+
+            <div class="flex justify-end">
+                <p class="text-gray-600">Date: March 15, 2024</p>
+                
+            </div>
+              
+        </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-5">
+                <div>
+                    <div>
+                        <p class="text-lg font-bold">Pay To:</p>
+                        <p class="mt-4">INBI TECHNOLOGY Co</p>
+                        <p class="mt-2">Responsible Person</p>
+                        <p class="mt-2 italic">Address</p>
+                        <p class="mt-2 italic">Email</p>
+                    </div>
+                </div>
+                <div>
+                   
+            <div>
+                <p class="text-lg font-bold">Invoice To:</p>
+                <p class="mt-4">Client Name</p>
+                <p class="mt-2">{{ getAttention(invoiceDetail) }}</p>
+                <p class="mt-2 italic">Address</p>
+                <p class="mt-2 italic">Email</p>
+            </div>
+                </div>
+            </div>
+
+            <div class="relative overflow-x-auto shadow-md border border-slate-600 sm:rounded-lg mt-5">
+                <table class="w-full text-sm text-left rtl:text-right text-gray-200 ">
+                    <thead class="text-xs text-center text-gray-4 00 sm:rounded-lg uppercase bg-slate-900 border border-slate-600">
+                        <tr >
+                            <th scope="col" class="px-6 py-3">
+                                SL No
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Product
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Quantity
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                UOM
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Price
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                              Total Amount
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let product of getProduct(invoiceDetail?.purchase_id?.po_id?.quotation_id?.products); let i = index; trackBy: trackByProductId " class="text-center odd:bg-slate-800 even:bg-slate-900 border-b border-slate-600">
+                            <th scope="row" class="px-6 py-4 font-medium text-gray-400 text-semibold whitespace-nowrap ">
+                                {{ i + 1 }}
+                            </th>
+                            <td class="px-6 py-4 text-gray-400">
+                                {{ product.product }}
+                            </td>
+                            <td class="px-6 py-4 text-gray-400">
+                                {{ product.qty }}
+                            </td>
+                            <td class="px-6 py-4 text-gray-400">
+                                {{ product.uom }}
+                            </td>
+                            <td class="px-6 py-4 text-gray-400">
+                                {{ product.unit }}
+                            </td>
+                            <td class="px-6 py-4 text-gray-400">
+                                {{ product.total }}
+                            </td>
+                        </tr>
+                    </tbody>
+                  
+                </table>
+              </div>
+                   
+        
+        <div class="mt-2 space-y-6">
+            <h4 class="text-xl font-semibold text-gray-900 dark:text-white">Order summary</h4>
+  
+            <div class="space-y-4">
+              <div class="space-y-2">
+                <dl class="flex items-center justify-between gap-4">
+                  <dt class="text-gray-500 dark:text-gray-400">Original price</dt>
+                  <dd class="text-base font-medium text-gray-300 dark:text-white">{{ getTotalamount(invoiceDetail) }}</dd>
+                </dl>
+  
+                <dl class="flex items-center justify-between gap-4">
+                  <dt class="text-gray-500 dark:text-gray-400">Discount</dt>
+                  <dd class="text-base font-medium text-green-500">0.00</dd>
+                </dl>
+  
+             
+                <dl class="flex items-center justify-between gap-4">
+                  <dt class="text-gray-500 dark:text-gray-400">Tax/Vat</dt>
+                  <dd class="text-base font-medium text-gray-300 dark:text-white">0.00</dd>
+                </dl>
+              </div>
+  
+              <dl class="flex items-center justify-between gap-4 border-t border-gray-200 pt-2 dark:border-gray-700">
+                <dt class="text-lg font-bold text-gray-300 dark:text-white">Total</dt>
+                <dd class="text-lg font-bold text-gray-300 dark:text-white">{{ getTotalamount(invoiceDetail) }}</dd>
+              </dl>
+            </div>
+
+
+            <div class="flex flex-col items-start items-center">
+                <p class="ms-2 text-sm font-medium text-slate-600 ">Make all payable to: INBI Technology Co. Thank you for your business!  </p>
+            </div>
+        </div>
+
     </div>
 </div>

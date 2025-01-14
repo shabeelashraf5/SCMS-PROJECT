@@ -33,6 +33,7 @@ export class InvoiceDetailsComponent implements OnInit, OnDestroy {
   invoice_id: string = '';
   confirmedInvoice: Set<string> = new Set();
   invoice: string =''
+  isPrintDropdownOpen: boolean = false
 
   routeSubscription!: Subscription;
 
@@ -146,6 +147,10 @@ ngOnDestroy() {
   if (this.routeSubscription) {
     this.routeSubscription.unsubscribe();
   }
+}
+
+togglePrintDropdown() {
+  this.isPrintDropdownOpen = !this.isPrintDropdownOpen;
 }
 
 
