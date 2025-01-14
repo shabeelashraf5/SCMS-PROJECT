@@ -29,6 +29,8 @@ export class EmDashboardComponent implements OnInit {
   employeeProfile!: Employee;
   articles: any[] = []
   displayedArticles: any[] = []
+  showMore: boolean = false;
+  
 
   canDelete: boolean = false; 
 
@@ -164,9 +166,9 @@ getImageUrl(imageFileName: string): string {
   return environment.apiUrl + `/images/${imageFileName}`; 
 }
 
-
-
-
+toggleShowMore(): void {
+  this.showMore = !this.showMore;
+}
 
 
 
