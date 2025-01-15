@@ -82,9 +82,6 @@ import { AdminRouterComponent } from './portal/admin/admin-router.component';
 
 
 
-
-
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -132,9 +129,9 @@ import { AdminRouterComponent } from './portal/admin/admin-router.component';
     SuccessPaymentComponent,
     NotFoundComponent,
     ExcelComponent,
-    AdminRouterComponent
+    AdminRouterComponent,
    
-    
+     
   ],
   imports: [
     BrowserModule,

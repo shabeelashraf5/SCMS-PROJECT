@@ -32,4 +32,9 @@ router.delete('/product/delete/:id' , adminController.deleteProduct)
 router.get('/dashboard',  adminController.loadDashboard)
 
 
+router.get('/article', adminController.loadNews)
+router.post('/article/add', adminController.addNews);
+router.delete('/article/delete/:id' , adminController.deleteNews)
+
+
 module.exports = router;

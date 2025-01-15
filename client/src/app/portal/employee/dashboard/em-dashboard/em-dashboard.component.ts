@@ -39,11 +39,18 @@ export class EmDashboardComponent implements OnInit {
 
   messages$: Observable<Messaging[]>; 
 
+  announcements = [
+    "Exciting News! We've secured a bulk order of 150 units from Limited Corp. Congratulations to the sales team for their hard work!",
+    "New Partnership Alert! We're thrilled to announce a collaboration with XYZ Ltd., paving the way for new opportunities in retail.",
+    "Milestone Reached! Our team has successfully shipped over 1,000 units this quarter. Keep up the great work, everyone!",
+    "Mark Your Calendars! The next Monthly Sales Review Meeting will be held on January 20th at 3 PM in the main conference hall.",
+    "Kudos to Jane Doe! She closed a major deal worth $50,000 this week. Your efforts make a huge difference!"
+  ];
+
   constructor(private store: Store<AppState> , private authService: EmployeeLoginService, private employeeService: ProfileService) {
     this.messages$ = this.store.pipe(select(state => state.message.messages));
     
   }
-
 
   ngOnInit(): void {
     

@@ -45,6 +45,8 @@ import { AdminRouterComponent } from './portal/admin/admin-router.component';
 
 
 
+
+
 const routes: Routes = [
   { path: '', redirectTo: '/employee-login', pathMatch: 'full' },
  
@@ -55,14 +57,17 @@ const routes: Routes = [
 
   {
     path: 'admin',
-    component: AdminRouterComponent,
+    component: AdminRouterComponent, 
     children: [
+  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   {path: 'portal' , loadChildren: () => import('./portal/admin/admin-portal/admin-portal.module').then( m => m.AdminPortalModule)   },
   {path: 'dashboard' , loadChildren: () => import('./portal/admin/dashboard/ad-dashboard/ad-dashboard.module').then( m => m.AdDashboardModule)}, 
   {path: 'employee' , loadChildren: () => import('./portal/admin/employee/ad-employee/ad-employee.module').then( m => m.AdEmployeeModule)   },
   {path: 'product' , loadChildren: () => import('./portal/admin/product/ad-product/ad-product.module').then( m => m.AdProductModule)    },
   {path: 'category' , loadChildren: () => import('./portal/admin/category/ad-category/ad-category.module').then( m => m.AdCategoryModule) },
   {path: 'admin-user' , loadChildren: () => import('./portal/admin/admin-user/ad-user/ad-user.module').then( m => m.AdUserModule)  },
+  { path: 'article', loadChildren: () => import('./portal/admin/article/article.module').then(m => m.ArticleModule) },
+  
     ]
   },
 
@@ -113,6 +118,8 @@ const routes: Routes = [
   { path: 'portal/messenger', loadChildren: () => import('./layouts/message/message.module').then( m => m.MessageModule) },
 
   { path: 'portal/success' , component: SuccessPaymentComponent, canActivate: [CanEmployeeLogged] },
+ 
+
 
   { path: '**', component: NotFoundComponent, canActivate: [CanEmployeeLogged] },
 

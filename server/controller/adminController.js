@@ -7,6 +7,7 @@ const collectionadmin = require('../model/adminDS')
 const collectionemployee = require('../model/employeeDB')
 const collectionadcategory = require('../model/categoryDB')
 const collectionproduct = require('../model/productDB')
+const collectionnews = require('../model/newsDB')
 const salesQuotation = require('../model/quotatiionDB')
 const sentEmail = require('../auth/sentEmail')
 const randomstring = require('randomstring')
@@ -742,6 +743,93 @@ const loadDashboard = async (req , res) => {
 }
 
 
+//load News
+
+const loadNews = async (req , res) => {
+
+    try {
+       
+        res.setHeader('Cache-Control', 'no-cache, no-store');
+        const news = await collectionnews.find({}).exec(); 
+        console.log('News:', news);
+
+        if (!category) {
+            
+            return res.status(404).json({ error: 'No admins found' });
+          }
+
+        res.json(news);
+
+      } catch (error) {
+    
+        console.error('Error fetching admins:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+      }
+
+}
+
+
+
+
+
+const addNews = async (req, res) => {
+    console.log('Request received to add a new category');
+    console.log('Request body:', req.body);
+
+    const newsData = {
+        article: req.body.article,
+    };
+
+    try {
+        
+        await collectionnews.create(newsData);
+        console.log('News added successfully');
+        
+        return res.json({
+            success: true,
+            message: 'News added successfully'
+        });
+    } catch (error) {
+        console.error('Error adding news:', error);
+        return res.status(500).json({
+            success: false,
+            message: 'An error occurred while adding the news'
+        });
+    }
+};
+
+
+//delete News
+
+const deleteNews = async (req, res) => {
+    const newsId = req.params.id; 
+    
+    console.log(`Request received to delete admin with ID: ${newsId}`);
+
+    try {
+       
+        await collectionnews.findOneAndDelete( {_id: newsId});
+        
+        console.log('News deleted successfully');
+        
+       
+        return res.json({
+            success: true,
+            message: 'SUCCESS'
+        });
+    } catch (error) {
+       
+        console.error('Error deleting news:', error);
+        
+     
+        return res.status(500).json({
+            success: false,
+            message: 'An error occurred'
+        });
+    }
+};
+
+
 
 
 
@@ -772,7 +860,11 @@ module.exports = {
     addProduct,
     deleteProduct,
 
-    loadDashboard
+    loadDashboard,
+
+    loadNews,
+    addNews,
+    deleteNews
 
 
 }
