@@ -21,7 +21,7 @@ export class AdminSbComponent  {
   logout(): void {
 
     this.authService.logout();
-    this.router.navigate(['/admin']);
+    this.router.navigate(['/admin-login']);
 
   
 }

@@ -14,7 +14,7 @@ export const CanAdminLogged: CanActivateFn = (route, state) => {
     return true;
   } else {
     console.log('canAdminLogged guard activated: Token does not exist');
-    router.navigate(['/admin']);
+    router.navigate(['/admin-login']);
     return false;
   }
 };

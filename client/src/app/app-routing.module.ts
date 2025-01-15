@@ -40,6 +40,7 @@ import { MessageComponent } from './layouts/message/message.component';
 import { SuccessPaymentComponent } from './portal/employee/accounting/success-payment/success-payment.component';
 import { NotFoundComponent } from './layouts/not-found/not-found.component';
 import { ExcelComponent } from './layouts/excel/excel.component';
+import { AdminRouterComponent } from './portal/admin/admin-router.component';
 
 
 
@@ -49,13 +50,21 @@ const routes: Routes = [
  
   {path: 'employee-login' , loadChildren: () => import('./portal/employee/employeelogin/employee-login/employee-login.module').then( m => m.EmployeeLoginModule)},
 
-  {path: 'admin' , loadChildren: () => import('./portal/admin/adminlogin/admin-login/admin-login.module').then( m => m.AdminLoginModule) },
-  {path: 'admin/portal' , loadChildren: () => import('./portal/admin/admin-portal/admin-portal.module').then( m => m.AdminPortalModule)   },
-  {path: 'admin/dashboard' , loadChildren: () => import('./portal/admin/dashboard/ad-dashboard/ad-dashboard.module').then( m => m.AdDashboardModule)}, 
-  {path: 'admin/employee' , loadChildren: () => import('./portal/admin/employee/ad-employee/ad-employee.module').then( m => m.AdEmployeeModule)   },
-  {path: 'admin/product' , loadChildren: () => import('./portal/admin/product/ad-product/ad-product.module').then( m => m.AdProductModule)    },
-  {path: 'admin/category' , loadChildren: () => import('./portal/admin/category/ad-category/ad-category.module').then( m => m.AdCategoryModule) },
-  {path: 'admin/admin-user' , loadChildren: () => import('./portal/admin/admin-user/ad-user/ad-user.module').then( m => m.AdUserModule)  },
+
+  {path: 'admin-login' , loadChildren: () => import('./portal/admin/adminlogin/admin-login/admin-login.module').then( m => m.AdminLoginModule) },
+
+  {
+    path: 'admin',
+    component: AdminRouterComponent,
+    children: [
+  {path: 'portal' , loadChildren: () => import('./portal/admin/admin-portal/admin-portal.module').then( m => m.AdminPortalModule)   },
+  {path: 'dashboard' , loadChildren: () => import('./portal/admin/dashboard/ad-dashboard/ad-dashboard.module').then( m => m.AdDashboardModule)}, 
+  {path: 'employee' , loadChildren: () => import('./portal/admin/employee/ad-employee/ad-employee.module').then( m => m.AdEmployeeModule)   },
+  {path: 'product' , loadChildren: () => import('./portal/admin/product/ad-product/ad-product.module').then( m => m.AdProductModule)    },
+  {path: 'category' , loadChildren: () => import('./portal/admin/category/ad-category/ad-category.module').then( m => m.AdCategoryModule) },
+  {path: 'admin-user' , loadChildren: () => import('./portal/admin/admin-user/ad-user/ad-user.module').then( m => m.AdUserModule)  },
+    ]
+  },
 
 
   { path: 'portal/dashboard' , loadChildren: () => import('./portal/employee/dashboard/em-dashboard/em-dashboard.module').then(m => m.EmDashboardModule) },

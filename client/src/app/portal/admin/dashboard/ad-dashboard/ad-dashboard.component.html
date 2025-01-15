@@ -1,6 +1,5 @@
-<app-admin-nb></app-admin-nb> 
 <app-admin-sb></app-admin-sb>
-
+<!-- 
 <main class="w-full sm:w-3/4 p-4 ml-0 sm:ml-80 ">
    
 
@@ -55,6 +54,63 @@
     </div>
 
     
-      
-  
-  </main>
+  </main> -->
+
+
+  <div class="relative overflow-x-auto sm:rounded-lg flex flex-col items-center">
+   
+
+      <div class="flex justify-center  ">
+        <div class="stats stats-vertical lg:stats-horizontal shadow bg-slate-100 border border-slate-900">
+          <div class="stat">
+            <div class="stat-title text-slate-900">No of Employees</div>
+            <div class="stat-value text-slate-900"> {{ employeeDetails.length }}   </div>
+          </div>
+          <div class="stat">
+            <div class="stat-title text-slate-900">No of Quotation</div>
+            <div class="stat-value text-slate-900"> {{ spoDetails.length }}   </div>
+          </div>
+          <div class="stat">
+            <div class="stat-title text-slate-900">No of Customers</div>
+            <div class="stat-value text-slate-900"> {{ calculateUniqueCustomers(spoDetails) }}   </div>
+          </div>
+          <div class="stat">
+            <div class="stat-title text-slate-900">No of Orders</div>
+            <div class="stat-value text-slate-900"> {{ calculateOrders(spoDetails) }}  </div>
+          </div>
+          <div class="stat">
+            <div class="stat-title text-slate-900">Total Orders</div>
+            <div class="stat-value text-slate-900"> {{ calculateTotalOrders(spoDetails) }}  </div>
+          </div>
+        </div>
+    
+      </div>
+    
+      <div class="grid grid-flow-col justify-center items-center gap-2 text-center auto-cols-max mt-5">
+        <div class="flex flex-col p-1 bg-slate-100 border border-slate-900 rounded-box text-neutral-content">
+          <span class="font-mono text-slate-900 text-4xl">{{ currentDate.getDate() }}</span>
+          <span class="text-xs"></span>
+        </div> 
+        <div class="flex flex-col p-1 bg-slate-100 border border-slate-900 rounded-box text-neutral-content">
+          <span class="font-mono text-4xl text-slate-900 ">{{ currentDate | date: 'MMMM' }}</span>
+          <span class="text-xs"></span>
+        </div> 
+        <div class="flex flex-col p-1 bg-slate-100 border border-slate-900 rounded-box text-neutral-content">
+          <span class="font-mono text-4xl text-slate-900">{{ currentDate.getFullYear() }}</span>
+          <span class="text-xs"></span>
+        </div> 
+    </div>
+    
+    
+      <div class="mt-5">
+        <button class="btn btn-sm btn-outline text-slate-900" (click)="toggleTimePeriod()">Toggle Time Period</button>
+      </div>
+    
+        <div class="mt-2 ">
+          <canvas id="linechart" width="900" height="400"></canvas>
+        </div>  
+    
+
+  </div>
+
+

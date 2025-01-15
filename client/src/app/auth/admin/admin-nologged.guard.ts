@@ -15,7 +15,7 @@ export class CanActivateLogin implements CanActivate {
     if (token) {
       console.log('CanActivateLogin guard: Token exists');
      
-      if (this.router.url !== '/admin') {
+      if (this.router.url !== '/admin-login') {
         console.log('Redirecting to admin portal');
         this.router.navigate(['/admin/portal']);
       }

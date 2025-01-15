@@ -1,14 +1,13 @@
-<app-admin-nb></app-admin-nb> 
-<app-admin-sb></app-admin-sb>
 
-<main class="w-full sm:w-3/4 p-4 ml-0 sm:ml-80 ">
+
+<div class="relative flex flex-col ">
   <!-- Your main content goes here -->
   <div class="form-control">
     <input type="text" placeholder="Search"  [(ngModel)]="searchTerm" class="input input-bordered w-24 md:w-auto" />
   </div>
 
   <!-- Open the modal using ID.showModal() method -->
-  <button class="btn btn-outline mt-5" (click)="showModal()">Add</button>
+  <button class="btn btn-outline mt-5 text-slate-900" (click)="showModal()">Add</button>
   <dialog #my_modal_1 class="modal">
     <div class="modal-box">
 
@@ -35,9 +34,9 @@
     <table class="table">
       <!-- head -->
       <thead>
-        <tr>
+        <tr class="text-slate-900">
           <th>
-            
+            Sl No
           </th>
           <th>Category</th>
           
@@ -48,7 +47,7 @@
       </thead>
       <tbody>
         <!-- row 1 -->
-        <tr *ngFor="let category of getCurrentPageRecords() | async; let i = index; trackBy: trackByCategory">
+        <tr *ngFor="let category of getCurrentPageRecords() | async; let i = index; trackBy: trackByCategory" class="text-slate-900">
           <th>
             {{ i + 1 }}
           </th>
@@ -93,8 +92,10 @@
       </tbody>
       <!-- foot -->
       <tfoot>
-        <tr>
-          <th></th>
+        <tr class="text-slate-900">
+
+          <th>Sl No</th>
+       
           <th>Category</th>
        
           <th></th>
@@ -107,9 +108,9 @@
 
   <div class="pagination">
     <button class="btn" (click)="previousPage()" [disabled]="currentPage === 1">Previous</button>
-    <span>Page {{ currentPage }}</span>
+    <span class="ml-5 me-5 text-slate-900">Page {{ currentPage }}</span>
     <button class="btn" (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
   </div>
 
 
-</main>
+</div>

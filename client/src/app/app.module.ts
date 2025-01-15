@@ -78,6 +78,7 @@ import { SuccessPaymentComponent } from './portal/employee/accounting/success-pa
 import { NotFoundComponent } from './layouts/not-found/not-found.component';
 import { ExcelComponent } from './layouts/excel/excel.component';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { AdminRouterComponent } from './portal/admin/admin-router.component';
 
 
 
@@ -131,10 +132,8 @@ import { NgxPaginationModule } from 'ngx-pagination';
     SuccessPaymentComponent,
     NotFoundComponent,
     ExcelComponent,
-    
-    
-    
-
+    AdminRouterComponent
+   
     
   ],
   imports: [
