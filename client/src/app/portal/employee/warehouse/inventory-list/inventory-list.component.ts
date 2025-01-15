@@ -20,6 +20,11 @@ export class InventoryListComponent implements OnInit, OnDestroy {
  
   product$: Observable<Product[]>;
 
+  searchTerm: string = '';
+  currentPage: number = 1;
+  itemsPerPage: number = 8;
+  totalPages: number = 1;
+
   categories: Category[] = [];
   private destroy$ = new Subject<void>();
 
@@ -39,6 +44,8 @@ export class InventoryListComponent implements OnInit, OnDestroy {
       this.categories = categories;
       console.log('Categories:', this.categories);
     });
+
+    this.calculateTotalPages()
   
   }
 
@@ -53,6 +60,48 @@ export class InventoryListComponent implements OnInit, OnDestroy {
   trackByProductId(index: number, product: Product): string {
     return product._id;
   }
+
+
+  getCurrentPageRecords(): Observable<Product[]> {
+    return this.filteredRecords.pipe(
+      map(records => {
+        const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+        return records.slice(startIndex, startIndex + this.itemsPerPage);
+      })
+    );
+  }
+
+
+  get filteredRecords(): Observable<Product[]> {
+    const searchTermLower = this.searchTerm.toLowerCase();
+    return this.product$.pipe(
+      map(records => records.filter(record => 
+        record.product.toLowerCase().includes(searchTermLower) ||
+        record.description.toLowerCase().includes(searchTermLower) ||
+        record.uom.toLowerCase().includes(searchTermLower) ||
+        record.availability.toLowerCase().includes(searchTermLower)
+      ))
+    );
+  }
+
+  calculateTotalPages(): void {
+    this.product$.pipe(takeUntil(this.destroy$)).subscribe(product => {
+      this.totalPages = Math.ceil(product.length / this.itemsPerPage);
+    });
+  }
+
+  previousPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+    }
+  }
+
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+    }
+  }
+
 
   ngOnDestroy(): void {
     this.destroy$.next(); 
