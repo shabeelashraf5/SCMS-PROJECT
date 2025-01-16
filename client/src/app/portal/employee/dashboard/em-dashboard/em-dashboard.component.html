@@ -88,19 +88,11 @@
             <p class="text-xl">Trending News</p>
             <div class="divider"></div>
             <div class="row">
-              <!-- <div *ngFor="let news of displayedArticles" class="col-lg-6 mt-2 mb-3">
+             
+              <div *ngFor="let article of articleData" class="col-lg-6 mt-2 mb-3">
                 <div class="flex flex-row box">
-                  <img [src]="news.urlToImage" alt="News Image" class="mt-3 w-14 h-14 rounded-md">
-                  <p class="mt-2 mb-2 ml-2 text-sm text-justify">{{ news.title }}</p>
-                </div>
-                <div>
-                  <a [href]="news.url" target="_blank" class="btn btn-dark btn-sm mt-2">Read more</a>
-                </div>
-              </div> -->
-              <div *ngFor="let news of announcements" class="col-lg-6 mt-2 mb-3">
-                <div class="flex flex-row box">
-                  <!-- <img [src]="news.urlToImage" alt="News Image" class="mt-3 w-14 h-14 rounded-md"> -->
-                  <p class="mt-2 mb-2 ml-2 text-sm text-justify">{{ news}}</p>
+                
+                  <p class="mt-2 mb-2 ml-2 text-sm text-justify">{{ article.article}}</p>
                 </div>
                 
               </div>

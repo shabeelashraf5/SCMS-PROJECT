@@ -23,4 +23,10 @@ export class ArticleService {
       return this.http.post(`${this.apiUrl}/article/add`, form)
 
     }
+
+    deleteArticle(id: string): Observable<any> {
+
+      return this.http.delete(`${this.apiUrl}/article/delete/${id}`)
+
+    }
 }

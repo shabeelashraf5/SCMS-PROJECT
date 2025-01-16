@@ -51,7 +51,17 @@ export class ArticleComponent implements OnInit {
 
     this.articleService.addArticle(formData).subscribe({
       next: (response) => {
+        this.loadArticle()
         console.log('Article Created')
+      }
+    })
+  }
+
+  removeArticle(id: string) {
+
+    this.articleService.deleteArticle(id).subscribe({
+      next: (response) => {
+        this.loadArticle()
       }
     })
   }
