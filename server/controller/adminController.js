@@ -753,12 +753,16 @@ const loadNews = async (req , res) => {
         const news = await collectionnews.find({}).exec(); 
         console.log('News:', news);
 
-        if (!category) {
+        if (!news) {
             
             return res.status(404).json({ error: 'No admins found' });
           }
 
-        res.json(news);
+        res.status(200).json({
+            success: true,
+            message: 'Datas loaded Successfully',
+            datas: news
+        });
 
       } catch (error) {
     
@@ -782,12 +786,13 @@ const addNews = async (req, res) => {
 
     try {
         
-        await collectionnews.create(newsData);
-        console.log('News added successfully');
+        articleDatas = await collectionnews.create(newsData);
+        console.log('News added successfully', articleDatas);
         
         return res.json({
             success: true,
-            message: 'News added successfully'
+            message: 'News added successfully',
+            datas: articleDatas
         });
     } catch (error) {
         console.error('Error adding news:', error);

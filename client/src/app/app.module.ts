@@ -79,6 +79,8 @@ import { NotFoundComponent } from './layouts/not-found/not-found.component';
 import { ExcelComponent } from './layouts/excel/excel.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { AdminRouterComponent } from './portal/admin/admin-router.component';
+import { ArticleComponent } from './portal/admin/article/article.component';
+import { ArticleModule } from './portal/admin/article/article.module';
 
 
 
@@ -108,6 +110,7 @@ import { AdminRouterComponent } from './portal/admin/admin-router.component';
     SalesOrderComponent,
     AddQuotationComponent,
 
+
     PurchaseOrderComponent,
     EvaluationComponent,
     SupplierComponent,
@@ -130,6 +133,7 @@ import { AdminRouterComponent } from './portal/admin/admin-router.component';
     NotFoundComponent,
     ExcelComponent,
     AdminRouterComponent,
+  
    
      
   ],
@@ -147,6 +151,7 @@ import { AdminRouterComponent } from './portal/admin/admin-router.component';
     StoreModule.forRoot(appReducer),
     EffectsModule.forRoot([AdUserEffects, AdminLoginEffects, AdEmployeeEffects, EmployeeLoginEffects,
     AdCategoryEffects, AdProductEffects, EmDashboardEffects,  ProfileEffects, InventoryEffects]),
+    ArticleModule
  
    
     // SocketIoModule.forRoot(config)
