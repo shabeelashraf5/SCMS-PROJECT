@@ -32,7 +32,7 @@ router.put('/logout',  employeeController.EmployeeLogOut)
 
 router.put('/mark-as-seen', verifyToken, employeeController.markMessageAsSeen);
 
-router.get('/news', employeeController.getNews);
+// router.get('/news', employeeController.getNews);
 
 
 

@@ -56,7 +56,7 @@ export class EmDashboardComponent implements OnInit {
     
     this.store.dispatch(EmMessagingActions.loadMessage());
     this.loadProfile()
-    this.loadNews()
+    // this.loadNews()
   
   }
 
@@ -89,16 +89,16 @@ loadProfile() {
 }
 
 
-loadNews() {
+// loadNews() {
 
-  this.employeeService.topHeading().subscribe({
-    next: (response) => {
-      this.articles = response
-      this.displayedArticles = this.articles.slice(7, 11)
-      console.log('News:', this.articles)
-    }
-  })
-}
+//   this.employeeService.topHeading().subscribe({
+//     next: (response) => {
+//       this.articles = response
+//       this.displayedArticles = this.articles.slice(7, 11)
+//       console.log('News:', this.articles)
+//     }
+//   })
+// }
 
 
 
