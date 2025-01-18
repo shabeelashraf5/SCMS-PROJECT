@@ -116,6 +116,13 @@ getClient(detail: Invoice): string {
   return '';
 }
 
+getEmail(detail: Invoice): string {
+  if (detail && detail.purchase_id && detail.purchase_id.po_id && detail.purchase_id.po_id.quotation_id ) {
+    return detail.purchase_id.po_id.quotation_id.email; 
+  }
+  return '';
+}
+
 getAttention(detail: Invoice): string {
   if (detail && detail.purchase_id && detail.purchase_id.po_id && detail.purchase_id.po_id.quotation_id ) {
     return detail.purchase_id.po_id.quotation_id.attention; 
@@ -128,6 +135,20 @@ getTotalamount(detail: Invoice): number {
     return detail.purchase_id.po_id.quotation_id.totalAmount; 
   }
   return 0;
+}
+
+getResponsible(detail: Invoice): string {
+  if (typeof detail.employee_id === 'object' && 'fname' in detail.employee_id && 'lname' in detail.employee_id) {
+    return `${detail.employee_id.fname} ${detail.employee_id.lname}`;
+  }
+  return 'Unknown';
+}
+
+getResponsibleEmail(detail: Invoice): string {
+  if (typeof detail.employee_id === 'object' && 'email' in detail.employee_id) {
+    return `${detail.employee_id.email}`;
+  }
+  return 'Unknown';
 }
 
 trackByProductId(index: number, product: Product): string {
@@ -160,12 +181,12 @@ invoicePDF() {
   const products = this.getProduct(this.invoiceDetail.purchase_id.po_id.quotation_id.products);
 
   const productRows = products.map((product, index) => [
-    index + 1,
-    product.product,
-    product.qty,
-    product.uom,
-    product.unit,
-    product.total
+    { text: index + 1, alignment: 'center' },
+    { text: product.product, alignment: 'left' },
+    { text: product.qty, alignment: 'center' },
+    { text: product.uom, alignment: 'center' },
+    { text: product.unit, alignment: 'center' },
+    { text: product.total, alignment: 'center' },
   ]);
 
   const productTable = {
@@ -173,34 +194,164 @@ invoicePDF() {
       headerRows: 1,
       widths: ['auto', '*', 'auto', 'auto', 'auto', 'auto'],
       body: [
-        ['No.', 'Product', 'Quantity', 'UOM', 'Unit', 'Total'],
-        ...productRows
+        [
+          { text: 'No.', bold: true, alignment: 'center' },
+          { text: 'Product', bold: true, alignment: 'left' },
+          { text: 'Quantity', bold: true, alignment: 'center' },
+          { text: 'UOM', bold: true, alignment: 'center' },
+          { text: 'Unit', bold: true, alignment: 'center' },
+          { text: 'Total', bold: true, alignment: 'center' },
+        ],
+        ...productRows,
       ]
-    }
+    },
+    layout: 'lightHorizontalLines',
   };
 
   const documentDefinition: TDocumentDefinitions = {
-
-    
-      content: [
-        {
-          image: environment.logo_base64,
-          width: 50,
-          height: 50
-        },
-        { text: 'Invoice Note', fontSize: 16, alignment: 'center', margin: [0, 0, 0, 10] },
-        { text: `Invoice no:${this.invoiceDetail.invoice}\n Bill To: ${this.getClient(this.invoiceDetail)}\nAttention: ${this.getAttention(this.invoiceDetail)} `, fontSize: 12 },
-        { text: 'Dear Sir,', fontSize: 12, margin: [0, 20, 0, 0] },
-        { text: 'Thank you very much for giving us an opportunity', fontSize: 12, margin: [0, 10, 0, 0] },
+    content: [
+      {
+        columns: [
+          {
+            image: environment.logo_base64,
+            width: 50,
+          },
+          {
+            text: 'INVOICE',
+            alignment: 'right',
+            fontSize: 20,
+            bold: true,
+            margin: [0, 0, 0, 10],
+          },
+        ],
+      },
+      {
+        text: `Invoice No: ${this.invoiceDetail.invoice}`,
+        fontSize: 12,
+        margin: [0, 10, 0, 5],
+      },
+      {
+        text: `Date: ${new Date().toLocaleDateString()}`,
+        fontSize: 12,
+        margin: [0, 0, 0, 20],
+      },
+      {
+        columns: [
+          {
+            width: '50%',
+            stack: [
+              { text: 'Pay To:', bold: true, margin: [0, 0, 0, 5] },
+              { text: 'INBI Technology Co.', fontSize: 12 },
+              { text: this.getResponsible(this.invoiceDetail), fontSize: 12 },
+              { text: this.getResponsibleEmail(this.invoiceDetail), fontSize: 12, italics: true },
+            ],
+          },
+          {
+            width: '50%',
+            stack: [
+              { text: 'Invoice To:', bold: true, margin: [0, 0, 0, 5] },
+              { text: this.getClient(this.invoiceDetail), fontSize: 12 },
+              { text: this.getAttention(this.invoiceDetail), fontSize: 12 },
+              { text: this.getEmail(this.invoiceDetail), fontSize: 12, italics: true },
+            ],
+          },
+        ],
+      },
+      { text: 'Invoice Details', style: 'header', margin: [0, 20, 0, 10] },
       productTable,
-        { text: `Total Amount: ${this.getTotalamount(this.invoiceDetail)}`, fontSize: 12, alignment: 'right' },
-        { text: 'Make all payable to: 05shebz Limited LLC', fontSize: 12, margin: [0, 20, 0, 0] },
-        { text: 'Thank you for your business!', fontSize: 10, margin: [0, 20, 0, 0] },
-      ]
+      {
+        text: `Total Amount: ${this.getTotalamount(this.invoiceDetail)}`,
+        fontSize: 12,
+        bold: true,
+        alignment: 'right',
+        margin: [0, 20, 0, 0],
+      },
+      { text: 'Order Summary', style: 'header', margin: [0, 20, 0, 10] },
+      {
+        table: {
+          widths: ['*', 'auto'],
+          body: [
+            ['Original Price:', { text: this.getTotalamount(this.invoiceDetail), alignment: 'right' }],
+            ['Discount:', { text: '0.00', alignment: 'right' }],
+            ['Tax/VAT:', { text: '0.00', alignment: 'right' }],
+            ['Total:', { text: this.getTotalamount(this.invoiceDetail), bold: true, alignment: 'right' }],
+          ],
+        },
+        layout: 'noBorders',
+      },
+      {
+        text: 'Terms and Conditions',
+        style: 'header',
+        margin: [0, 20, 0, 10],
+      },
+      {
+        ul: [
+          'Payment is due within 15 days.',
+          'Late payments may incur additional charges.',
+          'Make all payable to: INBI Technology Co.',
+        ],
+      },
+      { text: 'Thank you for your business!', margin: [0, 20, 0, 0], alignment: 'center', italics: true },
+    ],
+    styles: {
+      header: {
+        fontSize: 14,
+        bold: true,
+        decoration: 'underline',
+      },
+    },
   };
 
   pdfMake.createPdf(documentDefinition).download('invoice-note.pdf');
 }
+
+
+
+// deliveryPDF() {
+//   pdfMake.vfs = pdfFonts.pdfMake.vfs;
+
+//   const products = this.getProduct(this.invoiceDetail.purchase_id.po_id.quotation_id.products);
+
+//   const productRows = products.map((product, index) => [
+//     index + 1,
+//     product.product,
+//     product.qty,
+//     product.uom,
+  
+//   ]);
+
+//   const productTable = {
+//     table: {
+//       headerRows: 1,
+//       widths: ['auto', '*', 'auto', 'auto' ],
+//       body: [
+//         ['No.', 'Product', 'Quantity', 'UOM' ],
+//         ...productRows
+//       ]
+//     }
+//   };
+
+//   const documentDefinition: TDocumentDefinitions = {
+
+    
+//       content: [
+//         {
+//           image: environment.logo_base64,
+//           width: 50,
+//           height: 50
+//         },
+//         { text: 'Delivery Note', fontSize: 16, alignment: 'center', margin: [0, 0, 0, 10] },
+//         { text: `Delivery no:${this.invoiceDetail.delivery}\nDeliver To: ${this.getClient(this.invoiceDetail)}\nAttention: ${this.getAttention(this.invoiceDetail)} `, fontSize: 12 },
+//         { text: 'Dear Sir,', fontSize: 12, margin: [0, 20, 0, 0] },
+//         { text: 'Thank you very much for giving us an opportunity', fontSize: 12, margin: [0, 10, 0, 0] },
+//       productTable,
+//         { text: 'Make all payable to: 05shebz Limited LLC', fontSize: 12, margin: [0, 20, 0, 0] },
+//         { text: 'Thank you for your business!', fontSize: 10, margin: [0, 20, 0, 0] },
+//       ]
+//   };
+
+//   pdfMake.createPdf(documentDefinition).download('delivery-note.pdf');
+// }
 
 
 deliveryPDF() {
@@ -209,41 +360,124 @@ deliveryPDF() {
   const products = this.getProduct(this.invoiceDetail.purchase_id.po_id.quotation_id.products);
 
   const productRows = products.map((product, index) => [
-    index + 1,
-    product.product,
-    product.qty,
-    product.uom,
-  
+    { text: index + 1, alignment: 'center' },
+    { text: product.product, alignment: 'left' },
+    { text: product.qty, alignment: 'center' },
+    { text: product.uom, alignment: 'center' },
   ]);
 
   const productTable = {
     table: {
       headerRows: 1,
-      widths: ['auto', '*', 'auto', 'auto' ],
+      widths: ['auto', '*', 'auto', 'auto'],
       body: [
-        ['No.', 'Product', 'Quantity', 'UOM' ],
-        ...productRows
-      ]
-    }
+        [
+          { text: 'No.', bold: true, alignment: 'center' },
+          { text: 'Product', bold: true, alignment: 'left' },
+          { text: 'Quantity', bold: true, alignment: 'center' },
+          { text: 'UOM', bold: true, alignment: 'center' },
+        ],
+        ...productRows,
+      ],
+    },
+    layout: 'lightHorizontalLines',
   };
 
   const documentDefinition: TDocumentDefinitions = {
-
-    
-      content: [
-        {
-          image: environment.logo_base64,
-          width: 50,
-          height: 50
-        },
-        { text: 'Delivery Note', fontSize: 16, alignment: 'center', margin: [0, 0, 0, 10] },
-        { text: `Delivery no:${this.invoiceDetail.delivery}\nDeliver To: ${this.getClient(this.invoiceDetail)}\nAttention: ${this.getAttention(this.invoiceDetail)} `, fontSize: 12 },
-        { text: 'Dear Sir,', fontSize: 12, margin: [0, 20, 0, 0] },
-        { text: 'Thank you very much for giving us an opportunity', fontSize: 12, margin: [0, 10, 0, 0] },
+    content: [
+      {
+        columns: [
+          {
+            image: environment.logo_base64,
+            width: 50,
+          },
+          {
+            text: 'DELIVERY NOTE',
+            alignment: 'right',
+            fontSize: 20,
+            bold: true,
+            margin: [0, 0, 0, 10],
+          },
+        ],
+      },
+      {
+        text: `Delivery No: ${this.invoiceDetail.delivery}`,
+        fontSize: 12,
+        margin: [0, 10, 0, 5],
+      },
+      {
+        text: `Date: ${new Date().toLocaleDateString()}`,
+        fontSize: 12,
+        margin: [0, 0, 0, 20],
+      },
+      {
+        columns: [
+          {
+            width: '50%',
+            stack: [
+              { text: 'Pay To:', bold: true, margin: [0, 0, 0, 5] },
+              { text: 'INBI Technology Co.', fontSize: 12 },
+              { text: this.getResponsible(this.invoiceDetail), fontSize: 12 },
+              { text: this.getResponsibleEmail(this.invoiceDetail), fontSize: 12, italics: true },
+            ],
+          },
+          {
+            width: '50%',
+            stack: [
+              { text: 'Delivery To:', bold: true, margin: [0, 0, 0, 5] },
+              { text: this.getClient(this.invoiceDetail), fontSize: 12 },
+              { text: this.getAttention(this.invoiceDetail), fontSize: 12 },
+              { text: this.getEmail(this.invoiceDetail), fontSize: 12, italics: true },
+            ],
+          },
+        ],
+      },
+      { text: 'Delivery Details', style: 'header', margin: [0, 20, 0, 10] },
       productTable,
-        { text: 'Make all payable to: 05shebz Limited LLC', fontSize: 12, margin: [0, 20, 0, 0] },
-        { text: 'Thank you for your business!', fontSize: 10, margin: [0, 20, 0, 0] },
-      ]
+      {
+        columns: [
+          { text: 'Delivered By:', fontSize: 12, margin: [0, 20, 0, 0] },
+          { text: 'Received By:', fontSize: 12, margin: [0, 20, 0, 0], alignment: 'right' },
+        ],
+      },
+      
+      {
+        qr: this.invoiceDetail.delivery,
+        fit: 75,
+        alignment: 'right',
+        margin: [0, 10, 0, 20],
+      },
+      {
+        text: 'Thank you for your business!',
+        margin: [0, 20, 0, 0],
+        alignment: 'center',
+        italics: true,
+      },
+      {
+        text: 'Terms and Conditions',
+        style: 'header',
+        margin: [0, 20, 0, 10],
+      },
+      {
+        text: 'All goods remain the property of INBI Technology Co. until paid in full. Please inspect the delivery and report any discrepancies within 7 days.',
+        fontSize: 10,
+        italics: true,
+        margin: [0, 0, 0, 10],
+      },
+    ],
+    styles: {
+      header: {
+        fontSize: 14,
+        bold: true,
+        decoration: 'underline',
+      },
+    },
+    footer: (currentPage, pageCount) => ({
+      text: `Page ${currentPage} of ${pageCount}`,
+      alignment: 'center',
+      fontSize: 10,
+      margin: [0, 10, 0, 0],
+    }),
   };
 
   pdfMake.createPdf(documentDefinition).download('delivery-note.pdf');

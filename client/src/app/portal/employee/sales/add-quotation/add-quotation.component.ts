@@ -280,34 +280,175 @@ trackByAddQuotation(index: number, addquotation: Product): string {
     });
   }
 
-  generatePDF() {
-    pdfMake.vfs = pdfFonts.pdfMake.vfs;
+//   generatePDF() {
+//     pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
-    const headers = ['Product Description', 'QTY', 'UOM', 'Unit Price', 'Total'];
-    const data = this.items.map(item => [item.product, item.qty, item.uom, item.unit, item.total]);
-    const tableBody = [headers, ...data];
+//     const headers = ['Product Description', 'QTY', 'UOM', 'Unit Price', 'Total'];
+//     const data = this.items.map(item => [item.product, item.qty, item.uom, item.unit, item.total]);
+//     const tableBody = [headers, ...data];
 
-    const documentDefinition: TDocumentDefinitions = {
+//     const documentDefinition: TDocumentDefinitions = {
 
       
-        content: [
-          {
-            image: environment.logo_base64,
-            width: 50,
-            height: 50
-          },
-            { text: 'Quotation Form', fontSize: 16, alignment: 'center', margin: [0, 0, 0, 10] },
-            { text: `RFQ No: ${this.rfqDetail?.srfq}\nTo: ${this.clientname}\nAttention: ${this.attention}\nEmail: ${this.email}\nPhone: ${this.phone}\nClient RFQ: ${this.clientrfq}`, fontSize: 12 },
-           // { canvas: [{ type: 'rect', x: 15, y: 35, w: 180, h: 35, r: 5, lineColor: '#000000' }] },
-            { text: 'Dear Sir,', fontSize: 12, margin: [0, 20, 0, 0] },
-            { text: `Subject: ${this.subject}`, fontSize: 12 },
-            { text: 'Thank you very much for giving us an opportunity to quote for above referred subject, we are pleased to quote our best offer as per the following:', fontSize: 12, margin: [0, 10, 0, 0] },
-            { table: { widths: ['*', '*', '*', '*', '*'], body: tableBody }, layout: 'lightHorizontalLines', margin: [0, 10, 0, 0] }
-        ]
-    };
+//         content: [
+//           {
+//             image: environment.logo_base64,
+//             width: 50,
+//             height: 50
+//           },
+//             { text: 'Quotation Form', fontSize: 16, alignment: 'center', margin: [0, 0, 0, 10] },
+//             { text: `RFQ No: ${this.rfqDetail?.srfq}\nTo: ${this.clientname}\nAttention: ${this.attention}\nEmail: ${this.email}\nPhone: ${this.phone}\nClient RFQ: ${this.clientrfq}`, fontSize: 12 },
+//            // { canvas: [{ type: 'rect', x: 15, y: 35, w: 180, h: 35, r: 5, lineColor: '#000000' }] },
+//             { text: 'Dear Sir,', fontSize: 12, margin: [0, 20, 0, 0] },
+//             { text: `Subject: ${this.subject}`, fontSize: 12 },
+//             { text: 'Thank you very much for giving us an opportunity to quote for above referred subject, we are pleased to quote our best offer as per the following:', fontSize: 12, margin: [0, 10, 0, 0] },
+//             { table: { widths: ['*', '*', '*', '*', '*'], body: tableBody }, layout: 'lightHorizontalLines', margin: [0, 10, 0, 0] }
+//         ]
+//     };
 
-    pdfMake.createPdf(documentDefinition).download('quotation.pdf');
+//     pdfMake.createPdf(documentDefinition).download('quotation.pdf');
+// }
+
+generatePDF() {
+  pdfMake.vfs = pdfFonts.pdfMake.vfs;
+
+  const headers = [
+    { text: 'Product Description', style: 'tableHeader' },
+    { text: 'QTY', style: 'tableHeader' },
+    { text: 'UOM', style: 'tableHeader' },
+    { text: 'Unit Price', style: 'tableHeader' },
+    { text: 'Total', style: 'tableHeader' }
+  ];
+
+  const data = this.items.map(item => [
+    { text: item.product, style: 'tableCell' },
+    { text: item.qty, style: 'tableCell', alignment: 'center' },
+    { text: item.uom, style: 'tableCell', alignment: 'center' },
+    { text: item.unit, style: 'tableCell', alignment: 'right' },
+    { text: item.total, style: 'tableCell', alignment: 'right' }
+  ]);
+
+  const tableBody = [headers, ...data];
+
+  const documentDefinition: TDocumentDefinitions = {
+    content: [
+      {
+        image: environment.logo_base64,
+        width: 70,
+        alignment: 'center',
+        margin: [0, 0, 0, 20]
+      },
+      {
+        text: 'Quotation Form',
+        style: 'title'
+      },
+      {
+        text: `RFQ No: ${this.rfqDetail?.srfq}\nTo: ${this.clientname}\nAttention: ${this.attention}\nEmail: ${this.email}\nPhone: ${this.phone}\nClient RFQ: ${this.clientrfq}`,
+        style: 'clientDetails',
+        margin: [0, 10, 0, 20]
+      },
+      {
+        text: 'Dear Sir/Madam,',
+        style: 'greeting',
+        margin: [0, 0, 0, 10]
+      },
+      {
+        text: `Subject: ${this.subject}`,
+        style: 'subject',
+        margin: [0, 0, 0, 10]
+      },
+      {
+        text: 'Thank you for giving us an opportunity to quote for the above-referenced subject. We are pleased to offer the following quotation:',
+        style: 'bodyText',
+        margin: [0, 0, 0, 20]
+      },
+      {
+        table: {
+          widths: ['*', 'auto', 'auto', 'auto', 'auto'],
+          body: tableBody
+        },
+        layout: 'lightHorizontalLines',
+        margin: [0, 10, 0, 20]
+      },
+      {
+        text: 'Terms and Conditions',
+        style: 'sectionHeader',
+        margin: [0, 20, 0, 10]
+      },
+      {
+        ul: [
+          `${this.basis}`,
+          `${this.payment}`,
+          `${this.validity}`,
+          `${this.availability}`
+        ],
+        style: 'list'
+      },
+      {
+        text: 'Notes',
+        style: 'sectionHeader',
+        margin: [0, 20, 0, 10]
+      },
+      {
+        text: 'We look forward to your positive response. Please feel free to contact us for any clarifications.',
+        style: 'bodyText'
+      }
+    ],
+    styles: {
+      title: {
+        fontSize: 18,
+        bold: true,
+        alignment: 'center',
+        margin: [0, 0, 0, 20]
+      },
+      clientDetails: {
+        fontSize: 12,
+        margin: [0, 0, 0, 10]
+      },
+      greeting: {
+        fontSize: 12,
+        bold: true
+      },
+      subject: {
+        fontSize: 12,
+        bold: true,
+        italics: true
+      },
+      bodyText: {
+        fontSize: 12
+      },
+      tableHeader: {
+        bold: true,
+        fontSize: 12,
+        color: 'white',
+        fillColor: '#4CAF50',
+        alignment: 'center'
+      },
+      tableCell: {
+        fontSize: 10,
+        margin: [5, 5, 5, 5]
+      },
+      sectionHeader: {
+        fontSize: 14,
+        bold: true,
+        decoration: 'underline'
+      },
+      list: {
+        fontSize: 12,
+        margin: [0, 0, 0, 10]
+      }
+    },
+    footer: (currentPage, pageCount) => ({
+      text: `Page ${currentPage} of ${pageCount}`,
+      alignment: 'center',
+      fontSize: 10,
+      margin: [0, 10, 0, 0]
+    })
+  };
+
+  pdfMake.createPdf(documentDefinition).download('quotation.pdf');
 }
+
 
 ngOnDestroy(): void {
   

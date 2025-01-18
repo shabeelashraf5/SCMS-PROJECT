@@ -63,6 +63,11 @@ const invoiceSingle = async function (req, res) {
     try {
         const invSingle = await invoicing.findOne({  _id: invoiceId })
         .populate({
+            path: 'employee_id',
+            select: 'fname lname email', 
+            model: 'employee' 
+        })
+        .populate({
             path: 'purchase_id',
             select: 'totalAmount to products po_id',
             populate: {
@@ -72,7 +77,7 @@ const invoiceSingle = async function (req, res) {
                 populate: {
                     path: 'quotation_id',
                     model: 'quotation',
-                    select: 'salesRFQ_id to attention clientrfq totalAmount totalprice products',
+                    select: 'salesRFQ_id clientname email attention clientrfq totalAmount totalprice products',
                     populate: {
                         path: 'salesRFQ_id',
                         model: 'sales-rfq',
@@ -208,7 +213,7 @@ const transSingle = async function (req, res) {
         const transSingle = await invoicing.findOne({  _id: invoiceId })
         .populate({
             path: 'purchase_id',
-            select: 'totalAmount to products supplierrfq basis po_id',
+            select: 'totalAmount to attention products supplierrfq basis po_id',
             populate: {
                 path: 'po_id',
                 model: 'purchase-po',
