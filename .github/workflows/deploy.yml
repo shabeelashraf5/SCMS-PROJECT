@@ -1,0 +1,34 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - core  # Trigger on changes to the main branch (modify if you use a different branch)
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest  # Use the latest Ubuntu runner for the job
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3  # Check out the code from the repository
+
+    - name: Set up SSH key for EC2
+      run: |
+        echo "Setting up SSH key..."
+        mkdir -p ~/.ssh  # Ensure the SSH directory exists
+        echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa  # Add the secret SSH key
+        chmod 600 ~/.ssh/id_rsa  # Set the correct permissions for the private key
+
+    - name: Add EC2 to Known Hosts
+      run: |
+        ssh-keyscan -H ${{ secrets.EC2_PUBLIC_IP }} >> ~/.ssh/known_hosts  # Add EC2 instance's SSH fingerprint to known hosts
+
+    - name: Deploy to EC2
+      run: |
+        ssh -i ~/.ssh/id_rsa ubuntu@${{ secrets.EC2_PUBLIC_IP }} << 'EOF'
+          cd /home/ubuntu/SCMS-PROJECT/server # Change to your app directory on EC2
+          git pull origin core  # Pull the latest changes from the main branch
+          npm install  # Install the latest dependencies
+          pm2 restart all  # Restart the app using pm2
+        EOF
