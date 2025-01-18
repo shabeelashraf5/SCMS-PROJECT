@@ -1,6 +1,6 @@
 const uuid = require('uuid');
 
-const prefix = "shebz/";
+const prefix = "INBI/";
 
 function generateCustomUUID() {
     const randomNumber = Math.floor(1000 + Math.random() * 9000);

@@ -1,6 +1,6 @@
 const uuid = require('uuid');
 
-const prefixpo = "PO/shebz/"
+const prefixpo = "PO/INBI/"
 
 
 function generateCustomPO(){

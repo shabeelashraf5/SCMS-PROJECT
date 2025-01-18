@@ -1,6 +1,6 @@
 const uuid = require('uuid');
 
-const prefixpo = "INV/shebz/"
+const prefixpo = "INV/INBI/"
 
 
 function generateCustomInvoice(){
