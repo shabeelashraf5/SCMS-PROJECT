@@ -159,20 +159,18 @@
                     {{ getClient(detail) }} 
                   </td>
                   <td class="px-6 py-4 text-gray-400">
-                    {{ getClient(detail) }} 
+                    {{ getRFQ(detail) }} 
                   </td>
                   <td class="px-6 py-4 text-gray-400">
-                    {{ getRFQ(detail) }}  
+                    {{ getInvoice(detail) }}   
                   </td>
                   <td class="px-6 py-4 text-gray-400">
-                    {{ getInvoice(detail) }} 
+                    {{ getDelivery(detail) }} 
                   </td>
                   <td class="px-6 py-4 text-gray-400">
-                    {{ getDelivery(detail) }}  
+                    {{ detail.status }} 
                   </td>
-                  <td class="px-6 py-4 text-gray-400">
-                    {{detail.status}}  
-                  </td>
+                  
                   <td class="px-6 py-4 text-gray-400">
                     <button class="btn btn-outline btn-error btn-xs"  [disabled]="confirmedDelivery.has(detail._id)"  (click)="confirmDelivery(detail._id)" >Confirm</button>
                   </td>
