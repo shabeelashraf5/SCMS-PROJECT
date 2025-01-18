@@ -1,4 +1,4 @@
-<div class="flex flex-col lg:flex-row w-full h-screen bg-slate-900">
+<div class="flex flex-col lg:flex-row w-full h-screen bg-slate-900 relative">
   <!-- Left Section -->
   <div class="grid h-screen w-full bg-slate-900 place-items-center">
     <div class="flex justify-center items-center">
@@ -40,8 +40,17 @@
       </form>
     </div>
   </div>
+
+  <!-- Guest Login Note -->
+  <div class="absolute top-5 left-5 bg-slate-900 border-l-4 border-t border-b border-r-4 border-yellow-500 text-white p-4 rounded-md shadow-md">
+    <h2 class="text-lg font-bold text-center">Guest Login</h2>
+    <p class="text-sm text-center mt-2">Email: <span class="font-medium">{{email}}</span></p>
+    <p class="text-sm text-center">Password: <span class="font-medium">{{password}}</span></p>
+    <p class="text-xs text-gray-400 mt-2 italic">Use these credentials for a quick guest visit.</p>
+  </div>
   <!-- <app-footer [backgroundColorClass]="'bg-black'"></app-footer> -->
 </div>
+
 
 
 

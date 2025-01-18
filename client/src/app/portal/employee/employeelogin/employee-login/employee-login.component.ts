@@ -18,8 +18,9 @@ import { filter } from 'rxjs/operators';
 export class EmployeeLoginComponent implements OnInit, OnDestroy  {
   loginForm!: FormGroup;
   subscription!: Subscription;
+  email: string = 'test@xyz.in'
+  password: number = 123456
   
-
   constructor(private formBuilder: FormBuilder, private store: Store<AppState>, private snackBar: MatSnackBar) {}
 
   ngOnInit(): void {
