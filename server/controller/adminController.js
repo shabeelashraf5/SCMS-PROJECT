@@ -202,7 +202,7 @@ const updateAdmin = async (req, res) => {
         });
     }
 };
-// delete Admin
+
 
 const deleteAdmin = async (req, res) => {
     const adminId = req.params.id; 
