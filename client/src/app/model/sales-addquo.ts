@@ -9,6 +9,7 @@ export interface Product {
     uom: string;
     unit: Number;
     uplift: Number;
+    upliftedprice: number;
     total: Number;
 }
 
@@ -28,7 +29,7 @@ export interface AddQuotation {
     payment: string;
     validity: string;
     availability: string;
-    discount: Number;
+    discount: number;
     totalAmount: number;
     totalprice: number;
     

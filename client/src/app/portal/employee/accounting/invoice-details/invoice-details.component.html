@@ -297,7 +297,7 @@
                                 {{ product.uom }}
                             </td>
                             <td class="px-6 py-4 text-gray-400">
-                                {{ product.unit }}
+                                {{ product.upliftedprice }}
                             </td>
                             <td class="px-6 py-4 text-gray-400">
                                 {{ product.total }}
@@ -316,12 +316,12 @@
               <div class="space-y-2">
                 <dl class="flex items-center justify-between gap-4">
                   <dt class="text-gray-500 dark:text-gray-400">Original price</dt>
-                  <dd class="text-base font-medium text-gray-300 dark:text-white">{{ getTotalamount(invoiceDetail) }}</dd>
+                  <dd class="text-base font-medium text-gray-300 dark:text-white">{{ getTotalPrice(invoiceDetail) }}</dd>
                 </dl>
   
                 <dl class="flex items-center justify-between gap-4">
                   <dt class="text-gray-500 dark:text-gray-400">Discount</dt>
-                  <dd class="text-base font-medium text-green-500">0.00</dd>
+                  <dd class="text-base font-medium text-green-500">{{ getDiscount(invoiceDetail)}} </dd>
                 </dl>
   
              

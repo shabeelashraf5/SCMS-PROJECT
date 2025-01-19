@@ -1,107 +1,4 @@
 <app-employee-nb></app-employee-nb> 
-<app-employee-sb></app-employee-sb>
-
-<!-- <main class="w-full sm:w-3/4 p-4 ml-0 sm:ml-80 ">
-
-
-
-    <p class="mt-5 text-lg font-bold">Financial Transaction</p>
-
-      <div class="divider"></div>     
-    
-    
-      <div class="overflow-x-auto" *ngIf="!errorMessage">
-        <label class="input input-bordered flex items-center gap-2 mt-5">
-        <input type="text" class="grow" placeholder="Search" [(ngModel)]="searchQuery" (input)="filterEmployees()"   />
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4 opacity-70"><path fill-rule="evenodd" d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z" clip-rule="evenodd" /></svg>
-      </label>
-        <table class="table">
-        
-          <thead>
-            <tr >
-              <th>
-                
-              </th>
-              <th>FT ID</th>
-              <th>Responsible</th>
-              <th>Your Ref no</th>
-              <th>Your PO no</th>
-              <th>Supplier Name</th>
-              <th>Total Amount</th>
-              <th>Status</th>
-            
-          
-              
-              <th></th>
-          
-              
-            </tr>
-          </thead>
-          <tbody>
-           
-            <tr  *ngFor="let detail of filteredEmployees | paginate: { itemsPerPage: itemsPerPage, currentPage: currentPage }; trackBy: trackByFT" >
-              <th>
-                
-              </th>
-              <td>
-                <div class="flex items-center gap-3">
-                  <div>
-                 
-                    <div class="font-bold">
-                      
-                     <button (click)="getTransDetail(detail._id)" > {{detail.transaction}} </button>
-                    </div>
-                    
-                  </div>
-                </div>
-              </td>
-              <td>{{getResponsible(detail)}}</td>
-              <td>
-                {{ getSRFQ(detail) }}
-                <br/>
-              </td>
-              <td> {{ getPO(detail) }}</td> 
-              <td>  {{ getSupplier(detail)}}  </td>
-              <td>{{ getAmount(detail) }}  </td>
-              <td>{{detail.payment}}</td>
-            
-              
-            </tr>
-           
-            
-          </tbody>
-      
-          <tfoot>
-            <tr>
-              <th></th>
-              <th>FT ID</th>
-              <th>Responsible</th>
-              <th>Your Ref no</th>
-              <th>Your PO no</th>
-              <th>Supplier Name</th>
-              <th>Total Amount</th>
-              <th>Status</th>
-              
-       
-             
-            </tr>
-          </tfoot>
-          
-        </table>
-        <pagination-controls  (pageChange)="currentPage = $event"></pagination-controls>
-      </div>
-    
-  
-
-      <div class="error-message mt-5" *ngIf="errorMessage">
-        <div role="alert" class="alert alert-ing">
-          <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
-          <span> {{ errorMessage }}</span>
-        </div>
-      </div>
-    
-
-</main> -->
 
 
 <div class="p-4 bg-slate-900 min-h-screen">
@@ -180,15 +77,21 @@
   </table>
 </div>
 
-</div>
-<pagination-controls (pageChange)="currentPage = $event"></pagination-controls>
-
-<div class="error-message mt-12" *ngIf="errorMessage">
-  <div role="alert" class="alert alert-ing">
-    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
-    <span> {{ errorMessage }}</span>
+<div class="mt-5">
+  <pagination-controls (pageChange)="currentPage = $event"></pagination-controls>
   </div>
+
 </div>
+
+
+<div class="flex flex-col items-center ">
+  <div class="error-message mt-24" *ngIf="errorMessage">
+    <div role="alert" class="alert alert-ing border-t-4 border-b-4 border-yellow-500">
+      <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+      <span class="font-bold"> {{ errorMessage }}</span>
+    </div>
+  </div>
+  </div>
 
 </div>
 

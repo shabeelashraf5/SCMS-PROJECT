@@ -22,6 +22,7 @@ const SalesQuotationSchema = new mongoose.Schema({
             uom: { type: String, required: true },
             unit: { type: Number, required: true,  },
             uplift: { type: Number, required: true },
+            upliftedprice: { type: Number, required: true },
             total: { type: Number, required: true }
         }
     ],

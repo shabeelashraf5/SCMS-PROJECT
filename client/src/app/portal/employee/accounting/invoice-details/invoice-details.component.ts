@@ -130,9 +130,23 @@ getAttention(detail: Invoice): string {
   return '';
 }
 
+getDiscount(detail: Invoice): number {
+  if (detail && detail.purchase_id && detail.purchase_id.po_id && detail.purchase_id.po_id.quotation_id ) {
+    return detail.purchase_id.po_id.quotation_id.discount; 
+  }
+  return 0;
+}
+
 getTotalamount(detail: Invoice): number {
   if (detail && detail.purchase_id && detail.purchase_id.po_id && detail.purchase_id.po_id.quotation_id ) {
     return detail.purchase_id.po_id.quotation_id.totalAmount; 
+  }
+  return 0;
+}
+
+getTotalPrice(detail: Invoice): number {
+  if (detail && detail.purchase_id && detail.purchase_id.po_id && detail.purchase_id.po_id.quotation_id ) {
+    return detail.purchase_id.po_id.quotation_id.totalprice; 
   }
   return 0;
 }
@@ -185,7 +199,7 @@ invoicePDF() {
     { text: product.product, alignment: 'left' },
     { text: product.qty, alignment: 'center' },
     { text: product.uom, alignment: 'center' },
-    { text: product.unit, alignment: 'center' },
+    { text: product.upliftedprice, alignment: 'center' },
     { text: product.total, alignment: 'center' },
   ]);
 
@@ -194,7 +208,7 @@ invoicePDF() {
       headerRows: 1,
       widths: ['auto', '*', 'auto', 'auto', 'auto', 'auto'],
       body: [
-        [
+        [ 
           { text: 'No.', bold: true, alignment: 'center' },
           { text: 'Product', bold: true, alignment: 'left' },
           { text: 'Quantity', bold: true, alignment: 'center' },
@@ -260,7 +274,7 @@ invoicePDF() {
       { text: 'Invoice Details', style: 'header', margin: [0, 20, 0, 10] },
       productTable,
       {
-        text: `Total Amount: ${this.getTotalamount(this.invoiceDetail)}`,
+        text: `Total Amount: ${this.getTotalPrice(this.invoiceDetail)}`,
         fontSize: 12,
         bold: true,
         alignment: 'right',
@@ -271,8 +285,8 @@ invoicePDF() {
         table: {
           widths: ['*', 'auto'],
           body: [
-            ['Original Price:', { text: this.getTotalamount(this.invoiceDetail), alignment: 'right' }],
-            ['Discount:', { text: '0.00', alignment: 'right' }],
+            ['Original Price:', { text: this.getTotalPrice(this.invoiceDetail), alignment: 'right' }],
+            ['Discount:', { text: this.getDiscount(this.invoiceDetail), alignment: 'right' }],
             ['Tax/VAT:', { text: '0.00', alignment: 'right' }],
             ['Total:', { text: this.getTotalamount(this.invoiceDetail), bold: true, alignment: 'right' }],
           ],

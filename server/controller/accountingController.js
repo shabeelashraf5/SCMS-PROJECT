@@ -77,7 +77,7 @@ const invoiceSingle = async function (req, res) {
                 populate: {
                     path: 'quotation_id',
                     model: 'quotation',
-                    select: 'salesRFQ_id clientname email attention clientrfq totalAmount totalprice products',
+                    select: 'salesRFQ_id clientname email attention discount clientrfq totalAmount totalprice products',
                     populate: {
                         path: 'salesRFQ_id',
                         model: 'sales-rfq',

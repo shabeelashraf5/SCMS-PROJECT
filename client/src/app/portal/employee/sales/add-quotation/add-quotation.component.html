@@ -7,7 +7,25 @@
         <div class="grid grid-cols-1 gap-1">
             <div>
     
-                <div class="flex justify-end">
+                <!-- <div class="flex justify-end">
+                    <button type="submit" class="btn btn-outline"  >
+                        Submit
+                    </button>
+
+                    <button type="button" class="btn btn-outline ml-2" (click)="generatePDF()">
+                        Print
+                      </button>
+                 
+                </div> -->
+
+    
+                <div class="card lg:card-side bg-slate-900 border border-slate-600 shadow-xl mt-4">
+                    <div class="card-body">
+                        <div class="flex justify-end">
+                        <p class="card-title">RFQ No: {{ rfqDetail?.srfq }} </p>
+
+                        
+                <div>
                     <button type="submit" class="btn btn-outline"  >
                         Submit
                     </button>
@@ -17,13 +35,10 @@
                       </button>
                  
                 </div>
+                    </div>
 
-    
-                <div class="card lg:card-side bg-slate-900 border border-slate-600 shadow-xl mt-4">
-                    <div class="card-body">
-                        <h2 class="card-title">RFQ No: {{ rfqDetail?.srfq }} </h2>
-    
-                        <ul>
+                        <div>
+                        <ul class="mt-2">
                             <li>
                                 <input type="text" name="clientname" placeholder="To:" required [(ngModel)]="clientname" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
                             </li>
@@ -51,6 +66,7 @@
                                 <input type="text" name="date" placeholder="Date:" required [(ngModel)]="date" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
                             </li>
                         </ul>
+                    </div>
 
 
 
@@ -74,6 +90,7 @@
                                             <th class="text-center">UOM</th>
                                             <th class="text-center">Unit Price</th>
                                             <th class="text-center">Uplift%</th>
+                                            <th class="text-center">Uplifted Price</th>
                                             <th class="text-center">Total</th>
                                         </tr>
                                     </thead>
@@ -83,37 +100,45 @@
                                                 <input type="text" [name]="'product_' + i" required [(ngModel)]="item.product" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
                                             </td>
                                             <td>
-                                                <input type="number" [name]="'qty_' + i" required [(ngModel)]="item.qty" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800"  (input)="updateTotal(item)">
+                                                <input type="number" [name]="'qty_' + i" required [(ngModel)]="item.qty" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800 text-center"  (input)="updateTotal(item)">
                                             </td>
                                             <td>
-                                                <input type="text" [name]="'uom_' + i" required [(ngModel)]="item.uom" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
+                                                <select [name]="'uom_' + i" required [(ngModel)]="item.uom" 
+                                                        class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800 text-center">
+                                                    <option value="" disabled>Select UOM</option>
+                                                    <option *ngFor="let unit of uomList" [value]="unit">{{ unit }}</option>
+                                                </select>
                                             </td>
                                             <td>
-                                                <input type="number"  [name]="'unit_' + i" required [(ngModel)]="item.unit" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800" (ngModelChange)="updateTotal(item)">
+                                                <input type="number"  [name]="'unit_' + i" required [(ngModel)]="item.unit" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800 text-center" (ngModelChange)="updateTotal(item)">
                                             </td>
                                             <td>
-                                                <input type="number"  [name]="'uplift_' + i" required [(ngModel)]="item.uplift" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800" (input)="updateTotal(item)">
+                                                <input type="number"  [name]="'uplift_' + i" required [(ngModel)]="item.uplift" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800 text-center" (input)="updateTotal(item)">
                                             </td>
                                             <td>
-                                                <input type="number" [name]="'total_' + i" required [(ngModel)]="item.total" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800" readonly>
+                                                <input type="number" [name]="'upliftedprice_' + i" required [(ngModel)]="item.upliftedprice" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800 text-center" readonly>
                                             </td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="5" class="text-right">Total:</td>
+                                            
                                             <td>
-                                                <input type="number" name="totalprice" [value]="calculateTotalprice().toFixed(2)" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800" readonly>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="5" class="text-right">Discount%:</td>
-                                            <td>
-                                                <input type="number" name="discount" [(ngModel)]="discount" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
+                                                <input type="number" [name]="'total_' + i" required [(ngModel)]="item.total" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800 text-right" readonly>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td colspan="5" class="text-right">Total Amount:</td>
+                                            <td colspan="6" class="text-right">Total:</td>
                                             <td>
-                                                <input type="text" [value]="calculateTotal().toFixed(2)" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800" readonly>
+                                                <input type="number" name="totalprice" [value]="calculateTotalprice().toFixed(2)" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800 text-right" readonly>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="6" class="text-right">Discount%:</td>
+                                            <td>
+                                                <input type="number" name="discount" [(ngModel)]="discount" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800 text-right">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="6" class="text-right">Total Amount:</td>
+                                            <td>
+                                                <input type="text" [value]="calculateTotal().toFixed(2)" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800 text-right" readonly>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -150,7 +175,11 @@
                             <p>Terms and Conditions</p>
                             <ul>
                                 <li>
-                                    <input type="text" name="basis" required placeholder="Price Basis:" [(ngModel)]="basis" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">
+                                    <select name="basis" required [(ngModel)]="basis" 
+                                            class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800 ">
+                                        <option value="" disabled>Select Currency</option>
+                                        <option *ngFor="let currency of currencyList" [value]="currency">{{ currency }}</option>
+                                    </select>
                                 </li>
                                 <li class="mt-2">
                                     <input type="text" name="payment" required placeholder="Payment Terms:" [(ngModel)]="payment" class="w-full px-3 py-2 border rounded-md border-gray-300 bg-gray-50 text-gray-800">

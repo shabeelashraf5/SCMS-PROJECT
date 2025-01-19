@@ -48,11 +48,14 @@ export class AddQuotationComponent implements OnInit, OnDestroy  {
   addQuoSubscription!: Subscription
  
 
-  items: Product[] = [{ product: '', qty: 1 , uom: '', unit: 0 , uplift: 0 ,  total: 0 }];
+  items: Product[] = [{ product: '', qty: 1 , uom: '', unit: 0 , uplift: 0 , upliftedprice: 0 ,  total: 0 }];
 
   constructor(private route: ActivatedRoute, private addQuotationService: AddQuotationService, private quotationService: QuotationService, private snackBar: MatSnackBar  ) {
     
   }
+
+  uomList: string[] = ['meter', 'no', 'pcs', 'kg', 'litre'];
+  currencyList: string[] = ['AED', 'Dollar', 'Rupees', 'Euro', 'Pound', 'Yen'];
 
 
  ngOnInit() {
@@ -112,17 +115,23 @@ displayDatas(){
   
 
   addItem() {
-    this.items.push({ product: '', qty: 1, uom: '', unit: 0,  uplift: 0 , total: 0 });
+    this.items.push({ product: '', qty: 1, uom: '', unit: 0,  uplift: 0 , upliftedprice: 0, total: 0 });
     
   } 
 
 
 
   updateTotal(item: Product) {
-    const totalBeforeUplift = Number(item.qty) * Number(item.unit);
-    const totalWithUplift = totalBeforeUplift * (1 + Number(item.uplift) / 100); 
-    item.total = parseFloat(totalWithUplift.toFixed(2)); 
-}
+    const unit = Number(item.unit);
+    const uplift = Number(item.uplift);
+  
+    // Calculate uplifted price
+    item.upliftedprice = parseFloat((unit * (1 + uplift / 100)).toFixed(2));
+  
+    // Calculate total price
+    item.total = parseFloat((item.upliftedprice * Number(item.qty)).toFixed(2));
+  }
+  
 
 
 
@@ -309,15 +318,155 @@ trackByAddQuotation(index: number, addquotation: Product): string {
 //     pdfMake.createPdf(documentDefinition).download('quotation.pdf');
 // }
 
+// generatePDF() {
+//   pdfMake.vfs = pdfFonts.pdfMake.vfs;
+
+//   const headers = [
+//     { text: 'Product Description', style: 'tableHeader' },
+//     { text: 'QTY', style: 'tableHeader' },
+//     { text: 'UOM', style: 'tableHeader' },
+//     { text: 'Unit Price', style: 'tableHeader' },
+//     { text: 'Total', style: 'tableHeader' }
+//   ];
+
+//   const data = this.items.map(item => [
+//     { text: item.product, style: 'tableCell' },
+//     { text: item.qty, style: 'tableCell', alignment: 'center' },
+//     { text: item.uom, style: 'tableCell', alignment: 'center' },
+//     { text: item.unit, style: 'tableCell', alignment: 'right' },
+//     { text: item.total, style: 'tableCell', alignment: 'right' }
+//   ]);
+
+//   const tableBody = [headers, ...data];
+
+//   const documentDefinition: TDocumentDefinitions = {
+//     content: [
+//       {
+//         image: environment.logo_base64,
+//         width: 70,
+//         alignment: 'center',
+//         margin: [0, 0, 0, 20]
+//       },
+//       {
+//         text: 'Quotation Form',
+//         style: 'title'
+//       },
+//       {
+//         text: `RFQ No: ${this.rfqDetail?.srfq}\nTo: ${this.clientname}\nAttention: ${this.attention}\nEmail: ${this.email}\nPhone: ${this.phone}\nClient RFQ: ${this.clientrfq}`,
+//         style: 'clientDetails',
+//         margin: [0, 10, 0, 20]
+//       },
+//       {
+//         text: 'Dear Sir/Madam,',
+//         style: 'greeting',
+//         margin: [0, 0, 0, 10]
+//       },
+//       {
+//         text: `Subject: ${this.subject}`,
+//         style: 'subject',
+//         margin: [0, 0, 0, 10]
+//       },
+//       {
+//         text: 'Thank you for giving us an opportunity to quote for the above-referenced subject. We are pleased to offer the following quotation:',
+//         style: 'bodyText',
+//         margin: [0, 0, 0, 20]
+//       },
+//       {
+//         table: {
+//           widths: ['*', 'auto', 'auto', 'auto', 'auto'],
+//           body: tableBody
+//         },
+//         layout: 'lightHorizontalLines',
+//         margin: [0, 10, 0, 20]
+//       },
+//       {
+//         text: 'Terms and Conditions',
+//         style: 'sectionHeader',
+//         margin: [0, 20, 0, 10]
+//       },
+//       {
+//         ul: [
+//           `${this.basis}`,
+//           `${this.payment}`,
+//           `${this.validity}`,
+//           `${this.availability}`
+//         ],
+//         style: 'list'
+//       },
+//       {
+//         text: 'Notes',
+//         style: 'sectionHeader',
+//         margin: [0, 20, 0, 10]
+//       },
+//       {
+//         text: 'We look forward to your positive response. Please feel free to contact us for any clarifications.',
+//         style: 'bodyText'
+//       }
+//     ],
+//     styles: {
+//       title: {
+//         fontSize: 18,
+//         bold: true,
+//         alignment: 'center',
+//         margin: [0, 0, 0, 20]
+//       },
+//       clientDetails: {
+//         fontSize: 12,
+//         margin: [0, 0, 0, 10]
+//       },
+//       greeting: {
+//         fontSize: 12,
+//         bold: true
+//       },
+//       subject: {
+//         fontSize: 12,
+//         bold: true,
+//         italics: true
+//       },
+//       bodyText: {
+//         fontSize: 12
+//       },
+//       tableHeader: {
+//         bold: true,
+//         fontSize: 12,
+//         color: 'white',
+//         fillColor: '#4CAF50',
+//         alignment: 'center'
+//       },
+//       tableCell: {
+//         fontSize: 10,
+//         margin: [5, 5, 5, 5]
+//       },
+//       sectionHeader: {
+//         fontSize: 14,
+//         bold: true,
+//         decoration: 'underline'
+//       },
+//       list: {
+//         fontSize: 12,
+//         margin: [0, 0, 0, 10]
+//       }
+//     },
+//     footer: (currentPage, pageCount) => ({
+//       text: `Page ${currentPage} of ${pageCount}`,
+//       alignment: 'center',
+//       fontSize: 10,
+//       margin: [0, 10, 0, 0]
+//     })
+//   };
+
+//   pdfMake.createPdf(documentDefinition).download('quotation.pdf');
+// }
+
 generatePDF() {
   pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
   const headers = [
     { text: 'Product Description', style: 'tableHeader' },
-    { text: 'QTY', style: 'tableHeader' },
-    { text: 'UOM', style: 'tableHeader' },
-    { text: 'Unit Price', style: 'tableHeader' },
-    { text: 'Total', style: 'tableHeader' }
+    { text: 'QTY', style: 'tableHeader', alignment: 'center' },
+    { text: 'UOM', style: 'tableHeader', alignment: 'center' },
+    { text: 'Unit Price', style: 'tableHeader', alignment: 'right' },
+    { text: 'Total', style: 'tableHeader', alignment: 'right' }
   ];
 
   const data = this.items.map(item => [
@@ -333,18 +482,39 @@ generatePDF() {
   const documentDefinition: TDocumentDefinitions = {
     content: [
       {
-        image: environment.logo_base64,
-        width: 70,
-        alignment: 'center',
+        columns: [
+          {
+            image: environment.logo_base64,
+            width: 70,
+            margin: [0, 0, 0, 0]
+          },
+          {
+            text: 'Quotation Form',
+            style: 'title',
+            alignment: 'right',
+            margin: [0, 0, 0, 0]
+          }
+        ],
         margin: [0, 0, 0, 20]
       },
       {
-        text: 'Quotation Form',
-        style: 'title'
+        text: `Date: ${new Date().toLocaleDateString()}`,
+        alignment: 'right',
+        margin: [0, 0, 0, 10],
+        style: 'smallText'
       },
       {
-        text: `RFQ No: ${this.rfqDetail?.srfq}\nTo: ${this.clientname}\nAttention: ${this.attention}\nEmail: ${this.email}\nPhone: ${this.phone}\nClient RFQ: ${this.clientrfq}`,
-        style: 'clientDetails',
+        columns: [
+          {
+            width: '*',
+            text: `RFQ No: ${this.rfqDetail?.srfq}\nTo: ${this.clientname}\nAttention: ${this.attention}\nEmail: ${this.email}\nPhone: ${this.phone}\nClient RFQ: ${this.clientrfq}`,
+            style: 'clientDetails'
+          },
+          {
+            width: '*',
+            text: ' ',
+          }
+        ],
         margin: [0, 10, 0, 20]
       },
       {
@@ -358,16 +528,25 @@ generatePDF() {
         margin: [0, 0, 0, 10]
       },
       {
-        text: 'Thank you for giving us an opportunity to quote for the above-referenced subject. We are pleased to offer the following quotation:',
+        text: 'Thank you for the opportunity to quote for the above-referenced subject. We are pleased to offer the following quotation:',
         style: 'bodyText',
         margin: [0, 0, 0, 20]
       },
       {
         table: {
+          headerRows: 1,
           widths: ['*', 'auto', 'auto', 'auto', 'auto'],
           body: tableBody
         },
-        layout: 'lightHorizontalLines',
+        layout: {
+          fillColor: (rowIndex: number) => (rowIndex === 0 ? '#4CAF50' : null),
+          hLineColor: () => '#CCCCCC',
+          vLineColor: () => '#CCCCCC',
+          paddingLeft: () => 10,
+          paddingRight: () => 10,
+          paddingTop: () => 5,
+          paddingBottom: () => 5
+        },
         margin: [0, 10, 0, 20]
       },
       {
@@ -396,10 +575,14 @@ generatePDF() {
     ],
     styles: {
       title: {
-        fontSize: 18,
+        fontSize: 20,
         bold: true,
-        alignment: 'center',
-        margin: [0, 0, 0, 20]
+        alignment: 'right',
+        margin: [0, 0, 0, 0]
+      },
+      smallText: {
+        fontSize: 10,
+        color: '#666666'
       },
       clientDetails: {
         fontSize: 12,
@@ -415,13 +598,13 @@ generatePDF() {
         italics: true
       },
       bodyText: {
-        fontSize: 12
+        fontSize: 12,
+        margin: [0, 10, 0, 10]
       },
       tableHeader: {
         bold: true,
         fontSize: 12,
         color: 'white',
-        fillColor: '#4CAF50',
         alignment: 'center'
       },
       tableCell: {
@@ -439,15 +622,17 @@ generatePDF() {
       }
     },
     footer: (currentPage, pageCount) => ({
-      text: `Page ${currentPage} of ${pageCount}`,
-      alignment: 'center',
-      fontSize: 10,
-      margin: [0, 10, 0, 0]
+      columns: [
+        { text: `Generated by: `, alignment: 'left', fontSize: 10 },
+        { text: `Page ${currentPage} of ${pageCount}`, alignment: 'right', fontSize: 10 }
+      ],
+      margin: [10, 10, 10, 0]
     })
   };
 
   pdfMake.createPdf(documentDefinition).download('quotation.pdf');
 }
+
 
 
 ngOnDestroy(): void {
