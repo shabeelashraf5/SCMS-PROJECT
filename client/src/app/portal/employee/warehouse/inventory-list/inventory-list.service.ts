@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Product } from '../../../../model/ad-product.model';
+import { Products } from '../../../../model/ad-product.model';
 import { environment } from '../../../../../environment/environment';
 
 @Injectable({
@@ -13,9 +13,9 @@ export class InventoryListService {
 
   constructor(private http: HttpClient) { }
 
-  getInventory(): Observable<Product[]> {
+  getInventory(): Observable<Products[]> {
     const headers = { 'Cache-Control': 'no-cache' };
-    return this.http.get<Product[]>(`${this.apiUrl}/inventory-list`, { headers });
+    return this.http.get<Products[]>(`${this.apiUrl}/inventory-list`, { headers });
   }
   
 }

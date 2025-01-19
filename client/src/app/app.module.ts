@@ -81,6 +81,10 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { AdminRouterComponent } from './portal/admin/admin-router.component';
 import { ArticleComponent } from './portal/admin/article/article.component';
 import { ArticleModule } from './portal/admin/article/article.module';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatOptionModule } from '@angular/material/core';
 
 
 
@@ -133,8 +137,7 @@ import { ArticleModule } from './portal/admin/article/article.module';
     NotFoundComponent,
     ExcelComponent,
     AdminRouterComponent,
-  
-   
+    
      
   ],
   imports: [
@@ -143,6 +146,11 @@ import { ArticleModule } from './portal/admin/article/article.module';
     HttpClientModule,
     FormsModule,
     CommonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatAutocompleteModule,
+    MatOptionModule,
+
     ReactiveFormsModule,
     HttpClientModule,
     PlotlyViaCDNModule,

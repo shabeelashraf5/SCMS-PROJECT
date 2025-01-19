@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Product } from '../../../../model/ad-product.model';
+import { Products } from '../../../../model/ad-product.model';
 import { environment } from '../../../../../environment/environment';
 
 @Injectable({
@@ -13,21 +13,23 @@ export class AdProductService {
 
   constructor(private http: HttpClient) { }
 
-  getProducts(): Observable<Product[]> {
+  getProducts(): Observable<Products[]> {
     const headers = { 'Cache-Control': 'no-cache' };
-    return this.http.get<Product[]>(`${this.apiUrl}/product`, { headers });
+    return this.http.get<Products[]>(`${this.apiUrl}/product`, { headers });
   }
 
-  addProduct(product: Product): Observable<any> {
+  addProduct(product: Products): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/product/add`, product);
   }
 
-  updateProduct(product: Partial<Product>): Observable<any> {
+  updateProduct(product: Partial<Products>): Observable<any> {
     return this.http.put<any>(`${this.apiUrl}/product/update/${product._id}`, product);
   }
 
   deleteProduct(id: string): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/product/delete/${id}`);
   }
+
+  
 
 }

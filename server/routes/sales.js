@@ -16,6 +16,8 @@ router.get('/quotations/:id', verifyToken,  salesController.quotationSingle)
 router.post('/quotations/form-add', verifyToken,  salesController.addQuotation)
 router.put('/quotations/form-update/:id', verifyToken, salesController.updateQuotation)
 
+router.get('/quotations/products', salesController.searchProduct)
+
 router.get('/quotations/form-add/:salesRFQ_id', verifyToken,  salesController.fetchSrfq)
 
 router.get('/sales-order', verifyToken ,  salesController.loadSalesOrder)

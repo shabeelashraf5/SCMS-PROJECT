@@ -1,7 +1,7 @@
 import { Component, ViewChild, ElementRef, OnInit, OnDestroy  } from '@angular/core';
 import { Store, select  } from '@ngrx/store';
 import * as AdProductActions from '../../../../store/action/inventory-list.action'
-import { Product } from '../../../../model/ad-product.model';
+import { Products } from '../../../../model/ad-product.model';
 import { Observable, map, Subject, of } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { AppState } from '../../../../state/app.state';
@@ -18,7 +18,7 @@ import { Category } from '../../../../model/ad-category.model';
 
 export class InventoryListComponent implements OnInit, OnDestroy {
  
-  product$: Observable<Product[]>;
+  product$: Observable<Products[]>;
 
   searchTerm: string = '';
   currentPage: number = 1;
@@ -57,12 +57,12 @@ export class InventoryListComponent implements OnInit, OnDestroy {
     return 'Unknown Category'; 
   }
 
-  trackByProductId(index: number, product: Product): string {
+  trackByProductId(index: number, product: Products): string {
     return product._id;
   }
 
 
-  getCurrentPageRecords(): Observable<Product[]> {
+  getCurrentPageRecords(): Observable<Products[]> {
     return this.filteredRecords.pipe(
       map(records => {
         const startIndex = (this.currentPage - 1) * this.itemsPerPage;
@@ -72,7 +72,7 @@ export class InventoryListComponent implements OnInit, OnDestroy {
   }
 
 
-  get filteredRecords(): Observable<Product[]> {
+  get filteredRecords(): Observable<Products[]> {
     const searchTermLower = this.searchTerm.toLowerCase();
     return this.product$.pipe(
       map(records => records.filter(record => 

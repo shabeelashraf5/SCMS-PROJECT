@@ -41,10 +41,8 @@ import { SuccessPaymentComponent } from './portal/employee/accounting/success-pa
 import { NotFoundComponent } from './layouts/not-found/not-found.component';
 import { ExcelComponent } from './layouts/excel/excel.component';
 import { AdminRouterComponent } from './portal/admin/admin-router.component';
-
-
-
-
+import { dashboardResolverResolver } from './service/dashboard/dashboard-resolver.resolver';
+import { profileResolver } from './service/profile/profile.resolver';
 
 
 const routes: Routes = [
@@ -61,7 +59,7 @@ const routes: Routes = [
     children: [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   {path: 'portal' , loadChildren: () => import('./portal/admin/admin-portal/admin-portal.module').then( m => m.AdminPortalModule)   },
-  {path: 'dashboard' , loadChildren: () => import('./portal/admin/dashboard/ad-dashboard/ad-dashboard.module').then( m => m.AdDashboardModule)}, 
+  {path: 'dashboard' , loadChildren: () => import('./portal/admin/dashboard/ad-dashboard/ad-dashboard.module').then( m => m.AdDashboardModule) }, 
   {path: 'employee' , loadChildren: () => import('./portal/admin/employee/ad-employee/ad-employee.module').then( m => m.AdEmployeeModule)   },
   {path: 'product' , loadChildren: () => import('./portal/admin/product/ad-product/ad-product.module').then( m => m.AdProductModule)    },
   {path: 'category' , loadChildren: () => import('./portal/admin/category/ad-category/ad-category.module').then( m => m.AdCategoryModule) },
@@ -71,60 +69,91 @@ const routes: Routes = [
     ]
   },
 
+  {
+    path: 'portal',
+    children: [
 
-  { path: 'portal/dashboard' , loadChildren: () => import('./portal/employee/dashboard/em-dashboard/em-dashboard.module').then(m => m.EmDashboardModule) },
+  { path: 'dashboard' , loadChildren: () => import('./portal/employee/dashboard/em-dashboard/em-dashboard.module').then(m => m.EmDashboardModule),  resolve: {profileData: profileResolver}},
 
-  { path: 'portal/sales' , loadChildren: () => import('./portal/employee/dashboard/em-dashboard/em-dashboard.module').then(m => m.EmDashboardModule) },
-  { path: 'portal/sales/customer' , loadChildren: () => import('./portal/employee/sales/customer/customer.module').then( m => m.CustomerModule) },
-  { path: 'portal/sales/quotations' , loadChildren: () => import('./portal/employee/sales/quotation/quotation.module').then( m => m.QuotationModule) },
-  { path: 'portal/sales/quotations/:id' , loadChildren: () => import('./portal/employee/sales/add-quotation/add-quotation.module').then( m => m.AddQuotationModule) },
-  { path: 'portal/sales/sales-order' , loadChildren: () => import('./portal/employee/sales/sales-order/sales-order.module').then( m => m.SalesOrderModule)  },
-  { path: 'portal/sales/sales-order/:id' , loadChildren: () => import('./portal/employee/sales/client-po/client-po.module').then( m => m.ClientPoModule) },
-  { path: 'portal/sales/sales-analysis' , loadChildren: () => import('./portal/employee/sales/sales-analysis/sales-analysis.module').then( m => m.SalesAnalysisModule) },
+  {
+    path: 'sales',
+    children: [
+
+  // { path: 'sales' , loadChildren: () => import('./portal/employee/dashboard/em-dashboard/em-dashboard.module').then(m => m.EmDashboardModule) },
+  { path: 'customer' , loadChildren: () => import('./portal/employee/sales/customer/customer.module').then( m => m.CustomerModule) },
+  { path: 'quotations' , loadChildren: () => import('./portal/employee/sales/quotation/quotation.module').then( m => m.QuotationModule) },
+  { path: 'quotations/:id' , loadChildren: () => import('./portal/employee/sales/add-quotation/add-quotation.module').then( m => m.AddQuotationModule) },
+  { path: 'sales-order' , loadChildren: () => import('./portal/employee/sales/sales-order/sales-order.module').then( m => m.SalesOrderModule)  },
+  { path: 'sales-order/:id' , loadChildren: () => import('./portal/employee/sales/client-po/client-po.module').then( m => m.ClientPoModule) },
+  { path: 'sales-analysis' , loadChildren: () => import('./portal/employee/sales/sales-analysis/sales-analysis.module').then( m => m.SalesAnalysisModule) },
  
+    ]
+  },
 
-  { path: 'portal/purchase' , loadChildren: () => import('./portal/employee/dashboard/em-dashboard/em-dashboard.module').then(m => m.EmDashboardModule) },
-
-  { path: 'portal/purchase/supplier' , loadChildren: () => import('./portal/employee/purchase/supplier/supplier.module').then( m => m.SupplierModule) },
-  { path: 'portal/purchase/purchase-order' , loadChildren: () => import('./portal/employee/purchase/purchase-order/purchase-order.module').then( m => m.PurchaseOrderModule) },
-  //{ path: 'portal/purchase/vendor-evaluation' , component: EvaluationComponent, canActivate: [CanEmployeeLogged] },
-  { path: 'portal/purchase/purchase-order/:id' , loadChildren: () => import('./portal/employee/purchase/add-po/add-po.module').then( m => m.AddPoModule)  },
-  { path: 'portal/purchase/purchase-history' , loadChildren: () => import('./portal/employee/purchase/purchase-history/purchase-history.module').then( m => m.PurchaseHistoryModule) },
-
-
-  { path: 'portal/warehouse' , loadChildren: () => import('./portal/employee/dashboard/em-dashboard/em-dashboard.module').then(m => m.EmDashboardModule) },
-  { path: 'portal/warehouse/inventory-list' , loadChildren: () => import('./portal/employee/warehouse/inventory-list/inventory-list.module').then( m => m.InventoryListModule) },
-
+  // { path: 'purchase' , loadChildren: () => import('./portal/employee/dashboard/em-dashboard/em-dashboard.module').then(m => m.EmDashboardModule) },
   
-  { path: 'portal/shipment' , loadChildren: () => import('./portal/employee/dashboard/em-dashboard/em-dashboard.module').then(m => m.EmDashboardModule) },
-  { path: 'portal/shipment/shipment-history' , loadChildren: () => import('./portal/employee/shipment/shipment-history/shipment-history.module').then( m => m.ShipmentHistoryModule) },
+  {
+    path: 'purchase',
+    children: [
 
+  { path: 'supplier' , loadChildren: () => import('./portal/employee/purchase/supplier/supplier.module').then( m => m.SupplierModule) },
+  { path: 'purchase-order' , loadChildren: () => import('./portal/employee/purchase/purchase-order/purchase-order.module').then( m => m.PurchaseOrderModule) },
 
-  { path: 'portal/accounting' , loadChildren: () => import('./portal/employee/dashboard/em-dashboard/em-dashboard.module').then(m => m.EmDashboardModule) },
-  { path: 'portal/accounting/invoicing' , loadChildren: () => import('./portal/employee/accounting/invoicing/invoicing.module').then( m => m.InvoicingModule)},
-  { path: 'portal/accounting/invoicing/:id' , loadChildren: () => import('./portal/employee/accounting/invoice-details/invoice-details.module').then( m => m.InvoiceDetailsModule) },
-  { path: 'portal/accounting/financial-transaction' , loadChildren: () => import('./portal/employee/accounting/financial-transaction/financial-transaction.module').then( m => m.FinancialTransactionModule)  },
-  { path: 'portal/accounting/financial-reports' , component: FinancialReportComponent, canActivate: [CanEmployeeLogged] },
-  { path: 'portal/accounting/financial-transaction/:id' , loadChildren: () => import('./portal/employee/accounting/payment/payment.module').then( m => m.PaymentModule) },
+  { path: 'purchase-order/:id' , loadChildren: () => import('./portal/employee/purchase/add-po/add-po.module').then( m => m.AddPoModule)  },
+  { path: 'purchase-history' , loadChildren: () => import('./portal/employee/purchase/purchase-history/purchase-history.module').then( m => m.PurchaseHistoryModule) },
+
+    ]
+  },
+
+  {
+    path: 'warehouse',
+    children: [
+  // { path: 'warehouse' , loadChildren: () => import('./portal/employee/dashboard/em-dashboard/em-dashboard.module').then(m => m.EmDashboardModule) },
+  { path: 'inventory-list' , loadChildren: () => import('./portal/employee/warehouse/inventory-list/inventory-list.module').then( m => m.InventoryListModule) },
+
+    ]
+  },
+
+  {
+    path: 'shipment',
+    children: [
   
+  // { path: 'shipment' , loadChildren: () => import('./portal/employee/dashboard/em-dashboard/em-dashboard.module').then(m => m.EmDashboardModule) },
+  { path: 'shipment-history' , loadChildren: () => import('./portal/employee/shipment/shipment-history/shipment-history.module').then( m => m.ShipmentHistoryModule) },
+    ]
+
+  },
+
+  {
+    path: 'accounting',
+    children: [
+
+  // { path: 'accounting' , loadChildren: () => import('./portal/employee/dashboard/em-dashboard/em-dashboard.module').then(m => m.EmDashboardModule) },
+  { path: 'invoicing' , loadChildren: () => import('./portal/employee/accounting/invoicing/invoicing.module').then( m => m.InvoicingModule)},
+  { path: 'invoicing/:id' , loadChildren: () => import('./portal/employee/accounting/invoice-details/invoice-details.module').then( m => m.InvoiceDetailsModule) },
+  { path: 'financial-transaction' , loadChildren: () => import('./portal/employee/accounting/financial-transaction/financial-transaction.module').then( m => m.FinancialTransactionModule)  },
+  { path: 'financial-reports' , component: FinancialReportComponent, canActivate: [CanEmployeeLogged] },
+  { path: 'financial-transaction/:id' , loadChildren: () => import('./portal/employee/accounting/payment/payment.module').then( m => m.PaymentModule) },
+  
+    ]
+
+  },
   //{ path: 'success' , component: SuccessComponent,  canActivate:  [CanEmployeeLogged] },
 
-  { path: 'portal/profile' , loadChildren: () => import('./portal/employee/profile/profile/em-profile.module').then( m => m.EmProfileModule) },
+  { path: 'profile' , loadChildren: () => import('./portal/employee/profile/profile/em-profile.module').then( m => m.EmProfileModule) },
  
-  { path: 'reset-password' , loadChildren: () => import('./portal/employee/reset-password/reset-password.module').then( m => m.ResetPasswordModule) },
   
-  { path: 'portal/video-conference' , loadChildren: () => import('./layouts/video-chat/video-chat.module').then( m => m.VideoChatModule)  },
+  { path: 'video-conference' , loadChildren: () => import('./layouts/video-chat/video-chat.module').then( m => m.VideoChatModule)  },
 
-  { path: 'portal/messenger', loadChildren: () => import('./layouts/message/message.module').then( m => m.MessageModule) },
+  { path: 'messenger', loadChildren: () => import('./layouts/message/message.module').then( m => m.MessageModule) },
 
-  { path: 'portal/success' , component: SuccessPaymentComponent, canActivate: [CanEmployeeLogged] },
+  { path: 'success' , component: SuccessPaymentComponent, canActivate: [CanEmployeeLogged] },
  
+    ]
 
-
+  },
+  { path: 'reset-password' , loadChildren: () => import('./portal/employee/reset-password/reset-password.module').then( m => m.ResetPasswordModule) },
   { path: '**', component: NotFoundComponent, canActivate: [CanEmployeeLogged] },
-
-
-
 
 
 ];

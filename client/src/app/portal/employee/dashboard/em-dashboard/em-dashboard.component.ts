@@ -12,6 +12,7 @@ import { ProfileService } from '../../profile/profile/profile.service';
 import { SalesAnalysisComponent } from '../../sales/sales-analysis/sales-analysis.component';
 import { ArticleService } from '../../../admin/article/article.service';
 import { Article } from '../../../../model/ad-article.model';
+import { ActivatedRoute } from '@angular/router';
 
 
 
@@ -42,15 +43,25 @@ export class EmDashboardComponent implements OnInit {
 
   messages$: Observable<Messaging[]>; 
 
+  profileData: any;
+
+  profileData$!: Observable<Employee>
 
 
-  constructor(private store: Store<AppState> , private authService: EmployeeLoginService, private employeeService: ProfileService, private articleService: ArticleService) {
+
+  constructor(private store: Store<AppState> , private authService: EmployeeLoginService, private employeeService: ProfileService, private articleService: ArticleService, private route: ActivatedRoute) {
     this.messages$ = this.store.pipe(select(state => state.message.messages));
     
   }
 
   ngOnInit(): void {
+
+    this.route.data.subscribe((data) => console.log('Data',data))
+
+    this.profileData$ = this.route.data.pipe(map(data => data['profileData'] ))
+  
     
+
     this.store.dispatch(EmMessagingActions.loadMessage());
     this.loadProfile()
     this.loadArticle()

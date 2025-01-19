@@ -4,7 +4,7 @@ import { QuotationService } from '../quotation/quotation.service';
 import { AddQuotationService } from './add-quotation.service';
 import { AddQuotation, Product } from '../../../../model/sales-addquo';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Subscription, firstValueFrom } from 'rxjs';
+import { Subject, Subscription, firstValueFrom } from 'rxjs';
 import { Quotation } from '../../../../model/sales-quotation.model';
 import { OrderStatus } from '../../../../enums/order-status.enum';
 //import { jsPDF } from "jspdf"
@@ -12,6 +12,8 @@ import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { TDocumentDefinitions } from 'pdfmake/interfaces';
 import { environment } from '../../../../../environment/environment';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { Products } from '../../../../model/ad-product.model';
 
 
 
@@ -49,6 +51,9 @@ export class AddQuotationComponent implements OnInit, OnDestroy  {
  
 
   items: Product[] = [{ product: '', qty: 1 , uom: '', unit: 0 , uplift: 0 , upliftedprice: 0 ,  total: 0 }];
+
+  filteredProducts: Products[] = [];
+
 
   constructor(private route: ActivatedRoute, private addQuotationService: AddQuotationService, private quotationService: QuotationService, private snackBar: MatSnackBar  ) {
     

@@ -5,7 +5,7 @@ import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
 import { AdProductService } from '../ad-product.service';
 import * as AdProductActions from '../store/ad-product.action'
 
-import { Product } from '../../../../../model/ad-product.model';
+import { Products } from '../../../../../model/ad-product.model';
 
 
 
@@ -16,7 +16,7 @@ export class AdProductEffects {
     ofType(AdProductActions.loadProduct),
     mergeMap(() =>
       this.adProductService.getProducts().pipe(
-        map((products: Product[]) => AdProductActions.loadProductSuccess({ products })),
+        map((products: Products[]) => AdProductActions.loadProductSuccess({ products })),
         
         catchError(error => of(AdProductActions.loadProductFailure({ error: error.message })))
       )
@@ -29,8 +29,8 @@ export class AdProductEffects {
     ofType(AdProductActions.addProduct),
     switchMap(({ category_id, product, description, uom, price, availability }) => {
       console.log('Creating user...');
-      const products: Partial<Product> = { category_id, product, description, uom, price, availability }; // Use Partial<User> here
-      return this.adProductService.addProduct(products as Product).pipe( // Cast it back to User
+      const products: Partial<Products> = { category_id, product, description, uom, price, availability }; // Use Partial<User> here
+      return this.adProductService.addProduct(products as Products).pipe( // Cast it back to User
         map(() => {
           console.log('User created successfully');
           return AdProductActions.loadProduct(); // Trigger a load after create
@@ -48,7 +48,7 @@ this.actions$.pipe(
   switchMap(({ product }) => {
     console.log('Updating category...');
     return this.adProductService.updateProduct(product).pipe(
-      map((updatedProduct: Product) => {
+      map((updatedProduct: Products) => {
         console.log('Category updated successfully');
         return AdProductActions.updateProductSuccess({ product: updatedProduct });
       }),

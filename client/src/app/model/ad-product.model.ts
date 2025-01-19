@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { Category } from './ad-category.model';
 
-export interface Product {
+export interface Products {
 
     _id: string;
     category_id: Category | string ; 

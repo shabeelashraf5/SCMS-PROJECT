@@ -6,6 +6,7 @@ const salesQuotation = require('../model/quotatiionDB')
 const collectionemployee = require('../model/employeeDB')
 const purchasePO = require('../model/poDS')
 const clientPO = require('../model/clientPoDS')
+const collectionproduct = require('../model/productDB')
 
 const generateCustomUUID = require('../uuid/uuid')
 const genereateCustomSPO = require('../uuid/idspo')
@@ -428,6 +429,19 @@ const loadSalesAnalysis = async (req , res) => {
 }
 
 
+const searchProduct = async (req, res) => {
+    try {
+      const searchQuery = req.query.q;
+    
+      const products = await collectionproduct.find({ name: { $regex: searchQuery, $options: 'i' } }).select('description');
+      res.json(products);
+    } catch (error) {
+      console.error('Error fetching Products:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  };
+
+
 
 
 
@@ -449,6 +463,7 @@ module.exports = {
     ClientPoSingle,
     addClientPo,
     updateClientPo,
-    fetchQuotationId
+    fetchQuotationId,
+    searchProduct
     
 }

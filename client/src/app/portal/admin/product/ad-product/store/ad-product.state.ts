@@ -1,8 +1,8 @@
-import { Product } from "../../../../../model/ad-product.model";
+import { Products } from "../../../../../model/ad-product.model";
 
 
 export interface AdProductState {
-    products: Product[];
+    products: Products[];
     
   }
   

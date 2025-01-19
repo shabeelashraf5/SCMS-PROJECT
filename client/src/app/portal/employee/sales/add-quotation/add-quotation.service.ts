@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AddQuotation } from '../../../../model/sales-addquo';
 import { environment } from '../../../../../environment/environment';
+import { Products } from '../../../../model/ad-product.model';
 
 @Injectable({
   providedIn: 'root'
@@ -32,7 +33,11 @@ export class AddQuotationService {
   getQuotationBySalesRFQId(salesRFQId: string): Observable<AddQuotation> {
     return this.http.get<AddQuotation>(`${this.apiUrl}/quotations/form-add/${salesRFQId}`);
   }
-  
 
+  searchProducts(query: string): Observable<Products[]> {
+    const headers = { 'Cache-Control': 'no-cache' };
+    return this.http.get<Products[]>(`${this.apiUrl}/quatations/products?q=${query}`, { headers });
+  }
+  
 
 }

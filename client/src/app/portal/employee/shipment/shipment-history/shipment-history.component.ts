@@ -1,9 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ShipmentHistoryService } from './shipment-history.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subscription, firstValueFrom } from 'rxjs';
 import { Shipment } from '../../../../model/shipment.model';
 import { response } from 'express';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-shipment-history',

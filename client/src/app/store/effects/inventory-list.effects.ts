@@ -5,7 +5,7 @@ import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
 import { InventoryListService } from '../../portal/employee/warehouse/inventory-list/inventory-list.service';
 import * as AdProductActions from '../action/inventory-list.action'
 
-import { Product } from '../../model/ad-product.model';
+import { Products } from '../../model/ad-product.model';
 
 
 @Injectable()
@@ -15,7 +15,7 @@ export class InventoryEffects {
     ofType(AdProductActions.loadInventory),
     mergeMap(() =>
       this.adProductService.getInventory().pipe(
-        map((products: Product[]) => AdProductActions.loadInventorySuccess({ products })),
+        map((products: Products[]) => AdProductActions.loadInventorySuccess({ products })),
         
         catchError(error => of(AdProductActions.loadInventoryFailure({ error: error.message })))
       )

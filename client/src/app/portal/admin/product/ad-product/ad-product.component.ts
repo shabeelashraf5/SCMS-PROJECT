@@ -1,7 +1,7 @@
 import { Component, ViewChild, ElementRef, OnInit, OnDestroy,} from '@angular/core';
 import { Store, select  } from '@ngrx/store';
 import * as AdProductActions from '../ad-product/store/ad-product.action';
-import { Product } from '../../../../model/ad-product.model';
+import { Products } from '../../../../model/ad-product.model';
 import { Observable, map, Subject, takeUntil } from 'rxjs';
 import { AppState } from '../../../../state/app.state';
 import { AdCategoryService } from '../../category/ad-category/ad-category.service'; 
@@ -30,15 +30,15 @@ export class AdProductComponent implements OnInit, OnDestroy {
   itemsPerPage: number = 5;
   totalPages: number = 1;
 
-  selectedProduct: Product | null = null;
+  selectedProduct: Products | null = null;
   categories$!: Observable<Category[]>;
-  product$: Observable<Product[]>;
+  product$: Observable<Products[]>;
 
   categories: Category[] = [];
 
 
 
-  productToEdit: Partial<Product> = {};
+  productToEdit: Partial<Products> = {};
 
 
   private destroy$ = new Subject<void>();
@@ -102,7 +102,7 @@ export class AdProductComponent implements OnInit, OnDestroy {
 
  
 
-  editProducts(product: Partial<Product>) {
+  editProducts(product: Partial<Products>) {
  
     this.productToEdit = {
       ...product,
@@ -115,12 +115,12 @@ export class AdProductComponent implements OnInit, OnDestroy {
     this.modal2.nativeElement.showModal(); 
   }
 
-  editProduct(product: Partial<Product>) {
+  editProduct(product: Partial<Products>) {
     this.store.dispatch(AdProductActions.updateProduct({ product }));
     this.modal2.nativeElement.close();
   }
 
-  deleteProduct(product: Product): void {
+  deleteProduct(product: Products): void {
     if (product._id) {
       this.store.dispatch(AdProductActions.deleteProduct({ productId: product._id }));
       console.log(`Deleted product with ID: ${product._id}`);
@@ -129,7 +129,7 @@ export class AdProductComponent implements OnInit, OnDestroy {
     }
   }
 
-  confirmDelete(product: Product): void {
+  confirmDelete(product: Products): void {
     if (confirm('Are you sure you want to delete this product?')) {
       this.deleteProduct(product);
     }
@@ -139,7 +139,7 @@ export class AdProductComponent implements OnInit, OnDestroy {
     this.modal.nativeElement.showModal();
   }
 
-  get filteredRecords(): Observable<Product[]> {
+  get filteredRecords(): Observable<Products[]> {
     const searchTermLower = this.searchTerm.toLowerCase();
     return this.product$.pipe(
       map(records => records.filter(record => 
@@ -163,7 +163,7 @@ export class AdProductComponent implements OnInit, OnDestroy {
     return category._id 
   }
 
-  trackByProduct(index: number, product: Product): string {
+  trackByProduct(index: number, product: Products): string {
     return product._id;
   }
 
@@ -173,7 +173,7 @@ export class AdProductComponent implements OnInit, OnDestroy {
     });
   }
 
-  getCurrentPageRecords(): Observable<Product[]> {
+  getCurrentPageRecords(): Observable<Products[]> {
     return this.filteredRecords.pipe(
       map(records => {
         const startIndex = (this.currentPage - 1) * this.itemsPerPage;
