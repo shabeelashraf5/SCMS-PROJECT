@@ -60,7 +60,7 @@ export class AddQuotationComponent implements OnInit, OnDestroy  {
   }
 
   uomList: string[] = ['meter', 'no', 'pcs', 'kg', 'litre'];
-  currencyList: string[] = ['AED', 'Dollar', 'Rupees', 'Euro', 'Pound', 'Yen'];
+  currencyList: string[] = ['AED', 'Dollar', 'INR', 'Euro', 'Pound', 'Yen'];
 
 
  ngOnInit() {

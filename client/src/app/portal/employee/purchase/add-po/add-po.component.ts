@@ -37,7 +37,7 @@ export class AddPoComponent implements OnInit, OnDestroy {
   addPoSubscription!: Subscription
   
   uomList: string[] = ['meter', 'no', 'pcs', 'kg', 'litre'];
-  currencyList: string[] = ['AED', 'Dollar', 'Rupees', 'Euro', 'Pound', 'Yen'];
+  currencyList: string[] = ['AED', 'Dollar', 'INR', 'Euro', 'Pound', 'Yen'];
   
   items: Product[] = [{  product: '', qty: 1 , uom: '', unit: 0 ,  total: 0 }];
 
