@@ -38,6 +38,8 @@ export class EmployeeNbComponent implements OnInit, OnDestroy  {
   isPurchaseDropdownOpen = false;
   isAccountingDropdownOpen = false;
 
+  isImage!: string | null;
+
   constructor(private pService: ProfileService, private authService: EmployeeLoginService, private router: Router ) {
 
     this.router.events.subscribe((event) => {
@@ -63,6 +65,7 @@ export class EmployeeNbComponent implements OnInit, OnDestroy  {
       console.log('Disconnected from Socket.IO server');
     });
       
+    this.getDetails()
   }
 
   loadProfile() {
@@ -75,6 +78,15 @@ export class EmployeeNbComponent implements OnInit, OnDestroy  {
       }
 
     })
+  }
+
+  getDetails() {
+    this.authService.users$.subscribe({
+      next: (user) => {
+        this.isImage = environment.apiUrl + `/images/${user.image}`;
+        console.log('Logged Image', user);
+      },
+    });
   }
 
 

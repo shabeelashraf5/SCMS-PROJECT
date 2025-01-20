@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, throwError  } from 'rxjs';
+import { BehaviorSubject, Observable, of, throwError  } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Employee } from '../../../../model/ad-employee.model';
 import { tap , map, catchError } from 'rxjs/operators';
@@ -17,9 +17,16 @@ export class EmployeeLoginService {
   private refreshTokenKey = 'employee_refresh_token';
   private loggedInEmployee: Employee | null = null;
   private loggedInEmployeeKey = 'logged_in_employee'
+
+  private isUsers = new BehaviorSubject<{
+    image: string | null;
+  }>({
+    image: this.getImageFromStorage(),
+  });
+
+  users$ = this.isUsers.asObservable();
   
 
-  
   constructor(private http: HttpClient ) {
     const employeeData = localStorage.getItem(this.loggedInEmployeeKey);
     if (employeeData) {
@@ -36,10 +43,14 @@ export class EmployeeLoginService {
         this.loggedInEmployee = response.employee;
         localStorage.setItem(this.loggedInEmployeeKey, JSON.stringify(response.employee)); 
         localStorage.setItem(this.tokenKey, response.token);
+        localStorage.setItem('image', response.employee.image);
         localStorage.setItem(this.refreshTokenKey, response.refreshToken);
         console.log('Token stored in localStorage:', response.token);
         console.log('Refresh Token stored in localStorage:', response.refreshToken);
         console.log('Logged-in Employee:', this.loggedInEmployee);
+        this.isUsers.next({
+          image: response.employee.image,
+        });
       })
     );
 }
@@ -50,12 +61,17 @@ export class EmployeeLoginService {
 logout(employeeId: string): Observable<any> {
   return this.http.put(`${this.apiUrl}/logout`, { employeeId }).pipe(
     tap(() => {
-      localStorage.removeItem(this.tokenKey);
+      localStorage.removeItem(this.tokenKey)
+      localStorage.removeItem('image');
       console.log('User logged out');
     })
   );
 }
 
+
+  getImageFromStorage(): string | null {
+  return localStorage.getItem('image');
+}
 
 
 
