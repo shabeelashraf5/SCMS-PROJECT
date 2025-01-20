@@ -198,7 +198,7 @@ const loadPurchaseDetails = async (req , res) => {
                 select: 'srfq' 
             }
             
-        } }).exec(); 
+        } }).sort({ createdAt: -1 }).exec(); 
         
         console.log('purchaseDetail:', purchaseDetail);
         console.log(purchaseDetail)
