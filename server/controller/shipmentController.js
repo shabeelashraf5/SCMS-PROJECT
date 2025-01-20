@@ -4,7 +4,7 @@ let express = require('express');
 const collectionshipment = require('../model/shipmentDB')
 
 
-const loadInv = async (req, res) => {
+const loadShip = async (req, res) => {
 
     try {
 
@@ -41,7 +41,7 @@ const loadInv = async (req, res) => {
                 }
             }
         }
-        }).exec();
+        }).sort({ createdAt: -1 }).exec();
     
         console.log('shipData:', shipData);
 
@@ -84,7 +84,7 @@ const changeStatus = async (req , res) => {
 module.exports = {
 
    
-    loadInv,
+    loadShip,
     changeStatus
 
 }

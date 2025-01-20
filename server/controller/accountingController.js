@@ -39,8 +39,7 @@ const loadInv = async (req, res) => {
                         }
                     }
                 }
-            })
-            .exec();
+            }).sort({ createdAt: -1 }).exec();
         
         console.log('invData:', invData);
 
@@ -189,7 +188,7 @@ const loadTrans = async (req, res) => {
                         }
                     }
                 }
-            }).exec();
+            }).sort({ createdAt: -1 }).exec();
     
         console.log('transData:', transData);
 

@@ -26,7 +26,7 @@ const loadPo = async (req, res) => {
         path: 'salesRFQ_id',
         model: 'sales-rfq',
         select: 'srfq' 
-    } }).exec(); 
+    } }).sort({ createdAt: -1 }).exec(); 
         console.log('Supplier PO:', supplierPO);
 
         if (!supplierPO || supplierPO.length === 0) { 

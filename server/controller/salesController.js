@@ -67,11 +67,15 @@ const loadRfq = async (req, res) => {
         res.setHeader('Cache-Control', 'no-cache, no-store');
         
        
-        const customerRFQ = await salesRFQ.find({  employee_id: employeeId }).populate({
+        const customerRFQ = await salesRFQ
+        .find({ employee_id: employeeId })
+        .populate({
             path: 'employee_id',
-            select: 'fname lname', 
-            model: 'employee' 
-        }).exec(); 
+            select: 'fname lname',
+            model: 'employee',
+        })
+        .sort({ createdAt: -1 }) // Sort by `createdAt` in descending order
+        .exec(); 
         console.log('Customer RFQ:', customerRFQ);
 
         if (!customerRFQ || customerRFQ.length === 0) { 
@@ -244,7 +248,7 @@ const loadSalesOrder = async (req , res) => {
             path: 'employee_id',
             select: 'fname lname', 
             model: 'employee' 
-        }).populate({path: 'salesRFQ_id', select: 'srfq'}).exec(); 
+        }).populate({path: 'salesRFQ_id', select: 'srfq'}).sort({ createdAt: -1 }).exec(); 
         console.log('ClientDetails:',salesOrder);
         console.log(salesOrder)
 

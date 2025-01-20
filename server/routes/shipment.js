@@ -7,7 +7,7 @@ const {verifyToken} = require('../token/tokenauth')
 
 
 
-router.get('/shipment-history', verifyToken , shipmentController.loadInv)
+router.get('/shipment-history', verifyToken , shipmentController.loadShip)
 router.put('/:id/update-status', verifyToken , shipmentController.changeStatus)
 
 
